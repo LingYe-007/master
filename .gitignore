@@ -1,0 +1,45 @@
+# LaTeX 临时文件和编译输出
+*.aux
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.xdv
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ind
+*.ilg
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+output/
+
+# 系统文件
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# 日志文件
+*.log
+/tmp/
+
+# 其他临时文件
+*.tmp
+*.bak
+

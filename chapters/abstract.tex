@@ -1,0 +1,89 @@
+% --- 摘要页设置开始 ---
+\clearpage
+\pagenumbering{Roman} % 设置页码为罗马数字 I, II, III
+
+% 定义摘要页专用的页眉页脚格式
+\fancypagestyle{abstractstyle}{
+    \fancyhf{} % 清空当前页眉页脚
+    % \fancyhead[C]{\CJKfamily{song}\wuhao} % 如果需要页眉可取消注释
+    \fancyfoot[C]{\wuhao --~\thepage~--} % 页脚格式：-- I --
+    \renewcommand{\headrulewidth}{0pt} % 去掉页眉横线
+    \renewcommand{\footrulewidth}{0pt}
+}
+\pagestyle{abstractstyle} % 应用该样式
+\setcounter{page}{1} % 重置页码为 I
+
+% --- 中文摘要 ---
+\begin{center}
+    % 论文题目（根据你的文档填充）
+    % {\fontsize{15.75pt}{13pt}\selectfont\heiti\bfseries 基于对比学习的联邦异构图推荐算法与系统研究}
+    \par\vspace{1.0cm}
+    
+    % "摘要"标题
+    {\fontsize{15.75pt}{13pt}\selectfont\heiti\bfseries 摘\quad 要}
+    \par\vspace{1.0cm}
+\end{center}
+
+% 添加到目录
+\phantomsection
+\addcontentsline{toc}{chapter}{摘\quad 要} 
+
+% 摘要正文
+{\fontsize{12pt}{18pt}\selectfont \songti
+随着移动互联网高速发展，推荐系统从单纯的流量分发转向对用户深度兴趣的挖掘。异构信息网络（Heterogeneous Information Network）因为能够整合多种异构数据源，挖掘隐藏的语义信息，成为提升推荐精度的有效技术。同时，在《个人信息保护法》与GDPR的合规要求下，以及各大平台之间的“数据围墙”日益增高，传统的集中式大图训练模式满足不了跨域数据融合与隐私合规的要求。联邦学习（Federated Learning, FL）通过“数据不动模型动”的分布式训练范式，允许参与方在本地保留原始数据的前提下，仅上传交互加密的模型参数，满足了隐私合规的要求。然而，由于联邦学习场景的特性，现有联邦异构图推荐研究仍面临冷启动问题、推荐效果变差、以及高维异构模型带来的通信瓶颈与落地困难等一系列严峻挑战。
+
+研究如何解决上述问题与挑战具有重大的科研意义和现实意义。本文以跨视图语义融合与结构化模型压缩为切入点，通过研究冷启动、非IID数据适配及端侧轻量化等问题，提出了高效、保护隐私、可落地的联邦异构图推荐框架，为上述核心问题提供一个切实可行的解决方案。具体而言，本文的研究工作如下：
+
+1) 针对\textbf{冷启动}和\textbf{推荐效果差}的核心问题，本文提出了\textbf{基于属性-结构双视图对比学习的联邦异构图推荐框架（FedAsclRc）}。该框架通过\textbf{跨视图对比学习机制}，在潜在空间对齐用户属性与图结构语义；利用属性特征重构缺失的拓扑信息，有效解决了\textbf{零交互用户的冷启动难题}。同时，针对\textbf{数据异质性（Non-IID）导致的模型偏差问题}，该框架引入了\textbf{全局语义原型对齐（Global Semantic Prototype Alignment）机制}，通过约束本地模型表征向全局一致的语义原型靠拢，有效纠正了\textbf{客户端模型漂移（Client Drift）现象}，从而显著缓解了推荐性能的下降。
+
+2) 针对联邦异构图模型参数量大、通信效率低的问题，本文提出了\textbf{语义感知的模型参数压缩策略}。该策略设计了轻量级的\textbf{元路径选择器}，在本地训练阶段动态剔除对用户贡献度低的冗余通道，并结合\textbf{残差梯度量化技术}压缩传输数据，在保持模型语义完整性的前提下大幅降低了\textbf{通信开销}。
+
+3) 针对当前联邦推荐系统落地困难的问题，本文构建了支持\textbf{异构设备协同}的\textbf{联邦推荐监控系统}。该系统采用\textbf{端云协同的异步聚合架构}以适配不同性能的终端设备，并集成了\textbf{本地差分隐私模块}，完成了联邦推荐系统的落地。
+\par
+}
+
+\vspace{1em}
+% 关键词
+\noindent % 取消首行缩进
+{\fontsize{12pt}{18pt}\selectfont
+\textbf{\heiti 关键词}：联邦学习，异构图推荐，对比学习，冷启动，模型轻量化，系统实现
+}
+
+% --- 英文摘要 (另起一页) ---
+\newpage
+\begin{center}
+    % 英文题目 (根据中文题目翻译)
+    % {\fontsize{15.75pt}{13pt}\selectfont\bfseries 
+    % Research on Federated Heterogeneous Graph Recommendation Algorithm and System Based on Contrastive Learning}
+    \par\vspace{1.0cm}
+    
+    % "ABSTRACT" 标题
+    {\fontsize{15.75pt}{13pt}\selectfont\bfseries ABSTRACT}
+    \par\vspace{1.0cm}
+\end{center}
+
+% 添加到目录
+\phantomsection
+\addcontentsline{toc}{chapter}{ABSTRACT}
+
+% 英文摘要正文 (已填充你的文档内容)
+{\fontsize{12pt}{18pt}\selectfont
+With the rapid development of the mobile Internet, recommendation systems have shifted from mere traffic distribution to deep interest mining of users. Heterogeneous Information Networks (HINs) have emerged as an effective technology to improve recommendation accuracy by integrating diverse heterogeneous data sources and excavating hidden semantic information. Meanwhile, under the compliance requirements of the Personal Information Protection Law and GDPR, as well as the increasing "data silos" between major platforms, the traditional centralized large-graph training paradigm can no longer meet the demands of cross-domain data fusion and privacy compliance. Federated Learning (FL), through a distributed training paradigm of "models move while data stays", allows participants to retain raw data locally and only upload interactively encrypted model parameters, thus satisfying privacy compliance requirements. However, due to the characteristics of the federated scenario, existing research on federated heterogeneous graph recommendation still faces a series of severe challenges, such as the cold start problem, recommendation performance constrained by Non-Independent and Identically Distributed (Non-IID) data, and communication bottlenecks and deployment difficulties brought by high-dimensional heterogeneous models.
+
+Research on addressing the aforementioned issues and challenges holds significant scientific and practical significance. Taking cross-view semantic fusion and structured model compression as entry points, this paper proposes an efficient, privacy-preserving, and deployable federated heterogeneous graph recommendation framework by investigating cold start, Non-IID data adaptation, and edge-side lightweighting, providing a feasible solution to the core problems mentioned above. 
+
+Specifically, the research work of this paper is as follows:
+
+1) To tackle the poor recommendation performance caused by cold start and Non-IID data, this paper proposes a federated heterogeneous graph recommendation framework based on Attribute-Structure dual-view Contrastive Learning (FedAsclRc). This framework employs a cross-view contrastive learning mechanism to force the model to align user attribute and graph structure semantics in the latent space; it reconstructs missing topological information using attribute features, effectively solving the cold start problem for zero-interaction users and alleviating performance degradation caused by data heterogeneity.
+
+2) To address the problems of large parameter size and low communication efficiency in federated heterogeneous graph models, this paper proposes a semantics-aware model parameter compression strategy. This strategy designs a lightweight meta-path selector to dynamically eliminate redundant channels with low contribution to users during local training, and combines residual gradient quantization technology to compress transmitted data, significantly reducing communication overhead while maintaining the semantic integrity of the model.
+
+3) To solve the difficulty in deploying current federated recommendation systems, this paper constructs a federated recommendation system supporting heterogeneous device collaboration. The system adopts an edge-cloud collaborative asynchronous aggregation architecture to adapt to terminal devices with different performances, and integrates a local differential privacy module to complete the deployment of the federated recommendation system.
+\par
+}
+
+\vspace{1em}
+% 英文关键词
+\noindent
+{\fontsize{12pt}{18pt}\selectfont
+\textbf{Keywords}: Federated Learning; Heterogeneous Graph Recommendation; Contrastive Learning; Cold Start; Model Lightweighting

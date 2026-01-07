@@ -1,0 +1,105 @@
+\documentclass[oneside,12pt,reqno,CJK]{ctexart}
+\input{images/option}
+\renewcommand{\textfraction}{0.15}    % 正文至少占页面的15%（避免图片占满整页）
+% \renewcommand{\floatpagefraction}{0.8}% 图片占页面80%以上才会单独占页
+\renewcommand{\topfraction}{0.85}     % 顶部浮动体最多占页面85%
+\renewcommand{\bottomfraction}{0.85}
+
+\addbibresource{chapters/reference.bib}
+
+% --- 1. 基础宏包 ---
+\usepackage{amsmath, amssymb, amsfonts} % 数学公式 (去重)
+\usepackage{indentfirst}
+\usepackage{graphicx}   % 图片
+\usepackage{booktabs}   % 三线表
+\usepackage{geometry}   % 页面设置
+\usepackage{fancyhdr}   % 页眉页脚
+\usepackage{hyperref}   % 超链接
+\usepackage{titletoc}   % 目录格式
+\usepackage{enumitem}
+\usepackage{algorithm}    % 算法浮动环境
+\usepackage{algorithmicx} % 算法结构扩展
+\usepackage{algpseudocode}% 算法关键词（For/If/State等）
+\usepackage{amsmath}      % 数学公式支持
+\usepackage{amssymb}
+% 注意：参考文献使用 biblatex（在 option.tex 中已配置），不需要 natbib
+
+% --- 2. 算法宏包 (修复冲突) ---
+\usepackage{algorithm}  
+\usepackage{algpseudocode} % 推荐使用这个现代包
+% \usepackage{algorithmic} % 已注释：与 algpseudocode 冲突，建议不用
+
+
+% --- 3. 页面设置 (参考西北大学标准) ---
+\geometry{left=3cm, right=2.5cm, top=3cm, bottom=2.5cm}
+
+
+% --- 4. 页眉页脚设置 ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small 西北大学硕士学位论文}
+\fancyfoot[C]{\small \thepage}
+
+% --- 信息录入 ---
+\title{基于对比学习的联邦异构图推荐算法与系统研究}
+\author{伍勋高}
+\date{2025年6月}
+
+\begin{document}
+
+% =========================================================
+%   前置部分 (Front Matter)
+%   特点：页码为罗马数字 (i, ii, iii...)
+% =========================================================
+\frontmatter 
+
+% 1. 封面页
+\input{chapters/titlePage}
+
+% 2. 声明页 (独创性声明)
+\input{chapters/statement}
+
+% 3. 摘要页 (中英文摘要)
+\input{chapters/abstract}
+
+% 4. 目录       % 自动生成目录
+\input{TableofContents}  % 目录页（包含 \tableofcontents）
+\newpage
+\listoffigures          % 图目录
+\newpage
+\listoftables           % 表目录
+
+% =========================================================
+%   主体部分 (Main Matter)
+%   特点：页码重置为阿拉伯数字 (1, 2, 3...)
+% =========================================================
+\mainmatter
+
+\input{chapters/chap1_intro}
+\input{chapters/chap2_related}
+\input{chapters/chap3_method}
+\input{chapters/chap4_compression}
+\input{chapters/chap5_system}
+\input{chapters/chap6_summary}
+
+% =========================================================
+%   后置部分 (Back Matter)
+%   特点：参考文献、致谢、成果等
+% =========================================================
+% \backmatter  % ctexart 不支持 \backmatter，已注释
+
+% 1. 参考文献
+% 使用 biblatex（已在 option.tex 中配置）
+% Reference.tex 中已包含 \printbibliography
+\input{chapters/Reference}
+
+% 2. 致谢 (保留一个即可)
+\input{chapters/thank} 
+% \input{backmatter/ack} % 已注释：避免重复致谢
+
+% 3. 科研成果/简历（已删除）
+% \input{backmatter/resume}
+
+% \input{} % 已删除：空的 input 会导致编译错误
+
+\end{document}
