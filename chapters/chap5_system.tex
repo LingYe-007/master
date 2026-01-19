@@ -1,66 +1,124 @@
 \newpage
-\section*{第五章~~基于联邦异构图模型的推荐系统设计与实现}
-\setcounter{section}{5} \setcounter{subsection}{0}
-\addcontentsline{toc}{section}{第五章~~基于联邦异构图模型的推荐系统设计与实现}
+% =========================================================
+% 第五章：基于联邦异构图模型的推荐系统设计与实现
+% =========================================================
+
+\section*{第五章\quad 基于联邦异构图模型的推荐系统设计与实现}
+\setcounter{section}{5} 
+\setcounter{subsection}{0}
+\addcontentsline{toc}{section}{第五章\quad 基于联邦异构图模型的推荐系统设计与实现}
 \label{chap:system_design}
 
-\subsection{系统概述与架构设计}
+\subsection{系统概述}
 \label{sec:sys_overview}
 
-基于前文提出的 FedASCL 算法框架与语义感知压缩策略，本章设计并实现了一个面向学术场景的隐私保护联邦推荐系统原型。该系统旨在解决传统集中式推荐中存在的“数据孤岛”与隐私泄露问题，通过端云协同（Cloud-Edge Collaboration）架构，使分布在不同科研机构（客户端）的异构数据能够在不离本地的前提下，协同训练出高精度的异构图推荐模型。
+基于前文提出的 FedASCL（Federated Attribute-Structure Contrastive Learning）算法框架，本章设计并实现了一个面向学术场景的隐私保护联邦推荐系统。该系统旨在解决传统集中式推荐中存在的“数据孤岛”与隐私泄露问题。通过构建“端-云协同”的联邦计算架构，系统能够在客户端数据不出域的前提下，利用本地自我中心子图（Ego-Subgraph）与全局语义原型协同训练，实现高精度的个性化推荐。
 
 \subsection{系统设计原则}
-系统的设计遵循以下核心原则：
+为了兼顾推荐系统的准确性、实时性与安全性，系统的设计遵循以下核心原则：
+
 \begin{itemize}
-    \item \textbf{隐私优先（Privacy-First）}：原始交互数据（如用户阅读记录）与敏感属性6y y y y y（如所属课题组）严禁出域，仅交互加密后的梯度或模型参数。
-    \item \textbf{高效通信（Communication-Efficient）}：针对移动端或边缘网络环境，集成第4章提出的语义压缩与残差量化机制，降低传输开销。
-    \item \textbf{模块解耦（Decoupling）}：将算法核心逻辑（训练、聚合）与业务逻辑（推荐展示、用户管理）分离，便于后续算法迭代。
+    \item \textbf{数据隐私优先（Data Privacy First）：} 严格遵循联邦学习协议，原始交互数据（如点击流）与敏感属性（如所属机构）仅存储于客户端本地。端云之间仅交互加密后的模型梯度或原型参数，从架构层面阻断隐私泄露风险。
+    \item \textbf{架构分层解耦（Hierarchical Decoupling）：} 采用微服务架构思想，将核心算法逻辑（联邦训练、梯度聚合）与业务应用逻辑（推荐展示、用户管理）分离，降低系统耦合度，便于算法模型的独立迭代。
+    \item \textbf{异构数据适配（Heterogeneity Adaptation）：} 针对学术场景中节点类型多样（论文、作者、会议）的特点，系统在端侧设计了动态元路径编码器，能够自适应处理不同构型的本地子图数据。
 \end{itemize}
 
-\subsection{系统分层架构}
-系统采用分层微服务架构设计，自下而上划分为数据层、算法引擎层、服务层与应用层，如图 \ref{fig:sys_arch} 所示。
+\subsection{系统总体架构设计}
+系统采用分层架构设计，自下而上划分为数据存储层、算法引擎层、业务服务层与应用交互层，如图 \ref{fig:sys_arch} 所示。
 
+\begin{figure}[htbp]
+    \centering
+    \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：系统总体架构图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{基于 FedASCL 的联邦推荐系统逻辑架构图}
+    \label{fig:sys_arch}
+\end{figure}
 
+各层级的功能定义如下：
 
 \begin{enumerate}
-    \item \textbf{数据存储层 (Data Layer)}：
+    \item \textbf{数据存储层 (Data Storage Layer)：}
+    数据存储层的架构设计如图 \ref{fig:storage_layer} 所示。
     \begin{itemize}
-        \item \textbf{客户端（Edge）}：部署于用户终端或机构服务器，利用 SQLite/LevelDB 存储本地私有的用户-物品交互图、用户属性特征及本地训练产生的残差累积量。
-        \item \textbf{服务端（Cloud）}：利用 MySQL 存储系统元数据（用户信息索引、版本控制），利用 Redis 缓存待分发的全局模型参数及全局原型聚类中心（Global Prototypes）。
+        \item \textbf{客户端（Client）：} 部署于用户终端。利用轻量级数据库（如 SQLite）存储本地私有的自我中心子图（Ego-Subgraph）及用户属性特征。
+        \item \textbf{服务端（Cloud）：} 利用 MySQL 存储系统元数据（用户信息、日志），利用 Redis 缓存待分发的全局模型参数（Global Model）及全局语义原型（Global Prototypes）。
     \end{itemize}
     
-    \item \textbf{算法引擎层 (Algorithm Engine Layer)}：
-    这是系统的核心计算单元，封装了 FedASCL 框架的关键组件。
+    \begin{figure}[htbp]
+        \centering
+        \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：数据存储层架构图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{数据存储层架构设计}
+        \label{fig:storage_layer}
+    \end{figure}
+    
+    \item \textbf{算法引擎层 (Algorithm Engine Layer)：}
+    该层是系统的核心计算单元，封装了 FedASCL 框架的关键组件，其模块架构如图 \ref{fig:algorithm_layer} 所示。
     \begin{itemize}
-        \item \textbf{本地训练器 (Local Trainer)}：负责执行基于属性-结构双视图的对比学习，生成本地梯度。
-        \item \textbf{语义压缩器 (Semantic Compressor)}：集成“动态元路径选择器”，在上传前对梯度进行结构剪枝与残差量化。
-        \item \textbf{安全聚合器 (Secure Aggregator)}：部署于云端，执行基于加权平均（FedAvg）的参数聚合与原型对齐（Prototype Alignment）。
+        \item \textbf{本地训练器 (Local Trainer)：} 负责在客户端执行基于属性-结构双视图的对比学习，计算 InfoNCE 损失与原型对齐损失。
+        \item \textbf{联邦协调器 (Federated Coordinator)：} 部署于云端，负责任务调度、节点选择以及全局原型的同步与更新。
+        \item \textbf{安全聚合器 (Secure Aggregator)：} 执行基于加权平均（FedAvg）的参数聚合，融合各客户端上传的梯度信息。
     \end{itemize}
     
-    \item \textbf{服务层 (Service Layer)}：
-    基于算法层的输出提供具体的 API 服务，包括 `Recommendation Service`（推荐列表生成）、`Cold-start Handler`（冷启动处理）以及 `Model Version Manager`（模型版本管理）。
+    \begin{figure}[htbp]
+        \centering
+        \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：算法引擎层模块架构图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{算法引擎层模块架构}
+        \label{fig:algorithm_layer}
+    \end{figure}
     
-    \item \textbf{应用层 (Application Layer)}：
-    提供可视化的 Web 交互界面，支持学术文献浏览、学者合作网络探索以及联邦训练状态监控面板。
+    \item \textbf{业务服务层 (Service Layer)：}
+    基于算法层的输出提供具体的 API 服务，其服务架构如图 \ref{fig:service_layer} 所示，包括推荐列表生成服务（Recommendation Service）、新用户冷启动处理服务（Cold-start Handler）以及模型版本管理服务。
+    
+    \begin{figure}[htbp]
+        \centering
+        \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：业务服务层架构图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{业务服务层架构设计}
+        \label{fig:service_layer}
+    \end{figure}
+    
+    \item \textbf{应用交互层 (Application Layer)：}
+    提供可视化的 Web 控制台，支持学术文献浏览、学者合作网络探索以及联邦训练状态的实时监控（如 Loss 曲线、AUC 指标）。应用交互层的功能模块如图 \ref{fig:app_layer} 所示。
+    
+    \begin{figure}[htbp]
+        \centering
+        \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：应用交互层功能模块图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{应用交互层功能模块}
+        \label{fig:app_layer}
+    \end{figure}
 \end{enumerate}
 
 \subsection{技术选型与开发环境}
-系统基于 Python 生态构建，核心技术栈如表 \ref{tab:tech_stack} 所示。
+系统基于 Python 生态构建，采用前后端分离模式。核心技术选型如表 \ref{tab:tech_stack} 所示。
 
 \begin{table}[htbp]
     \centering
     \caption{系统技术选型与开发环境}
     \label{tab:tech_stack}
+    \renewcommand{\arraystretch}{1.1}
     \begin{tabular}{l|l}
         \toprule
         \textbf{组件类别} & \textbf{技术选型} \\
         \midrule
         \textbf{开发语言} & Python 3.8 \\
         \textbf{深度学习框架} & PyTorch 1.10, PyTorch Geometric (PyG) \\
-        \textbf{联邦通信协议} & gRPC / WebSocket (自定义压缩协议报文) \\
-        \textbf{后端框架} & Flask (API服务), Celery (异步任务) \\
-        \textbf{数据存储} & MySQL 8.0 (关系型), Redis 6.0 (缓存), SQLite (端侧) \\
-        \textbf{前端框架} & Vue.js + ECharts (可视化) \\
+        \textbf{通信协议} & RESTful API / gRPC (模型参数传输) \\
+        \textbf{后端框架} & Flask (API服务), Celery (异步任务调度) \\
+        \textbf{数据存储} & MySQL 8.0 (元数据), Redis 6.0 (热数据) \\
+        \textbf{前端框架} & React + TypeScript + ECharts (可视化) \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -68,88 +126,128 @@
 \subsection{关键模块详细设计}
 \label{sec:sys_modules}
 
-\subsection{联邦协同训练模块}
-该模块负责协调客户端与服务端进行多轮次的联邦学习，是系统智能化的基础。
+\subsubsection{联邦协同训练模块}
+该模块是系统智能化的核心，负责协调分布式的客户端与中心服务器进行多轮次的联邦学习。
 
-\subsubsection{通信协议设计}
-为了支持第4章提出的压缩策略，自定义了联邦通信报文格式。报文负载（Payload）不再是完整的权重矩阵，而是包含以下字段：
+\paragraph{1. 训练流程控制}
+系统采用同步联邦学习（Synchronous FL）机制，具体的协同训练时序流程如图 \ref{fig:training_flow} 所示。单轮训练主要包含四个标准阶段：
+
+\begin{figure}[htbp]
+    \centering
+    \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：联邦协同训练时序流程图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{联邦协同训练时序流程图}
+    \label{fig:training_flow}
+\end{figure}
+
 \begin{itemize}
-    \item \texttt{meta\_path\_mask}: 二进制掩码，标识当前轮次保留的活跃元路径通道。
-    \item \texttt{quantized\_grads}: 经过 INT8 量化的梯度数据流。
-    \item \texttt{scalar\_factor}: 用于反量化的缩放因子。
+    \item \textbf{模型分发（Broadcast）：} 服务端根据节点活跃度，随机选择 $K$ 个客户端，下发最新的全局模型参数 $W_g$ 与全局属性原型 $P_g$。
+    \item \textbf{本地更新（Local Update）：} 客户端加载模型，基于本地异构子图执行 $E$ 轮 FedASCL 训练。在此过程中，双视图编码器分别提取结构特征与属性特征，并通过最大化互信息来优化节点表示。
+    \item \textbf{参数上传（Upload）：} 训练结束后，客户端仅上传模型梯度更新 $\Delta W$ 与本地属性聚类中心，原始图数据严格保留在本地。
+    \item \textbf{全局聚合（Aggregation）：} 服务端收集所有被选节点的更新，执行加权聚合操作，更新全局模型版本。
 \end{itemize}
 
-\subsubsection{训练流程控制}
-系统采用同步联邦学习（Synchronous FL）机制：
-\begin{enumerate}
-    \item \textbf{分发阶段}：服务端通过心跳包监测在线客户端，随机选择 $K$ 个节点下发最新的全局模型 $W_g$ 与全局原型 $P_g$。
-    \item \textbf{本地更新}：客户端加载模型，利用本地异构图数据进行 $E$ 轮 FedASCL 训练。在此过程中，双视图对比学习模块计算 InfoNCE 损失，优化节点表示。
-    \item \textbf{压缩上传}：训练结束后，调用`Compressor`模块计算梯度，剔除低注意力权重的元路径分支，并将剩余参数量化打包上传。
-    \item \textbf{聚合更新}：服务端等待所有被选节点回传完毕，解压数据并执行加权聚合，更新全局模型版本。
-\end{enumerate}
+\paragraph{2. 仿真引擎实现}
+为了验证算法有效性，系统后端实现了一个高保真仿真引擎。引擎通过 \texttt{DataPartitioner} 模块将 ACM 数据集切分为多个互不重叠的 Ego-Subgraph，模拟真实环境下的数据异构（Non-IID）特性；通过多线程机制模拟客户端的并发训练与网络延迟。仿真引擎的架构设计如图 \ref{fig:simulator_arch} 所示。
 
+\begin{figure}[htbp]
+    \centering
+    \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：仿真引擎架构图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{联邦学习仿真引擎架构图}
+    \label{fig:simulator_arch}
+\end{figure}
 
-
-\subsection{学术资源推荐模块}
+\subsubsection{学术资源推荐模块}
 \label{subsec:paper_rec}
-该模块基于训练好的联邦异构图模型，为用户提供个性化的学术资源推荐，主要包括文献推荐与学者合作推荐。
+该模块基于训练好的联邦异构图模型，为用户提供个性化的学术资源推荐，重点解决了冷启动问题。
 
-\subsubsection{文献推荐与冷启动处理}
-针对学术场景中用户交互稀疏的特点，该功能实现了“分级推理”策略：
+\paragraph{1. 分级推荐策略}
+针对学术场景中用户交互稀疏的特点，该功能实现了"分级推理"机制，其逻辑判定流程如图 \ref{fig:rec_logic} 所示：
+
+\begin{figure}[htbp]
+    \centering
+    \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：分级推荐策略流程图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{基于属性-结构双通路的冷启动推荐策略示意图}
+    \label{fig:rec_logic}
+\end{figure}
+
 \begin{itemize}
-    \item \textbf{常规推荐}：对于活跃用户，系统加载本地保存的异构图结构，利用 HGNN 编码器聚合“用户-点击-论文”及“论文-引用-论文”的高阶邻居信息，生成用户嵌入向量，并在候选集中检索 Top-N 相似文献。
-    \item \textbf{冷启动推荐}：对于无交互记录的新注册用户，系统自动切换至 \textbf{FedASCL 属性视图}分支。利用用户注册时填写的“研究兴趣关键词”或“所属实验室”属性，映射到全局原型空间，检索与该原型最接近的文献簇，实现零样本启动（Zero-shot Start）。
+    \item \textbf{常规推荐（结构优先）：} 对于有丰富交互历史的活跃用户，系统优先利用结构视图，聚合“用户-论文-会议”的高阶邻居信息，生成精确的用户嵌入，检索 Top-N 相似文献。
+    \item \textbf{冷启动推荐（属性优先）：} 对于无交互记录的新注册用户，系统自动激活 FedASCL 的\textbf{属性映射分支}。利用用户注册时的属性（如研究兴趣、机构），通过映射网络投影到全局原型空间，基于语义相似度检索相关文献，实现零样本启动。
 \end{itemize}
 
-\subsubsection{学者合作网络挖掘}
-该功能旨在解决学术社交中的信息不对称问题。区别于文献推荐，学者推荐更关注“同质性”与“互补性”。
-系统利用动态元路径机制，在推理阶段动态调整注意力权重，重点关注 \texttt{User-Paper-User} (共同作者) 和 \texttt{User-Org-User} (同一机构) 这类社交元路径。前端界面除了展示推荐的学者列表外，还会生成\textbf{“推荐解释路径”}（例如：“因为你们都引用了 Bengio 的文献”），增强系统的可解释性。
+\paragraph{2. 可解释性增强}
+系统利用动态元路径的注意力权重（Attention Weights）提供推荐解释。例如，若 \texttt{User-Author-User} 路径的权重较高，前端界面将提示用户："推荐该学者是因为你们有共同的合作者"。推荐解释的可视化展示如图 \ref{fig:explainability} 所示。
 
-\subsection{系统测试与评估}
-\label{sec:sys_test}
+\begin{figure}[htbp]
+    \centering
+    \rule{0.8\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：推荐可解释性展示图]}\\[1em]
+    \rule{0.8\textwidth}{0.4pt}
+    \caption{基于元路径注意力的推荐可解释性展示}
+    \label{fig:explainability}
+\end{figure}
 
-\subsection{功能测试}
-测试采用黑盒测试方法，验证系统各核心功能模块的逻辑正确性。测试环境覆盖了 Windows 与 Linux 客户端，测试结果如表 \ref{tab:func_test} 所示。
+\subsection{系统界面展示与功能测试}
+\label{sec:sys_ui_test}
+
+为了直观展示系统的运行效果，图 \ref{fig:sys_ui} 展示了系统的核心功能界面。
+
+\begin{figure}[htbp]
+    \centering
+    \rule{0.48\textwidth}{0.4pt}\\[1em]
+    \textbf{[待插入图片：推荐列表界面]}\\[1em]
+    \rule{0.48\textwidth}{0.4pt}
+    \caption{学术资源推荐列表页}
+    \label{fig:ui_rec}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \rule{0.48\textwidth}{0.4pt}\\[1em]
+    \textbf{[待插入图片：训练监控界面]}\\[1em]
+    \rule{0.48\textwidth}{0.4pt}
+    \caption{联邦训练状态监控面板}
+    \label{fig:ui_monitor}
+\end{figure}
+
+\subsubsection{系统功能测试结果}
+测试采用黑盒测试方法，重点验证系统各核心功能模块的逻辑正确性与业务流程的闭环能力。测试环境覆盖了模拟的客户端节点与中心服务器，测试结果如表 \ref{tab:func_test} 所示。
 
 \begin{table}[htbp]
     \centering
     \caption{系统核心功能测试用例及结果}
     \label{tab:func_test}
-    \begin{tabular}{c|p{6cm}|c|c}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{c|p{7.5cm}|c|c}
         \toprule
-        \textbf{模块} & \textbf{测试用例描述} & \textbf{预期结果} & \textbf{结论} \\
+        \textbf{测试模块} & \textbf{测试用例描述} & \textbf{预期结果} & \textbf{结论} \\
         \midrule
-        \multirow{2}{*}{联邦控制} & 模拟客户端网络波动导致的中断重连 & 服务端剔除超时节点，系统不崩溃 & 通过 \\
-        & 验证全局模型参数的版本迭代 & 轮次 $t+1$ 的参数与 $t$ 轮不同 & 通过 \\
+        \multirow{2}{*}{\textbf{联邦控制}} & 验证全局模型参数的版本迭代 & 轮次 $t+1$ 的参数与 $t$ 轮发生更新 & 通过 \\
+        \cline{2-4}
+         & 验证数据隔离性 & 服务端无法读取客户端的原始图结构 & 通过 \\
         \midrule
-        \multirow{2}{*}{推荐服务} & 历史交互丰富的老用户请求 & 推荐列表与历史偏好一致性高 & 通过 \\
-        & 仅有属性信息的冷启动用户请求 & 基于属性原型返回相关领域文献 & 通过 \\
+        \multirow{2}{*}{\textbf{推荐服务}} & 历史交互丰富的老用户请求推荐 & 推荐列表与历史偏好领域一致性高 & 通过 \\
+        \cline{2-4}
+         & 仅有属性信息的冷启动用户请求推荐 & 系统基于属性原型返回相关领域文献 & 通过 \\
         \midrule
-        \multirow{2}{*}{隐私保护} & 尝试在服务端解析客户端上传的数据包 & 仅能解析出梯度噪声，无法还原交互图 & 通过 \\
+        \textbf{系统监控} & 前端实时拉取训练 Loss 与 AUC 指标 & 曲线随训练轮次动态更新且趋势收敛 & 通过 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\subsection{通信性能测试}
-为了验证第4章所提压缩算法在工程实现层面的收益，我们在模拟的弱网环境（带宽限制 5Mbps，延迟 200ms）下进行了压力测试。
-
-\begin{figure}[htbp]
-    \centering
-    % 
-    % \includegraphics[width=0.7\textwidth]{images/latency_test.png} 
-    \caption{不同网络环境下单轮联邦通信耗时对比}
-    \label{fig:latency_test}
-\end{figure}
-
-测试指标包括单轮通信耗时（Communication Latency）和吞吐量。实验结果显示：
-\begin{enumerate}
-    \item \textbf{时延降低}：在开启语义感知压缩策略后，单轮通信的平均耗时从 4.5 秒降低至 0.6 秒，降幅达到 86\%。这主要得益于动态元路径剪枝大幅减少了无效参数的传输。
-    \item \textbf{稳定性提升}：在丢包率设置为 5\% 的不稳定网络下，全精度模型的上传成功率仅为 82\%，而压缩后的模型上传成功率达到 98\%，证明了轻量化模型在边缘环境下的传输鲁棒性。
-\end{enumerate}
+测试结果表明，系统成功实现了联邦学习的完整闭环，具备了模型分发、本地训练、梯度聚合以及基于模型的在线推荐功能。特别是在隐私保护方面，系统架构有效地隔离了原始数据，验证了 FedASCL 框架在工程落地上的可行性。
 
 \subsection{本章小结}
 \label{sec:sys_summary}
-本章详细阐述了基于 FedASCL 算法的联邦推荐系统的设计与实现过程。
-首先，确立了端云协同的四层系统架构，明确了数据流向与隐私边界；
-其次，重点介绍了联邦协同训练与学术资源推荐两大核心模块的实现逻辑，特别是将冷启动处理与动态元路径机制转化为具体的工程特性；
-最后，通过系统功能与性能测试，验证了系统在功能完备性、推荐准确性以及通信效率方面的优势。该系统的成功实现，标志着本文提出的理论算法具备在实际移动互联网环境下部署的可行性。
+
+本章详细阐述了基于 FedASCL 算法的联邦推荐系统的设计与实现过程。首先，确立了端云协同的分层系统架构，明确了数据流向与隐私边界；其次，重点介绍了联邦协同训练与学术资源推荐两大核心模块的实现逻辑，特别是将冷启动处理与动态元路径机制转化为具体的工程特性；最后，通过系统界面展示与功能测试，验证了系统在功能完备性、推荐准确性以及隐私保护方面的优势。该系统的实现为异构图联邦学习在实际学术推荐场景中的应用提供了有效的工程范例。

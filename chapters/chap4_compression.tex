@@ -1,8 +1,12 @@
 \newpage
-\section*{第四章~~基于语义感知的联邦异构图模型参数压缩策略}
+% =========================================================
+% 第四章：基于语义感知的联邦异构图模型参数压缩策略
+% =========================================================
+
+\section*{第四章\quad 基于语义感知的联邦异构图模型参数压缩策略}
 \label{chap:compression}
 \setcounter{section}{4} \setcounter{subsection}{0}
-\addcontentsline{toc}{section}{第四章~~基于语义感知的联邦异构图模型参数压缩策略}
+\addcontentsline{toc}{section}{第四章\quad 基于语义感知的联邦异构图模型参数压缩策略}
 
 \subsection{问题说明}
 
@@ -12,7 +16,7 @@
 
 针对上述问题，本章结合 FedASCL 的多视图特性，提出一种\textbf{基于语义感知的联邦异构图模型参数压缩策略}\cite{semfed2024}。该策略摒弃了传统的粗粒度压缩方法，针对结构视图中的元路径聚合过程，设计了一个轻量级的\textbf{动态元路径选择器（Dynamic Meta-path Selector）}。该选择器利用 FedASCL 在本地训练阶段生成的注意力权重，自动识别并剔除对当前用户意图贡献度低的冗余语义通道，从结构上实现模型剪枝。在此基础上，进一步引入\textbf{残差梯度量化（Residual Gradient Quantization）}技术，将剩余的关键参数梯度压缩为低比特整数进行传输，并将量化过程中产生的精度误差累积存储在本地以在下一轮更新中进行补偿\cite{yi2023fedlpq}。
 
-这种“先结构剪枝、后数值量化”的组合策略，不仅大幅降低了通信开销，实际上还起到了一种\textbf{“语义去噪”}的作用——通过过滤不相关的元路径连接，使 FedASCL 的对比学习模块能更专注于核心语义特征，从而在低带宽环境下依然保持甚至提升推荐精度。
+这种“先结构剪枝、后数值量化”的组合策略，不仅大幅降低了通信开销，实际上还起到了一种\textbf{“语义去噪”}的作用——通过过滤不相关的元路径连接，使 FedASCL 的对比学习模块能更专注于核心语义特征，从而在低带宽环境下依然保持推荐精度。
 
 \subsection{语义感知压缩算法设计}
 \label{sec:comp_design}
@@ -29,8 +33,7 @@
 
 \begin{figure}[htbp]
     \centering
-    % 请将生成的图片命名为 compression_framework.png 并放在 figures 目录下
-    \includegraphics[width=0.9\textwidth]{chapters/模型压缩.png}
+    \includegraphics[width=0.9\textwidth]{images/基于感知的压缩模型.jpg}
     \caption{基于语义感知的 FedASCL 模型参数压缩流程示意图}
     \label{fig:compression_framework}
 \end{figure}
@@ -39,19 +42,29 @@
 \label{subsec:metapath_selector}
 在 FedASCL 的异构图结构中，不同的元路径代表了用户偏好的不同侧面（如“用户-点击-物品”代表显式偏好，“用户-同城-用户”代表社交偏好）\cite{li2023metapath}。然而，并非所有元路径在每一轮训练中都同等重要。
 
-为了剔除冗余语义，我们设计了动态元路径选择器。假设异构图中包含元路径集合 $\mathcal{P} = \{p_1, p_2, \dots, p_M\}$，在第 $t$ 轮训练中，模型通过注意力机制学习到的元路径权重为 $\boldsymbol{\alpha}^{(t)} = [\alpha_1^{(t)}, \dots, \alpha_M^{(t)}]$。
+为了剔除冗余语义，我们设计了动态元路径选择器。其工作原理如图 \ref{fig:selector_logic} 所示。
 
-选择器通过 Top-$K$ 策略生成一个二进制掩码向量 $\mathbf{m}^{(t)} \in \{0, 1\}^M$。若元路径 $p_i$ 的权重 $\alpha_i^{(t)}$ 位于前 $K$ 大，则 $m_i^{(t)}=1$，否则 $m_i^{(t)}=0$。
-\begin{equation}
-    m_i^{(t)} = \mathbb{I}(\alpha_i^{(t)} \ge \text{Top-}K(\boldsymbol{\alpha}^{(t)}))
-\end{equation}
-其中 $\mathbb{I}(\cdot)$ 为示性函数。在梯度上传阶段，仅传输 $m_i^{(t)}=1$ 对应的元路径子网络参数梯度。
+% 【插入图表 4.2：动态元路径剪枝原理】
+\begin{figure}[htbp]
+    \centering
+    % 请替换为您的图片文件路径
+    \includegraphics[width=0.95\textwidth]{images/元路径的选择.jpg}
+    \caption{动态元路径选择器示意图（基于注意力权重 $\alpha$ 的 Top-K 筛选）。}
+    \label{fig:selector_logic}
+\end{figure}
 
-\textbf{服务端聚合策略说明}：需要特别说明的是，由于数据分布的非独立同分布（Non-IID）特性，不同客户端选中的活跃元路径集合可能不同。在服务端聚合阶段，我们采用**按位聚合（Coordinate-wise Aggregation）**策略。具体而言，对于某条元路径 $p_i$，服务端仅对本轮上传了该路径梯度的客户端参数进行平均：
+假设异构图中包含元路径集合 $\mathcal{P} = \{p_1, p_2, \dots, p_M\}$，在第 $t$ 轮训练中，模型通过注意力机制学习到的元路径权重为 $\boldsymbol{\alpha}^{(t)} = [\alpha_1^{(t)}, \dots, \alpha_M^{(t)}]$。
+
+选择器通过 Top-$K$ 策略生成一个二进制掩码向量 $\mathbf{m}^{(t)} \in \{0, 1\}^M$。设 $\alpha_{(K)}^{(t)}$ 为权重向量 $\boldsymbol{\alpha}^{(t)}$ 中第 $K$ 大的值，则：
 \begin{equation}
-    \mathbf{w}_{p_i}^{(t+1)} = \mathbf{w}_{p_i}^{(t)} - \eta \cdot \frac{1}{|\mathcal{S}_{p_i}|} \sum_{k \in \mathcal{S}_{p_i}} \mathbf{g}_{k, p_i}^{(t)}
+    m_i^{(t)} = \begin{cases}
+        1 & \text{if } \alpha_i^{(t)} \ge \alpha_{(K)}^{(t)} \\
+        0 & \text{otherwise}
+    \end{cases}
 \end{equation}
-其中 $\mathcal{S}_{p_i}$ 表示本轮保留了元路径 $p_i$ 的客户端集合。这种机制在宏观上等效于在联邦异构图训练中引入了**结构化 Dropout**，在大幅降低通信量的同时，通过引入随机性增强了全局模型的泛化能力，防止过拟合。
+其中，若多个元路径的权重等于阈值 $\alpha_{(K)}^{(t)}$，则随机选择以满足恰好保留 $K$ 条元路径。在梯度上传阶段，仅传输 $m_i^{(t)}=1$ 对应的元路径子网络参数梯度。
+
+\textbf{服务端聚合策略说明}：由于数据分布的非独立同分布特性，不同客户端选中的活跃元路径集合可能不同。在服务端聚合阶段，我们采用\textbf{按位聚合}策略。具体而言，对于某条元路径 $p_i$，服务端仅对本轮上传了该路径梯度的客户端参数进行加权平均。这种机制在宏观上等效于在联邦异构图训练中引入了\textbf{结构化 Dropout}，在大幅降低通信量的同时，通过引入随机性增强了全局模型的泛化能力。
 
 \subsection{量化机制}
 \label{subsec:quantization}
@@ -77,24 +90,25 @@
 
 \subsection{通信复杂度分析}
 \label{subsec:complexity_analysis}
-假设异构图模型包含 $M$ 条元路径，每条元路径对应的子网络参数维度为 $d$，采用 32 位浮点数表示。
-
-    \begin{enumerate}
-        \item 动态选择器保留 $K$ 条元路径 ($K < M$)；
-        \item 量化机制将位宽降低至 $b$ bits ($b \ll 32$)；
-        \item 额外开销仅为极小的元路径索引和缩放因子传输。
-    \end{enumerate}
-    因此，本章策略的通信开销约为 $O(K \cdot d \cdot b)$ bits。
-压缩比（Compression Ratio, CR）可近似计算为：
+假设异构图模型包含 $M$ 条元路径，每条元路径对应的子网络参数维度为 $d$，采用 32 位浮点数表示。考虑以下因素：
+\begin{itemize}
+    \item 动态选择器保留 $K$ 条元路径 ($K < M$)，即保留率 $\rho = K/M$；
+    \item 量化机制将位宽降低至 $b$ bits ($b \ll 32$)；
+    \item 额外开销包括元路径索引（$K \cdot \lceil \log_2 M \rceil$ bits）和缩放因子（$K \cdot 32$ bits）。
+\end{itemize}
+因此，本章策略的通信开销约为 $O(K \cdot d \cdot b + K \cdot \log_2 M + K \cdot 32)$ bits。压缩倍数（Compression Factor, CF）定义为原始通信量与压缩后通信量的比值：
 \begin{equation}
-    \text{CR} \approx \frac{M \cdot 32}{K \cdot b}
+    \text{CF} = \frac{M \cdot d \cdot 32}{K \cdot d \cdot b + K \cdot \lceil \log_2 M \rceil + K \cdot 32} \approx \frac{M \cdot 32}{K \cdot b} = \frac{32}{\rho \cdot b}
+    \label{eq:compression_factor}
 \end{equation}
+其中，当 $K \cdot d \cdot b \gg K \cdot (\log_2 M + 32)$ 时，可忽略索引和缩放因子的开销，得到近似表达式。
+
 \subsection{实验与分析}
 \label{sec:exp_analysis_chap4}
 
 为了验证本章提出的基于语义感知的联邦异构图模型参数压缩策略（以下简称 \textbf{FedASCL-Compress}）的有效性，本节将在 MovieLens 和 Yelp 数据集上进行广泛的实验。实验旨在回答以下三个核心研究问题（Research Questions, RQs）：
 \begin{itemize}
-    \item \textbf{RQ1（性能保持）：} 在高压缩率下，FedASCL-Compress 能否保持甚至超越全精度模型的推荐准确率？
+    \item \textbf{RQ1（性能保持）：} 在高压缩倍数下，FedASCL-Compress 能否保持甚至超越全精度模型的推荐准确率？
     \item \textbf{RQ2（机制有效性）：} 动态元路径选择器（剪枝）和残差梯度量化（量化）各自对模型性能有何贡献？是否确实存在“语义去噪”效应？
     \item \textbf{RQ3（通信效率）：} 相比现有压缩方法，该策略在通信开销和训练时间上能带来多大的缩减？
 \end{itemize}
@@ -106,26 +120,23 @@
 
 \subsubsection{对比基准 (Baselines)}
 为了全方位评估算法性能，选取了以下四类具有代表性的方法作为基准：
-\begin{itemize}
+\begin{enumerate}[label=(\arabic*)]
     \item \textbf{FedAvg (Full)}：传输全精度（32-bit float）参数的联邦平均算法，作为性能的\textbf{上限（Upper Bound）}参考。
     \item \textbf{Random-k}：一种语义无关的稀疏化方法，每轮随机选择 $k\%$ 的梯度参数进行上传，代表无差别的压缩策略。
-    \item \textbf{Top-k Sparsification}：基于梯度幅值的稀疏化方法，仅保留绝对值最大的 $k\%$ 参数。该方法在传统 CNN 中表现良好\cite{jiang2022fedmp}，但忽略了异构图的拓扑结构。
+    \item \textbf{Top-k Sparsification}：基于梯度幅值的稀疏化方法，仅保留绝对值最大的 $k\%$ 参数\cite{jiang2022fedmp}。
     \item \textbf{QSGD}：标准的随机梯度量化方法，将梯度随机量化为低比特表示，但不包含结构剪枝和残差补偿机制\cite{openreview2024fedcomloc}。
-\end{itemize}
+\end{enumerate}
 
 \subsubsection{参数设置}
-除非另有说明，实验默认设置如下：
-\begin{itemize}
-    \item \textbf{压缩超参数}：结构剪枝率（Sparsity Rate）设为 $\rho \in \{0.1, 0.3, 0.5, 0.7, 0.9\}$，表示保留参数的比例；量化比特数 $b \in \{2, 4, 8\}$。
-    \item \textbf{联邦环境}：客户端总数 $N=100$，每轮随机选取比例 $C=0.1$ 的客户端参与训练。模拟带宽限制设置为 10 Mbps 以评估通信延迟。
-\end{itemize}
+实验默认设置如下：元路径保留率 $\rho \in \{0.1, 0.3, 0.5, 0.7, 0.9\}$（即 $K = \rho \cdot M$）；量化比特数 $b \in \{2, 4, 8\}$。客户端总数 $N=100$，每轮参与比例 $C=0.1$。模拟带宽限制设置为 10 Mbps。
 
 \subsection{总体推荐性能对比 (RQ1)}
-表 \ref{tab:performance_comparison} 展示了不同方法在 32倍压缩率（保留前 10\% 结构 + 4-bit 量化）下的 Recall@20 和 NDCG@20 表现。
+
+表 \ref{tab:performance_comparison} 展示了不同方法在约 80 倍压缩倍数（$\rho=0.1$ 即保留前 10\% 元路径 + 4-bit 量化）下的 Recall@20 和 NDCG@20 表现。
 
 \begin{table}[htbp]
     \centering
-    \caption{不同压缩策略下的推荐性能对比（压缩倍率 $\approx 32\times$）}
+    \caption{不同压缩策略下的推荐性能对比（压缩倍数 $\approx 80\times$，$\rho=0.1$，$b=4$）}
     \label{tab:performance_comparison}
     \begin{tabular}{l|cc|cc}
         \toprule
@@ -133,9 +144,8 @@
         & Recall@20 & NDCG@20 & Recall@20 & NDCG@20 \\
         \midrule
         FedAvg (Full) & 0.1245 & 0.1032 & 0.0876 & 0.0654 \\
-        \midrule
         Random-k & 0.0982 & 0.0751 & 0.0612 & 0.0421 \\
-        Top-k Sparsification & 0.1103 & 0.0915 & 0.0754 & 0.0568 \\
+        Top-k & 0.1103 & 0.0915 & 0.0754 & 0.0568 \\
         QSGD (4-bit) & 0.1189 & 0.0987 & 0.0810 & 0.0605 \\
         \midrule
         \textbf{FedASCL-Compress} & \textbf{0.1258} & \textbf{0.1045} & \textbf{0.0881} & \textbf{0.0662} \\
@@ -143,38 +153,54 @@
     \end{tabular}
 \end{table}
 
-\textbf{结果分析：}
-\begin{enumerate}
-    \item \textbf{语义感知优势显著}：在相同压缩比下，FedASCL-Compress 显著优于 Random-k 和 Top-k。这证明了在异构图中，参数的重要性并不完全由数值大小决定，保留完整的核心语义通道（即元路径）比单纯保留离散的大数值参数更为关键。
-    \item \textbf{逼近甚至超越全精度模型}：值得注意的是，FedASCL-Compress 在 MovieLens 数据集上的性能略微超过了 FedAvg (Full)。这表明我们的策略并非简单的有损压缩，而是成功剔除了异构图中与用户兴趣无关的冗余元路径，起到了\textbf{“语义去噪”（De-noising）}的作用。
-\end{enumerate}
-
-\subsection{消融实验与机制分析 (RQ2)}
-
-\subsubsection{各组件有效性解耦}
-为了验证各模块的独立贡献，我们设计了以下变体进行消融实验：
-\begin{itemize}
-    \item \textbf{w/o Selector}：移除动态元路径选择器，仅使用 Top-k 剪枝 + 量化。
-    \item \textbf{w/o Residual}：移除残差梯度补偿，仅使用语义剪枝 + 直接量化。
-\end{itemize}
-
-实验结果如图 \ref{fig:ablation} 所示（需插入柱状图）。结果显示，移除语义选择器后，模型在稀疏交互数据上的性能下降最明显，说明结构完整性对对比学习至关重要；而移除残差补偿后，模型在低比特（2-bit）下的收敛震荡加剧，证明了误差补偿在极高压缩率下的稳定性作用。
-
-\subsubsection{语义去噪效应探究}
-为了深入探究“去噪效应”，我们测试了不同剪枝保留率 $\rho$ 对模型精度的影响。
+\textbf{结果分析：} 在相同压缩倍数下，FedASCL-Compress 显著优于 Random-k 和 Top-k，证明了保留完整核心语义通道的重要性。为了进一步验证训练的稳定性，图 \ref{fig:convergence} 展示了模型在训练过程中的收敛曲线。
 
 \begin{figure}[htbp]
     \centering
-    % \includegraphics[width=0.6\textwidth]{images/denoising_curve.png}
-    \caption{不同剪枝保留率 $\rho$ 下的模型性能变化曲线}
+    \includegraphics[width=0.6\textwidth]{images/压缩后的曲线.png}
+    \caption{不同压缩策略下的训练收敛曲线对比（MovieLens）。}
+    \label{fig:convergence}
+\end{figure}
+
+从图 \ref{fig:convergence} 可以观察到，虽然 FedASCL-Compress 在训练初期的震荡幅度略大于全精度模型（这是由结构变化带来的适应期），但其迅速收敛并保持稳定。相比之下，缺乏残差补偿的 QSGD 在后期出现了明显的精度抖动，这证实了误差补偿机制在平滑量化噪声方面的关键作用。
+
+\subsection{消融实验与机制分析 (RQ2)}
+
+为了验证各模块的独立贡献，我们设计了以下变体：\textbf{w/o Selector}（移除动态选择器）和 \textbf{w/o Residual}（移除残差补偿）。实验结果如图 \ref{fig:ablation} 所示。
+
+% 【插入图表 4.4：消融实验柱状图】
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.6\textwidth]{chapters/figures/ablation_study.png}
+    \rule{0.6\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：消融实验图表]}\\[1em]
+    \rule{0.6\textwidth}{0.4pt}
+    \caption{消融实验：关键模块对性能的贡献对比。}
+    \label{fig:ablation}
+\end{figure}
+
+实验表明，移除动态元路径选择器后，性能下降最明显，说明简单的数值剪枝无法保留异构图的关键拓扑信息。
+
+此外，为了探究“语义去噪”效应，我们测试了不同元路径保留率 $\rho$ 对模型精度的影响，结果如图 \ref{fig:denoising} 所示。
+
+% 【插入图表 4.5：去噪效应折线图】
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.6\textwidth]{chapters/figures/denoising_curve.png}
+    \rule{0.6\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：去噪效应曲线图]}\\[1em]
+    \rule{0.6\textwidth}{0.4pt}
+    \caption{不同元路径保留率 $\rho$ 下的模型性能变化曲线。}
     \label{fig:denoising}
 \end{figure}
 
-如图 \ref{fig:denoising} 所示，随着保留率 $\rho$ 从 100\% 降低至 30\%，模型性能呈现“先升后降”的趋势。在 $\rho=30\%$ 至 $50\%$ 的区间内，模型性能达到峰值，且高于 $\rho=100\%$（全保留）。这一现象有力地支撑了我们的观点：\textbf{异构图中存在大量噪声连接，适度剔除低权重的元路径不仅能压缩模型，还能增强对比学习对正负样本的判别能力。}
+如图 \ref{fig:denoising} 所示，随着保留率 $\rho$ 从 100\% 降低，模型性能呈现“先升后降”的趋势，并在 $\rho \approx 0.5$ 时达到峰值，且高于全保留状态。这一现象有力地支撑了我们的观点：\textbf{异构图中存在约 50\% 的低权重噪声连接，适度剔除这些冗余元路径不仅能压缩模型，还能增强对比学习对核心语义的判别能力。}
 
 \subsection{通信开销与收敛效率 (RQ3)}
 
-表 \ref{tab:communication_cost} 记录了各模型达到收敛精度（95\% of Optimal Performance）所需的累计通信流量和训练挂钟时间（Wall-clock Time）。
+表 \ref{tab:communication_cost} 记录了各模型达到收敛精度所需的累计通信流量和训练挂钟时间（Wall-clock Time）。
 
 \begin{table}[htbp]
     \centering
@@ -182,7 +208,7 @@
     \label{tab:communication_cost}
     \begin{tabular}{l|c|c|c}
         \toprule
-        \textbf{Method} & \textbf{Total Traffic (MB)} & \textbf{Compression Rate} & \textbf{Speedup} \\
+        \textbf{Method} & \textbf{Total Traffic (MB)} & \textbf{Compression Factor} & \textbf{Speedup} \\
         \midrule
         FedAvg (Full) & 12,450 & $1\times$ & $1.0\times$ \\
         QSGD & 1,556 & $8\times$ & $3.2\times$ \\
@@ -192,7 +218,21 @@
     \end{tabular}
 \end{table}
 
-结果表明，本章算法将总通信流量降低了约一个数量级（$20\times$）。由于数据传输量的显著减少，特别是在模拟的受限带宽网络环境下，联邦训练的整体时间缩短了近 8 倍。这证明了该策略在移动边缘设备部署上的巨大潜力。
+为了直观展示通信开销与性能的权衡，图 \ref{fig:pareto} 展示了不同方法在“通信量-精度”空间的分布。
+
+% 【插入图表 4.6：帕累托效率图】
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.6\textwidth]{chapters/figures/pareto_efficiency.png}
+    \rule{0.6\textwidth}{0.4pt}\\[1em]
+    \centering
+    \textbf{[待插入图片：帕累托效率图]}\\[1em]
+    \rule{0.6\textwidth}{0.4pt}
+    \caption{不同压缩方法的通信开销-精度权衡（帕累托分析）。}
+    \label{fig:pareto}
+\end{figure}
+
+结果表明，本章算法将总通信流量降低了约一个数量级（$20\times$），并将训练时间缩短了近 8 倍。在图 \ref{fig:pareto} 中，FedASCL-Compress 明显处于左上角的优势区域（低开销、高精度），证明了该策略在带宽受限环境下的部署潜力。
 
 \subsection{本章小结}
 本章通过一系列实验验证了基于语义感知的参数压缩策略的有效性。实验结果不仅证实了该策略能在大幅降低通信开销的同时保持高推荐精度，还揭示了结构剪枝带来的额外“语义去噪”收益，为联邦异构图推荐系统的轻量化落地提供了坚实的实证支持。

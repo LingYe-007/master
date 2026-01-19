@@ -20,10 +20,13 @@ gbpunctin=false,gbnamefmt=lowercase,
 \usepackage{enumerate}
 \usepackage{titletoc}
 \usepackage{titlesec}
-% 设置标题格式：左对齐（正常格式），不要居中拉伸
-\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+% 设置标题格式：section 居中，subsection 及以下左对齐
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{\centering}
+\titleformat{name=\section,numberless}{\normalfont\Large\bfseries}{}{0em}{\centering}
 \titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{name=\subsection,numberless}{\normalfont\large\bfseries}{}{0em}{#1}
 \titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\titleformat{name=\subsubsection,numberless}{\normalfont\normalsize\bfseries}{}{0em}{#1}
 \titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 \titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
 \titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
@@ -125,3 +128,6 @@ gbpunctin=false,gbnamefmt=lowercase,
 \titlecontents{subsubsection}[1em]{\fontsize{12pt}{\baselineskip}\selectfont}{\hspace*{4em}\contentslabel{2em}\ }%
 {}{\titlerule*[0.7pc]{$\cdot$}\contentspage\hspace*{1em}}%
 \renewcommand{\baselinestretch}{1.1}
+% 设置段落首行缩进
+\usepackage{indentfirst}  % 确保每个段落首行都缩进
+\setlength{\parindent}{2em}  % 每个段落首行缩进2个字符
