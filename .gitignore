@@ -43,3 +43,7 @@ output/
 *.tmp
 *.bak
 
+
+# 排除大文件
+*.dmg
+images/Cursor-darwin-*.dmg
