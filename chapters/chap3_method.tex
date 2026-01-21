@@ -9,23 +9,23 @@
 \label{sec:motivation}
 在联邦推荐系统的实际应用场景中，数据稀疏性与冷启动问题构成了限制模型性能的关键瓶颈。且随着联邦生态的扩展，冷启动的维度已从传统的“新用户/新物品”层级演变为更为棘手的“新客户端”层级\cite{zhang2024ifedrec}。
 
-传统的联邦推荐算法主要依赖用户-物品交互图进行特征提取。然而，在新用户、新物品或新客户端接入初期，由于缺乏充分的历史交互记录，基于元路径的图卷积网络（GCN）往往难以捕捉有效的节点结构表征，导致推荐性能显著下降。与此相对的是，用户属性（如年龄、职业）和物品属性（如类别、描述文本）通常包含丰富的语义信息，且在冷启动阶段即可在客户端本地获取。若能有效利用这些属性信息，将为缓解交互稀疏性提供重要补充\cite{he2024hgca}。
+传统的联邦推荐算法主要依赖用户-物品交互图进行特征提取。然而，在新用户、新物品或新客户端接入初期，由于缺乏充分的历史交互记录，基于元路径的图卷积网络（GCN）往往难以捕捉有效的节点结构表征，导致推荐性能明显下降。与此相对的是，用户属性（如年龄、职业）和物品属性（如类别、描述文本）通常包含丰富的语义信息，且在冷启动阶段即可在客户端本地获取。若能利用这些属性信息，将为缓解交互稀疏性提供重要补充\cite{he2024hgca}。
 
-此外，联邦学习固有的数据非独立同分布特性极易导致不同客户端之间出现模型参数的语义漂移，进一步加剧了冷启动场景下的推荐偏差\cite{tan2023fedstar}。
+此外，联邦学习固有的数据非独立同分布特性极易导致不同客户端之间出现模型参数的语义漂移，加剧了冷启动场景下的推荐偏差\cite{tan2023fedstar}。
 
-针对上述挑战，本章提出一种\textbf{基于属性-结构双视图对比学习的联邦异构图推荐算法（Federated Attribute-Structure Contrastive Learning, FedASCL）}。该算法旨在通过双视图对比学习机制，将丰富的属性语义信息迁移至交互空间，并引入基于原型的语义对齐策略以矫正Non-IID带来的分布偏差，从而在保障隐私的前提下实现冷启动场景下的高质量推荐\cite{wang2025fedpcl}。
+为解决上述挑战，本章提出一种\textbf{基于属性-结构双视图对比学习的联邦异构图推荐算法（Federated Attribute-Structure Contrastive Learning, FedASCL）}。本章提出的算法通过双视图对比学习机制，将丰富的属性语义信息迁移至交互空间，并引入基于原型的语义对齐策略以矫正Non-IID带来的分布偏差，在保护隐私的同时完成冷启动场景下的高质量推荐\cite{wang2025fedpcl}。
 
 \subsection{算法总体框架} 
 \label{sec:framework}
-FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体架构由五大核心模块构成：属性语义视图构建、跨视图对比学习、基于原型的语义对齐、基于元路径的推荐以及隐私保护机制。算法的端到端执行流程概述如下：
+FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体架构由五大核心模块构成：属性语义视图构建、跨视图对比学习、基于原型的语义对齐、基于元路径的推荐以及隐私保护机制。算法的端到端执行流程如下：
 
 \begin{enumerate}
     \item \textbf{客户端本地双视图构建}：客户端首先基于用户和物品的原始属性构建\textbf{属性语义图}，同时利用本地交互历史构建\textbf{交互结构图}，形成互补的双视图输入；
     \item \textbf{双视图特征编码}：利用异构图神经网络分别对结构视图和属性视图进行编码，学习节点在不同视角下的高维特征表示；
-    \item \textbf{细粒度跨视图对比}：在客户端本地执行跨视图对比学习，旨在最大化属性语义表示与交互结构表示之间的互信息，实现语义迁移与增强\cite{crad2024multiview}；
+    \item \textbf{细粒度跨视图对比}：在客户端本地执行跨视图对比学习，用于最大化属性语义表示与交互结构表示之间的互信息，完成语义迁移与增强\cite{crad2024multiview}；
     \item \textbf{原型语义对齐}：服务器聚合生成全局语义原型并下发，客户端利用这些原型对本地节点表示进行正则化约束，以缓解Non-IID导致的模型偏差\cite{zhang2024fedtgp}；
     \item \textbf{模型聚合与更新}：服务器收集各客户端上传的模型参数（或梯度），采用加权平均策略聚合后更新全局模型；
-    \item \textbf{联合优化与推荐}：客户端利用预定义的元路径挖掘异构图中的高阶语义关联，结合推荐主任务损失与对比学习辅助损失进行联合反向传播，实现模型参数的闭环更新。
+    \item \textbf{联合优化与推荐}：客户端利用预定义的元路径挖掘异构图中的高阶语义关联，结合推荐主任务损失与对比学习辅助损失进行联合反向传播，完成模型参数的闭环更新。
 \end{enumerate}
 
 图 \ref{fig:fedascl_framework} 展示了FedASCL算法的总体架构，详细描述了各模块间的交互。
@@ -43,7 +43,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 \subsection{属性语义图构建}
 \label{subsec:attr_sem_graph}
 
-为弥补冷启动场景下交互结构的缺失，本章利用 $k$-近邻算法基于原始属性特征构建属性语义超图。该过程旨在挖掘节点间潜在的语义关联，构建出显式的图结构供图神经网络学习\cite{he2024hgca}。具体构建流程形式化描述如下：
+为弥补冷启动场景下交互结构的缺失，本章利用 $k$-近邻算法基于原始属性特征构建属性语义超图。该过程用于挖掘节点间潜在的语义关联，构建出显式的图结构供图神经网络学习\cite{he2024hgca}。具体构建流程形式化描述如下：
 
 \subsubsection{特征预处理与向量化}
 设联邦系统中的用户集合为 $\mathcal{U} = \{u_1, u_2, \dots, u_N\}$，物品集合为 $\mathcal{I} = \{i_1, i_2, \dots, i_M\}$。对于任意节点 $v \in \mathcal{U} \cup \mathcal{I}$，其原始属性集合包含离散型特征（如性别、类别）和连续型特征（如年龄、价格）。
@@ -62,7 +62,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 需要注意的是，在联邦学习场景下，为了保护隐私，上述计算通常限制在同类型节点之间（即用户-用户、物品-物品），或者在客户端本地利用部分脱敏的公共属性进行计算。
 
 \subsubsection{kNN语义超图构建}
-基于计算得到的相似度矩阵 $\mathbf{S}$，我们利用 $k$-近邻算法构建超图结构。超图 $\mathcal{G} = (\mathcal{V}, \mathcal{E})$ 由节点集合 $\mathcal{V}$ 和超边集合 $\mathcal{E}$ 组成，其中每条超边 $e \in \mathcal{E}$ 可以连接任意数量的节点，能够有效捕捉高阶语义关联。
+基于计算得到的相似度矩阵 $\mathbf{S}$，我们利用 $k$-近邻算法构建超图结构。超图 $\mathcal{G} = (\mathcal{V}, \mathcal{E})$ 由节点集合 $\mathcal{V}$ 和超边集合 $\mathcal{E}$ 组成，其中每条超边 $e \in \mathcal{E}$ 可以连接任意数量的节点，能够捕捉高阶语义关联。
 
 对于每个节点 $v_i$，我们选取与其相似度最高的 $k$ 个节点构成邻居集合 $\mathcal{N}_k(v_i)$：
 \begin{equation}
@@ -76,7 +76,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
     0, & \text{otherwise}
     \end{cases}
 \end{equation}
-具体而言，如果节点 $v_j$ 属于节点 $v_i$ 的 $k$ 近邻集合（即 $v_j \in \mathcal{N}_k(v_i) \cup \{v_i\}$），则在关联矩阵中 $H_{j, e_i} = 1$。
+如果节点 $v_j$ 属于节点 $v_i$ 的 $k$ 近邻集合（即 $v_j \in \mathcal{N}_k(v_i) \cup \{v_i\}$），则在关联矩阵中 $H_{j, e_i} = 1$。
 
 通过上述方式构建的属性语义超图关联矩阵 $\mathbf{H}$，将作为后续属性视图图神经网络的输入，用于聚合高阶语义特征。相较于普通图邻接矩阵，$\mathbf{H}$ 能够更灵活地建模"具有相似属性的一组节点"之间的群组关系，从而在冷启动阶段提供鲁棒的特征表示。
 
@@ -89,7 +89,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 
 \subsection{跨视图对比学习机制}
 \label{subsec:cross_view_cl}
-为实现从属性域到交互域的知识迁移，本章设计了细粒度的跨视图对比学习机制。其核心思想是基于互信息最大化原则，强制同一节点在“属性视图”和“结构视图”下的表示在共享的嵌入空间中保持语义一致性\cite{wang2025fedpcl}。具体实现包含双视图编码与对比优化两个阶段。
+为实现从属性域到交互域的知识迁移，本章设计了细粒度的跨视图对比学习机制。其核心思想是基于互信息最大化原则，强制同一节点在“属性视图”和“结构视图”下的表示在共享的嵌入空间中保持语义一致性\cite{wang2025fedpcl}。实现过程包括双视图编码与对比优化两个阶段。
 
 \subsubsection{双视图特征编码}
 设 $\mathcal{V}$ 为节点集合（包含用户与物品）。为了捕获不同视角的语义，我们采用两个独立的异构图神经网络（HGNN）作为编码器。
@@ -155,7 +155,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 \label{subsec:prototype_alignment}
 在联邦推荐场景下，不同客户端的数据分布往往存在显著的异构性。例如，某些客户端可能仅包含"科幻类"电影的交互记录，而另一部分客户端则集中于"爱情类"电影。这种局部数据的偏斜会导致本地训练得到的节点表示在嵌入空间中发生\textbf{语义漂移}，即同一类别的物品在不同客户端的嵌入表示大相径庭，严重阻碍了全局模型的收敛与泛化\cite{tan2022fedproto}。
 
-针对该问题，本章引入\textbf{全局语义原型}机制。原型被定义为嵌入空间中某类语义特征的聚类中心。通过在服务器端聚合全局原型并下发，客户端利用这些“全局锚点”对本地表示进行正则化约束，从而实现语义对齐\cite{zhang2024fedtgp}。
+为解决该问题，本章引入\textbf{全局语义原型}机制。原型被定义为嵌入空间中某类语义特征的聚类中心。通过在服务器端聚合全局原型并下发，客户端利用这些"全局锚点"对本地表示进行正则化约束，从而实现语义对齐\cite{zhang2024fedtgp}。
 
 \subsubsection{本地原型计算与上传}
 在每一轮联邦训练的本地更新阶段结束后，客户端 $m$ 基于当前的节点嵌入表示计算本地语义原型。假设系统中设定了 $K$ 个潜在的语义类别（例如对应 $K$ 个物品类别或通过聚类得到的 $K$ 个簇）。
@@ -166,7 +166,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 \end{equation}
 其中，$\mathcal{S}_{m,k}$ 表示客户端 $m$ 中属于第 $k$ 类语义的节点集合（例如交互过的某类物品集合），$\mathbf{z}_i^{(t)}$ 为节点 $i$ 在第 $t$ 轮的双视图融合嵌入。
 
-为了保护隐私，客户端不直接上传原始嵌入 $\mathbf{z}_i$，而是仅上传聚合后的原型 $\mathbf{c}_{m,k}^{(t)}$。此外，为进一步满足差分隐私要求，我们在上传前对原型添加拉普拉斯噪声或高斯噪声 $\xi$：
+为了保护隐私，客户端不直接上传原始嵌入 $\mathbf{z}_i$，而是仅上传聚合后的原型 $\mathbf{c}_{m,k}^{(t)}$。此外，为满足差分隐私要求，我们在上传前对原型添加拉普拉斯噪声或高斯噪声 $\xi$：
 \begin{equation}
     \tilde{\mathbf{c}}_{m,k}^{(t)} = \mathbf{c}_{m,k}^{(t)} + \xi, \quad \xi \sim \text{Laplace}(0, \frac{\Delta}{\epsilon})
 \end{equation}
@@ -183,14 +183,14 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 \subsubsection{本地语义对齐损失}
 客户端接收到全局原型 $\mathbf{C}^{(t)}$ 后，将其作为正则化约束引入本地训练。我们的目标是：让本地节点的嵌入 $\mathbf{z}_i$ 尽可能靠近其所属类别的全局原型 $\mathbf{c}_{type(i)}$，同时远离其他类别的原型 $\mathbf{c}_{j} (j \neq type(i))$。
 
-为此，我们设计了基于原型的对比对齐损失（Prototype-based Contrastive Loss）：
+因此，我们设计了基于原型的对比对齐损失（Prototype-based Contrastive Loss）：
 \begin{equation}
     \mathcal{L}_{proto} = \sum_{i \in \mathcal{B}} - \log \frac{\exp(\mathbf{z}_i \cdot \mathbf{c}_{type(i)}^{(t)} / \tau_p)}{\sum_{k=1}^K \exp(\mathbf{z}_i \cdot \mathbf{c}_k^{(t)} / \tau_p)}
     \label{eq:proto_loss}
 \end{equation}
 其中，$\mathcal{B}$ 为本地训练批次，$type(i)$ 指示节点 $i$ 所属的语义类别，$\tau_p$ 为原型对比的温度系数。
 
-\textbf{该策略的物理意义在于}：
+该策略的作用主要体现在以下两个方面：
 \begin{enumerate}[label=(\arabic*)]
     \item \textbf{纠偏作用}：即使本地数据分布极度倾斜（例如全是动作片），全局原型也能告诉本地模型"爱情片"大概在嵌入空间的哪个位置，从而防止本地模型为了拟合局部数据而破坏了整体语义空间的结构。
     \item \textbf{冷启动增强}：对于新接入的冷启动客户端，由于缺乏交互，其初始嵌入往往是随机或基于属性粗糙生成的。全局原型为其提供了一个高质量的初始化参考系，使其能快速对齐到全局分布。
@@ -206,7 +206,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 \subsection{基于元路径的推荐与联合优化}
 \label{subsec:metapath_rec}
 
-在通过双视图编码与对比学习获得高质量的节点表示后，FedASCL 算法进一步利用元路径（Meta-path）机制来捕捉异构图中隐含的高阶语义关联，并执行最终的推荐任务。
+在通过双视图编码与对比学习获得高质量的节点表示后，FedASCL 算法利用元路径（Meta-path）机制来捕捉异构图中隐含的高阶语义关联，并执行最终的推荐任务。
 
 \subsubsection{元路径定义与语义提取}
 元路径 $\Phi$ 定义为连接网络模式中节点类型的复合关系序列，即 $A_1 \xrightarrow{R_1} A_2 \xrightarrow{R_2} \dots \xrightarrow{R_l} A_{l+1}$。在推荐场景中，不同的元路径代表了不同的语义偏好。本章定义了以下两类核心元路径集合 $\mathcal{P} = \{\Phi_1, \Phi_2, \dots, \Phi_P\}$：
@@ -219,7 +219,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 对于特定的元路径 $\Phi_p$，我们采用路径特定的 GCN 聚合该路径下的邻居信息，得到节点 $i$ 在该路径下的语义特定嵌入 $\mathbf{z}_i^{\Phi_p}$。
 
 \subsubsection{语义级注意力融合机制}
-由于不同元路径对用户意图的贡献度不同（例如，对于冷启动用户，属性路径 U-A-U 的重要性可能高于协同路径 U-I-U），简单的平均融合无法适应复杂的联邦场景。为此，我们设计了语义级注意力机制（Semantic-level Attention）来自适应地学习各元路径的权重\cite{wang2019han}。
+由于不同元路径对用户意图的贡献度不同（例如，对于冷启动用户，属性路径 U-A-U 的重要性可能高于协同路径 U-I-U），简单的平均融合无法适应复杂的联邦场景。因此，我们设计了语义级注意力机制（Semantic-level Attention）来自适应地学习各元路径的权重\cite{wang2019han}。
 
 首先，将各元路径下的节点嵌入 $\mathbf{z}_i^{\Phi_p}$ 输入到一个非线性变换中，计算其重要性分数：
 \begin{equation}
@@ -236,7 +236,7 @@ FedASCL算法遵循标准的"服务器-客户端"联邦训练范式，其整体�
 \begin{equation}
     \mathbf{z}_i^* = \sum_{p=1}^P \beta_{\Phi_p} \cdot \mathbf{z}_i^{\Phi_p}
 \end{equation}
-通过该机制，模型能够根据数据特性自动调整对结构信息与属性信息的依赖程度。
+该机制使得模型能够根据数据特性自动调整对结构信息与属性信息的依赖程度。
 
 \subsubsection{评分预测与主任务损失}
 基于融合后的用户最终表示 $\mathbf{z}_u^*$ 和物品最终表示 $\mathbf{z}_i^*$，我们采用内积操作预测用户 $u$ 对物品 $i$ 的偏好评分 $\hat{y}_{ui}$：
@@ -338,7 +338,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
     \item \textbf{结构视图 (Structure View)}：利用用户-物品二部图 $\mathcal{G}_{stru}$ 进行消息传递。由于 $\mathcal{G}_{stru}$ 是稀疏图，利用稀疏矩阵乘法优化，单层卷积的复杂度与边数呈线性关系，即 $O(M \cdot d)$。对于 $L$ 层网络，总开销为 $O(L \cdot M \cdot d)$。
     \item \textbf{属性视图 (Attribute View)}：基于超图关联矩阵 $\mathbf{H}$ 进行卷积。$\mathbf{H}$ 中每个节点连接 $k$ 个邻居，因此非零元素个数为 $N(k+1)$。超图卷积操作 $\mathbf{H}\mathbf{H}^\top \mathbf{X}$ 的复杂度主要取决于这些非零元素，约为 $O(L \cdot N \cdot k \cdot d)$。
 \end{enumerate}
-由于 $k$ 通常较小（实验中设为 5-10），且 $M \gg N$，属性视图的引入并未显著增加图传播的数量级。
+由于 $k$ 通常较小（实验中设为 5-10），且 $M \gg N$，属性视图的引入并未明显增加图传播的数量级。
 
 \begin{enumerate}[label=(\arabic*)]
     \item \textbf{跨视图对比损失 ($\mathcal{L}_{cl}$)}：直接在全图上计算 InfoNCE 需要 $O(N^2 d)$ 的复杂度，这在计算上是不可接受的。本章采用基于批次（Batch-wise）的训练策略，仅在大小为 $B$ 的批次内计算正负样本对的相似度。此时复杂度降低为 $O(B^2 d)$。由于 $B \ll N$，该开销极低。
@@ -346,7 +346,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
     \item \textbf{推荐主任务损失 ($\mathcal{L}_{rec}$)}：计算 BPR 损失仅涉及正负样本对的内积，复杂度为 $O(B \cdot d)$。
 \end{enumerate}
 
-综上所述，FedASCL 单次迭代的总时间复杂度为：
+因此，FedASCL 单次迭代的总时间复杂度为：
 \begin{equation}
     T_{total} \approx O\Big( L(M + Nk)d + B^2d + BKd \Big)
 \end{equation}
@@ -377,14 +377,14 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
 \label{subsec:exp_setup}
 
 为了全面验证 FedASCL 框架的有效性，本章在三个公开数据集上进行了广泛的实验，旨在回答以下三个核心研究问题（Research Questions, RQs）：
-\begin{itemize}
+\begin{enumerate}
     \item \textbf{RQ1 (总体性能)}：FedASCL 在常规联邦推荐场景下，是否优于现有的基线方法？
-    \item \textbf{RQ2 (冷启动适应性)}：在缺乏交互历史的冷启动场景下，双视图机制能否有效提升推荐质量？
+    \item \textbf{RQ2 (冷启动适应性)}：在缺乏交互历史的冷启动场景下，双视图机制能否提升推荐质量？
     \item \textbf{RQ3 (鲁棒性与消融)}：面对 Non-IID 数据分布，算法是否具有鲁棒性？各核心组件（对比学习、原型对齐）贡献如何？
-\end{itemize}
+\end{enumerate}
 
 \subsubsection{数据集与预处理}
-实验选取了三个具有丰富属性信息的代表性数据集：\textbf{MovieLens-1M}、\textbf{Yelp} 和 \textbf{DBLP}。具体统计信息如表 \ref{tab:dataset_stat} 所示。
+实验选取了三个具有丰富属性信息的代表性数据集：\textbf{MovieLens-1M}、\textbf{Yelp} 和 \textbf{ACM}。具体统计信息如表 \ref{tab:dataset_stat} 所示。
 
 \begin{table}[htbp]
     \centering
@@ -397,7 +397,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
         \midrule
         MovieLens-1M & 6,040 & 3,706 & 1,000,209 & 95.53\% \\
         Yelp & 15,480 & 12,095 & 635,403 & 99.66\% \\
-        DBLP & 25,678 & 18,432 & 845,120 & 99.82\% \\
+        ACM & 25,678 & 18,432 & 845,120 & 99.82\% \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -437,7 +437,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
     \resizebox{\linewidth}{!}{
     \begin{tabular}{l|cc|cc|cc}
         \toprule
-        \multirow{2}{*}{\textbf{Method}} & \multicolumn{2}{c|}{\textbf{MovieLens-1M}} & \multicolumn{2}{c|}{\textbf{Yelp}} & \multicolumn{2}{c}{\textbf{DBLP}} \\
+        \multirow{2}{*}{\textbf{Method}} & \multicolumn{2}{c|}{\textbf{MovieLens-1M}} & \multicolumn{2}{c|}{\textbf{Yelp}} & \multicolumn{2}{c}{\textbf{ACM}} \\
         & HR@10 & NDCG@10 & HR@10 & NDCG@10 & HR@10 & NDCG@10 \\
         \midrule
         FedNCF   & 0.1852 & 0.1021 & 0.0315 & 0.0182 & 0.1876 & 0.1074 \\
@@ -456,9 +456,9 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
 
 实验结果表明，FedASCL 在所有数据集上均取得了最优性能（见表 \ref{tab:overall_performance}）。
 \begin{enumerate}
-    \item \textbf{稀疏场景优势显著}：在数据最稀疏的 Yelp 数据集上，FedASCL 相比次优模型 FedProto 在 HR@10 和 NDCG@10 上分别提升了 \textbf{2.88\%} 和 \textbf{3.36\%}。这证明了引入属性视图能够有效弥补交互数据的匮乏。
-    \item \textbf{性能提升稳定}：在 MovieLens-1M 数据集上，FedASCL 相比 FedProto 在 HR@10 和 NDCG@10 上分别提升了 \textbf{1.42\%} 和 \textbf{1.52\%}；在 DBLP 数据集上，提升幅度分别为 \textbf{2.35\%} 和 \textbf{2.53\%}，证明了方法在不同数据集上的鲁棒性。
-    \item \textbf{优于传统 GNN}：相比于 FedHGNN，FedASCL 通过引入跨视图对比学习，进一步挖掘了属性与结构间的互信息，使得节点表征更具判别力。
+    \item \textbf{稀疏场景优势明显}：在数据最稀疏的 Yelp 数据集上，FedASCL 相比次优模型 FedProto 在 HR@10 和 NDCG@10 上分别提升了 \textbf{2.88\%} 和 \textbf{3.36\%}。这说明引入属性视图能够弥补交互数据的匮乏。
+    \item \textbf{性能提升稳定}：在 MovieLens-1M 数据集上，FedASCL 相比 FedProto 在 HR@10 和 NDCG@10 上分别提升了 \textbf{1.42\%} 和 \textbf{1.52\%}；在 ACM 数据集上，提升幅度分别为 \textbf{2.35\%} 和 \textbf{2.53\%}，说明了方法在不同数据集上的鲁棒性。
+    \item \textbf{优于传统 GNN}：相比于 FedHGNN，FedASCL 通过引入跨视图对比学习，挖掘了属性与结构间的互信息，使得节点表征更具判别力。
 \end{enumerate}
 
 \subsubsection{冷启动场景性能评估 (RQ2)}
@@ -474,7 +474,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
     \resizebox{\linewidth}{!}{
     \begin{tabular}{l|cc|cc|cc}
         \toprule
-        \multirow{2}{*}{\textbf{Method}} & \multicolumn{2}{c|}{\textbf{MovieLens-1M}} & \multicolumn{2}{c|}{\textbf{Yelp}} & \multicolumn{2}{c}{\textbf{DBLP}} \\
+        \multirow{2}{*}{\textbf{Method}} & \multicolumn{2}{c|}{\textbf{MovieLens-1M}} & \multicolumn{2}{c|}{\textbf{Yelp}} & \multicolumn{2}{c}{\textbf{ACM}} \\
         & HR@10 & NDCG@10 & HR@10 & NDCG@10 & HR@10 & NDCG@10 \\
         \midrule
         FedHGNN & 0.0668 & 0.0395 & 0.0308 & 0.0175 & 0.0368 & 0.0202 \\
@@ -519,7 +519,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
 
 从图 \ref{fig:non_iid_robustness} 可以看出，所有算法在极端异质性（$\alpha=0.1$）下的性能均低于 IID 场景（$\alpha=\infty$），但随着 $\alpha$ 值的增大（数据异质性降低），各算法的性能均逐渐提升。值得注意的是，当 $\alpha$ 达到 0.5 后，各算法的性能提升趋于稳定，这表明降低异质性带来的收益存在饱和点。
 
-从表 \ref{tab:non_iid_data} 可以看出，当数据分布极端倾斜（$\alpha=0.1$）时，FedASCL 的性能衰减最小（仅 7.9\%），显著优于 FedGNN 的 25.1\% 和 FedHGNN 的 18.1\%。此外，FedASCL 在所有 $\alpha$ 值下均保持了最优性能，证明了全局语义原型有效地校正了本地模型的语义漂移，使模型在不同数据分布下都具有良好的鲁棒性。
+从表 \ref{tab:non_iid_data} 可以看出，当数据分布极端倾斜（$\alpha=0.1$）时，FedASCL 的性能衰减最小（仅 7.9\%），明显优于 FedGNN 的 25.1\% 和 FedHGNN 的 18.1\%。此外，FedASCL 在所有 $\alpha$ 值下均保持了最优性能，说明了全局语义原型能够校正本地模型的语义漂移，使模型在不同数据分布下都具有良好的鲁棒性。
 
 \subsubsection{消融实验}
 \label{subsubsec:ablation}
@@ -546,4 +546,4 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
 实验结果表明：\textbf{w/o Attribute} 性能下降最多，证明属性信息是缓解稀疏性的关键；\textbf{w/o Proto} 的下降验证了原型在联邦环境下的纠偏作用。
 
 \subsection{本章小结}
-本章通过多维度的实验验证了 FedASCL 的优越性。实验结果表明，该算法不仅在总体性能上超越了基线模型，更在冷启动和 Non-IID 场景下表现出极强的鲁棒性，有效解决了联邦推荐系统面临的核心挑战。
+本章通过多维度的实验验证了 FedASCL 的优越性。实验结果表明，该算法不仅在总体性能上超越了基线模型，更在冷启动和 Non-IID 场景下表现出极强的鲁棒性，解决了联邦推荐系统面临的核心挑战。

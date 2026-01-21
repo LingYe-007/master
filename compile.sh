@@ -68,10 +68,15 @@ if [ -f "$OUT/main.pdf" ]; then
     echo "=========================================="
     echo "✓ 编译成功！"
     echo "=========================================="
-    echo "PDF 文件: $OUT/main.pdf"
-    ls -lh "$OUT/main.pdf" | awk '{print "文件大小:", $5}'
+    
+    # 重命名PDF文件
+    FINAL_NAME="毕业论文-伍勋高-202333248.pdf"
+    mv "$OUT/main.pdf" "$OUT/$FINAL_NAME"
+    
+    echo "PDF 文件: $OUT/$FINAL_NAME"
+    ls -lh "$OUT/$FINAL_NAME" | awk '{print "文件大小:", $5}'
     echo ""
-    echo "可以在 Cursor 中打开 output/main.pdf 查看"
+    echo "可以在 Cursor 中打开 output/$FINAL_NAME 查看"
 else
     echo "=========================================="
     echo "✗ 编译失败"

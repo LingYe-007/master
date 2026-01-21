@@ -9,7 +9,7 @@
 本章将说明本文研究涉及的核心理论与关键技术。首先，介绍推荐系统的基本概念、分类及常用评价指标，并重点阐述图神经网络（GNN）基本原理及其在异构图与超图推荐中的应用机制；其次，概述联邦学习的架构分类，剖析模型压缩策略在联邦场景下的应用；最后，介绍对比学习范式和其在图结构视图增强及缓解数据稀疏性方面的应用。
 
 \subsection{推荐系统基础}
-随着信息技术的飞速发展，互联网数据呈现指数级增长趋势，用户面临着从海量数据中筛选感兴趣内容的巨大挑战，即“信息过载”问题。推荐系统（Recommender System, RS）作为解决这一问题的核心技术手段，已广泛应用于电子商务、社交媒体及内容分发平台\cite{zhang2024social}。
+互联网数据的指数级增长使得用户面临"信息过载"问题。推荐系统（Recommender System, RS）作为解决这一问题的核心技术手段，已广泛应用于电子商务、社交媒体及内容分发平台\cite{zhang2024social}。
 
 \subsubsection{推荐系统的目标}
 推荐系统的核心目标是在没有明确用户检索指令的情况下，通过分析用户的历史行为数据（如点击、购买、评分）及辅助属性信息，挖掘用户潜在的兴趣偏好。从数学建模的角度来看，推荐任务通常被形式化为\textbf{矩阵补全（Matrix Completion）}或\textbf{链接预测（Link Prediction）}问题。
@@ -30,7 +30,7 @@ y_{uv} = \begin{cases}
 上述交互矩阵 $\mathbf{Y}$ 可等价地映射为一个\textbf{用户-物品二部图（User-Item Bipartite Graph）} $\mathcal{G} = (\mathcal{N}, \mathcal{E})$。其中，节点集 $\mathcal{N} = \mathcal{U} \cup \mathcal{V}$ 包含了所有的用户和物品，边集 $\mathcal{E} = \{(u, v) | y_{uv} = 1\}$ 则表示观测到的交互关系。
 在此视角下，推荐任务转化为\textbf{链接预测}问题：即根据图中已有的拓扑结构和节点特征，预测在用户节点 $u$ 和物品节点 $v$ 之间是否存在一条潜在的边（Link），并计算其连接概率 $p(u, v)$。根据链接概率判断用户和物品之间是否存在真实关系\cite{he2020lightgcn}。
 
-综上所述，无论是预测矩阵评分 $\hat{y}_{uv}$ 还是预测连接概率 $p(u, v)$，最终系统都会根据预测值对物品进行 Top-K 排序并推荐给目标用户。
+无论是预测矩阵评分 $\hat{y}_{uv}$ 还是预测连接概率 $p(u, v)$，最终系统都会根据预测值对物品进行 Top-K 排序并推荐给目标用户。
 
 \subsubsection{推荐系统的分类}
 根据算法原理及数据利用方式的不同，现有的推荐系统主要可以分为以下几种常见类型：
@@ -41,15 +41,15 @@ y_{uv} = \begin{cases}
     
     协同过滤是推荐系统发展历程中最经典且应用最广泛的方法之一。其核心思想基于“群体智慧”，即利用用户的历史行为数据（如点击、购买、评分）来挖掘用户或物品之间的相关性，主要分为基于用户的协同过滤和基于物品的协同过滤两种形式。
     
-    \begin{itemize}[wide, labelwidth=!, labelindent=\parindent]
-        \item \textbf{基于用户的协同过滤（UserCF）：} UserCF 的基本假设是“兴趣相似的用户往往喜欢相同的物品”。其算法流程首先是通过历史行为计算目标用户与其他用户的相似度，找到与目标用户兴趣最相近的邻居群体（Nearest Neighbors），然后将邻居群体偏好但目标用户尚未交互的物品进行推荐。
+    \begin{enumerate}[wide, labelwidth=!, labelindent=\parindent]
+        \item \textbf{基于用户的协同过滤（UserCF）：} UserCF 的基本假设是"兴趣相似的用户往往喜欢相同的物品"。其算法流程首先是通过历史行为计算目标用户与其他用户的相似度，找到与目标用户兴趣最相近的邻居群体（Nearest Neighbors），然后将邻居群体偏好但目标用户尚未交互的物品进行推荐。
         
         如图 \ref{fig:usercf} 所示：用户 A 和用户 C 都对物品 A（篮球）和物品 C（足球）表现出兴趣，通过相似度计算可认为两者具有相似的偏好。由于用户 C 还交互过物品 D（电子产品），因此推断用户 A 也可能对物品 D 感兴趣。
 
         \item \textbf{基于物品的协同过滤（ItemCF）：} 与 UserCF 不同，ItemCF 从物品的角度出发，其基本假设是"用户往往喜欢与其过去喜欢的物品相似的物品"。该算法首先计算物品之间的相似度，当用户对某物品产生行为后，系统会向其推荐与该物品相似度较高的其他物品。
 
         如图 \ref{fig:itemcf} 所示：物品 A（篮球）和物品 C（足球）因被多位共同用户交互而被判定为相似物品。当系统检测到用户 A 对物品 A 有历史交互时，便会基于物品间的相似性，将物品 C 推荐给用户 A。
-\end{itemize}
+\end{enumerate}
 
 \begin{figure}[H]
     \centering
@@ -65,7 +65,7 @@ y_{uv} = \begin{cases}
     \label{fig:itemcf}
 \end{figure}
 
-    \textbf{优缺点分析：} 协同过滤算法具有模型通用性强、无需领域知识等优点。然而，其严重依赖历史交互数据，在面对\textbf{数据稀疏（Data Sparsity）}问题时推荐质量会显著下降；同时，对于无历史行为的新用户或新物品，存在严重的\textbf{冷启动（Cold Start）}问题\cite{qiao2018coldstart}。
+    \textbf{优缺点分析：} 协同过滤算法具有模型通用性强、无需领域知识等优点。然而，其严重依赖历史交互数据，在面对\textbf{数据稀疏（Data Sparsity）}问题时推荐质量会明显下降；同时，对于无历史行为的新用户或新物品，存在严重的\textbf{冷启动（Cold Start）}问题\cite{qiao2018coldstart}。
 
     % --- (2) 矩阵分解 ---
     \item \textbf{矩阵分解方法（Matrix Factorization, MF）}
@@ -84,11 +84,11 @@ y_{uv} = \begin{cases}
     % --- (3) 深度学习 ---
     \item \textbf{深度学习方法}
     
-    随着深度学习技术的发展，神经网络被广泛应用于提升推荐系统的特征表达能力与泛化能力。常见的方法包括：
-    \begin{itemize}
+    深度学习技术的发展推动了神经网络在推荐系统中的应用。常见的方法包括：
+    \begin{enumerate}
         \item \textbf{神经协同过滤（NCF）：} 利用多层感知机（MLP）替代矩阵分解中的简单内积操作，以拟合用户与物品之间复杂的非线性交互函数。
         \item \textbf{序列推荐：} 利用循环神经网络（RNN）、Transformer 或 BERT 等模型建模用户行为的时间序列特征，捕捉用户兴趣的动态演化\cite{zhao2024multiinterest}。
-    \end{itemize}
+    \end{enumerate}
 
     % --- (4) 基于图的推荐 ---
     \item \textbf{基于图的推荐系统}
@@ -159,7 +159,7 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
     \mathbf{e}_u^{(l)} = \text{UPDATE}^{(l)} \left( \mathbf{e}_u^{(l-1)}, \mathbf{m}_{\mathcal{N}_u}^{(l)} \right)
     \label{eq:gnn_update}
 \end{equation}
-通过堆叠 $L$ 层 GNN 网络，节点 $u$ 的最终表示 $\mathbf{e}_u^{(L)}$ 实际上融合了其 $L$ 跳（L-hop）邻居的信息。这种机制使得模型能够显式地编码高阶协同信号（High-order Connectivity）。例如，通过“用户A-物品1-用户B-物品2”的路径，模型可以挖掘出具有相似偏好的潜在用户群体，从而有效缓解数据稀疏性问题，提升推荐的准确性\cite{wang2019kgat}。
+通过堆叠 $L$ 层 GNN 网络，节点 $u$ 的最终表示 $\mathbf{e}_u^{(L)}$ 实际上融合了其 $L$ 跳（L-hop）邻居的信息。这种机制使得模型能够显式地编码高阶协同信号（High-order Connectivity）。例如，通过“用户A-物品1-用户B-物品2”的路径，模型可以挖掘出具有相似偏好的潜在用户群体，缓解了数据稀疏性问题，提升了推荐的准确性\cite{wang2019kgat}。
 
 \begin{figure}[H]
     \centering
@@ -170,13 +170,13 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 
 \subsubsection{同构图和异构图}
 
-\begin{itemize}
+\begin{enumerate}
     \item \textbf{同构图（Homogeneous Graph）}：
     
     同构图是图结构中最简单的形式，图中所有的顶点都属于同一类型，并且所有的边也都属于同一类型。同构图示例如图 \ref{fig:homo_graph} 所示，图中的顶点具有相同的语义和属性集合，边也具有相同的语义和属性集合。
     
     用数学语言描述，设图 $G=(V, E)$，其中 $V$ 是顶点的集合，$E$ 是边的集合。对于任意的顶点 $u, v \in V$，它们具有相同的类型；对于任意的边 $(u, v) \in E$，这些边也具有相同的类型。
-\end{itemize}
+\end{enumerate}
 
 \begin{figure}[H]
     \centering
@@ -185,18 +185,18 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
     \label{fig:homo_graph}
 \end{figure}
 
-\begin{itemize}
+\begin{enumerate}
     \item \textbf{异构图（Heterogeneous Graph）}：
     
     异构图是指图中存在多种类型的节点和边，每种类型可能代表不同的实体或关系。在异构图中，节点和边的不同属性赋予了图更丰富的语义信息\cite{yan2024fedhgnn}。
     
     形式化地，给定异构图 $\mathcal{G} = (\mathcal{V}, \mathcal{E}, \mathcal{A}, \mathcal{R})$，其中 $\mathcal{V}$ 是顶点集，$\mathcal{E}$ 是边集，$\mathcal{A}$ 是顶点类型集合，$\mathcal{R}$ 是边类型集合。异构图包含两个映射函数：
-    \begin{itemize}
+    \begin{enumerate}
         \item 顶点类型映射函数 $\phi: \mathcal{V} \rightarrow \mathcal{A}$，将顶点映射到一个顶点类型集合 $\mathcal{A}$ 中的某一类型；
         \item 边类型映射函数 $\psi: \mathcal{E} \rightarrow \mathcal{R}$，将边映射到一个边类型集合 $\mathcal{R}$ 中的某一类型。
-    \end{itemize}
+    \end{enumerate}
     且满足 $|\mathcal{A}| > 1$ 或者 $|\mathcal{R}| > 1$（即至少存在两种顶点类型或者两种边类型）。
-\end{itemize}
+\end{enumerate}
 现实世界的网络结构往往呈现出高度的复杂性，包含多种类型的实体及它们之间错综复杂的交互关系。相比于传统的单一视图建模，采用异构图能够完整保留数据的结构异质性（Structural Heterogeneity），从而更精准地捕捉实体间深层次的语义关联与依赖信息。
 
 \subsubsection{基于元路径的推荐}
@@ -219,9 +219,9 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 
 \subsection{联邦学习概述}
 
-联邦学习是由谷歌（Google）于 2016 年首次提出的一种新兴分布式机器学习范式，旨在打破“数据孤岛”并有效保护用户隐私\cite{li2025openfgl}。
+联邦学习是由谷歌（Google）于 2016 年首次提出的一种新兴分布式机器学习范式，旨在打破"数据孤岛"并保护用户隐私\cite{li2025openfgl}。
 
-其核心理念在于“\textbf{数据不动模型动}”，即在不共享原始数据、保护数据隐私的前提下，利用分布在不同客户端（Clients）的数据协同训练出一个全局模型。联邦学习通常采用\textbf{客户端-服务器（Client-Server）}架构\cite{deng2023survey}。
+其核心理念在于"\textbf{数据不动模型动}"，即在不共享原始数据、保护数据隐私的同时，利用分布在不同客户端（Clients）的数据协同训练出一个全局模型。联邦学习通常采用\textbf{客户端-服务器（Client-Server）}架构\cite{deng2023survey}。
 
 一轮标准的联邦学习训练包含以下四个步骤：
 
@@ -245,11 +245,11 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 \end{figure}
 
 同时根据参与方数据的分布特性（即数据样本与特征空间的重叠情况），联邦学习通常被分为横向联邦学习、纵向联邦学习和联邦迁移学习三类\cite{guo2024fedgnn}。
-\begin{itemize}
+\begin{enumerate}
     \item \textbf{横向联邦学习（Horizontal FL）：} 主要适用于参与方数据特征空间重叠较多、但样本空间重叠较少的场景。这意味着不同参与方拥有相似的业务场景或数据结构，但服务于不同的用户群体。
     
     例如：不同的高校电子图书馆两者拥有相似的数据特征（均包含学生的论文下载记录、检索关键词、浏览时长等），但各自服务于不同的学生群体。通过横向联邦学习，双方可以联合利用更大规模的阅读行为数据，训练出泛化能力更强的论文推荐模型。
-\end{itemize}
+\end{enumerate}
 
 \begin{figure}[H]
     \centering
@@ -258,12 +258,11 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
     \label{fig:horz_fl}
 \end{figure}
 
-\begin{itemize}
-
+\begin{enumerate}
     \item \textbf{纵向联邦学习（Vertical FL）：} 主要适用于参与方数据样本空间重叠较多、但特征空间重叠较少的场景。这种情况常见于同一地区的不同机构之间，它们拥有同一批用户，但掌握该用户不同维度的属性数据。
     
-    例如：一所高校的电子图书馆与该校的科研管理系统。两者服务于同一批师生用户（样本相同），但图书馆掌握用户的论文下载与阅读记录，而科研系统掌握用户的论文发表情况与课题申报信息。通过纵向联邦学习，可以将用户的“阅读输入”与“科研输出”数据相结合，构建画像更立体的推荐模型，向用户推荐更符合其科研产出方向的文献\cite{wang2025p4gcn}。
-\end{itemize}
+    例如：一所高校的电子图书馆与该校的科研管理系统。两者服务于同一批师生用户（样本相同），但图书馆掌握用户的论文下载与阅读记录，而科研系统掌握用户的论文发表情况与课题申报信息。通过纵向联邦学习，可以将用户的"阅读输入"与"科研输出"数据相结合，构建画像更立体的推荐模型，向用户推荐更符合其科研产出方向的文献\cite{wang2025p4gcn}。
+\end{enumerate}
 
 \begin{figure}[H]
     \centering
@@ -272,12 +271,11 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
     \label{fig:vert_fl}
 \end{figure}
 
-\begin{itemize}
-
+\begin{enumerate}
     \item \textbf{迁移联邦学习（Transfer FL）：} 主要适用于参与方数据样本空间与特征空间均存在较大差异，且少量重叠的场景，解决单边数据稀缺或标签不足的问题。 
     
     例如：英文计算机科学（CS）论文数据库与新兴的中文生物医学论文平台。两者的用户群体和数据特征均存在巨大差异。通过联邦迁移学习，可以在两者仅有的交叉学科（如生物信息学）重叠数据上进行对齐，将CS数据库中成熟的引文图谱结构知识迁移到生物医学平台，解决新兴平台因数据稀缺导致的推荐冷启动问题\cite{li2025fedcsr, chen2024fedgcdr}。
-\end{itemize}
+\end{enumerate}
 
 \begin{figure}[H]
     \centering
@@ -327,9 +325,9 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 
 \begin{enumerate}[label=(\arabic*)]
     \item \textbf{训练后量化 (Post-Training Quantization, PTQ)}：
-    PTQ 是在模型训练完成并收敛后进行的。它通常只需要少量的校准数据（Calibration Data）来计算量化参数（如缩放因子和零点），无需对整个模型进行重新训练。该方法实施简单、计算成本低，但在极低比特（如 4-bit 以下）场景下可能会导致较大的精度下降\cite{zeng2025feddt}。
+    PTQ 是在模型训练完成并收敛后进行的。它通常只需要少量的校准数据（Calibration Data）来计算量化参数（如缩放因子和零点），无需对整个模型进行重新训练。该方法实施简单、计算成本低，但在极低比特（如 4-bit 以下）情况下可能会导致较大的精度下降\cite{zeng2025feddt}。
 
     \item \textbf{量化感知训练 (Quantization-Aware Training, QAT)}：
     QAT 将量化操作引入到模型的训练或微调过程中。通过在训练的前向传播中模拟量化引入的误差（Quantization Noise），并利用直通估计器（Straight-Through Estimator, STE）在反向传播中更新梯度，使模型能够适应低精度表示。
 \end{enumerate}
-模型剪枝侧重于减少参数数量，而模型量化侧重于降低参数精度。在实际部署中，这两种技术通常是正交且互补的，常被组合使用（例如“先剪枝后量化”）以在保证精度的前提下最大化模型的压缩比\cite{openreview2024fedcomloc}。
+模型剪枝侧重于减少参数数量，而模型量化侧重于降低参数精度。在实际部署中，这两种技术通常是正交且互补的，常被组合使用（例如"先剪枝后量化"）以在保证精度的同时最大化模型的压缩比\cite{openreview2024fedcomloc}。
