@@ -1,4 +1,6 @@
-\documentclass[oneside,12pt,reqno,CJK]{ctexart}
+% 设置正文字体为小四号宋体（12pt对应小四号）
+\documentclass[oneside,12pt,reqno]{ctexart}
+% ctexart默认使用宋体，12pt对应小四号
 \input{images/option}
 \renewcommand{\textfraction}{0.15}    % 正文至少占页面的15%（避免图片占满整页）
 % \renewcommand{\floatpagefraction}{0.8}% 图片占页面80%以上才会单独占页
@@ -31,14 +33,29 @@
 
 
 % --- 3. 页面设置 (参考西北大学标准) ---
+% 版心仅由此处 geometry 统一设置，option.tex 中不再重复以免冲突
 \geometry{left=3cm, right=2.5cm, top=3cm, bottom=2.5cm}
-
+\setlength{\headheight}{14.5pt}  % 消除 fancyhdr 页眉高度过小警告
 
 % --- 4. 页眉页脚设置 ---
+% 页眉统一：宋体五号（10.5pt），水平居中（目录、图目录、表目录等均同）
+\newcommand{\headerfont}{\wuhao\songti}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[C]{\small 西北大学硕士毕业生论文}  % 页眉：水平居中
+\fancyhead[C]{\headerfont\leftmark}
+\renewcommand{\headrulewidth}{0.4pt}
 \fancyfoot[C]{\small \thepage}
+% plain 样式同样使用宋体五号页眉
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[C]{\headerfont\leftmark}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \fancyfoot[C]{\small \thepage}
+}
+% 每章结束后留一页空页
+\newcommand{\chapterblank}{\clearpage\thispagestyle{empty}\null\newpage}
+% ctexart 无 \mainmatter，定义为空操作以免报错
+\providecommand{\mainmatter}{}
 
 % --- 信息录入 ---
 \title{基于对比学习的联邦异构图推荐算法与系统研究}
@@ -46,12 +63,14 @@
 \date{2025年6月}
 
 \begin{document}
+\let\maketitle\relax  % 不输出标题页，避免摘要前出现 *、[1]¹ 等
+
 
 % =========================================================
 %   前置部分 (Front Matter)
-%   特点：页码为罗马数字 (i, ii, iii...)
+%   特点：页码为罗马数字 (i, ii, iii...)；不用 \frontmatter 避免摘要前出现多余空白与符号
 % =========================================================
-\frontmatter 
+% \frontmatter  % 已注释：避免首页出现 * [1]1 等
 
 % 1. 封面页（已删除）
 % \input{chapters/titlePage}
@@ -63,11 +82,26 @@
 \input{chapters/abstract}
 
 % 4. 目录       % 自动生成目录
+% 设置目录深度为4级（显示章、节、条、段）
+\setcounter{tocdepth}{4}
 \input{TableofContents}  % 目录页（包含 \tableofcontents）
 \newpage
-\listoffigures          % 图目录
+% 图目录
+\markboth{图\quad 目\quad 录}{图\quad 目\quad 录}
+\begin{center}
+\sanhao\heiti 图~~~~目~~~~录
+\end{center}
+\addvspace{1em}
+\StartToc{lof}
 \newpage
-\listoftables           % 表目录
+% 表目录
+\markboth{表\quad 目\quad 录}{表\quad 目\quad 录}
+\begin{center}
+\sanhao\heiti 表~~~~目~~~~录
+\end{center}
+\addvspace{1em}
+\StartToc{lot}
+\newpage
 
 % =========================================================
 %   主体部分 (Main Matter)
@@ -76,11 +110,17 @@
 \mainmatter
 
 \input{chapters/chap1_intro}
+\chapterblank
 \input{chapters/chap2_related}
+\chapterblank
 \input{chapters/chap3_method}
+\chapterblank
 \input{chapters/chap4_compression}
+\chapterblank
 \input{chapters/chap5_system}
+\chapterblank
 \input{chapters/chap6_summary}
+\chapterblank
 
 % =========================================================
 %   后置部分 (Back Matter)

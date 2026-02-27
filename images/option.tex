@@ -1,11 +1,21 @@
 %---------------------------------------------------------------------------%
 %-                                Packages                                 -%
 %---------------------------------------------------------------------------%
-\usepackage{CJK,CJKnumb}
+% ctex + xeCJK 环境下不再需要 CJK 宏包（避免与 xeCJK 冲突）
+% \usepackage{CJK,CJKnumb}
 \usepackage{url}
-\usepackage[backend=biber,style=numeric-comp,sorting=none,gbpub=false,bibstyle=gb7714-2015,citestyle=gb7714-2015,
+% 正文引用只显示文献编号，右上角上标；参考文献表仍按 GB/T 7714-2015 格式
+\usepackage[backend=biber,sorting=none,gbpub=false,bibstyle=gb7714-2015,citestyle=numeric,
 gbpunctin=false,gbnamefmt=lowercase,
 ]{biblatex}
+% 引用改为右上角上标 [x] 格式（如 [1] [2]）；仅输出编号，避免 gb7714-2015 输出作者名
+\DeclareCiteCommand{\cite}[\mkbibsuperscript]
+  {\usebibmacro{citeindex}}
+  {\usebibmacro{citeindex}%
+   \printfield{labelnumber}}
+  {\multicitedelim}
+  {}
+\providecommand*{\mkbibsuperscript}[1]{\textsuperscript{[#1]}}
 
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{booktabs}
@@ -20,26 +30,71 @@ gbpunctin=false,gbnamefmt=lowercase,
 \usepackage{enumerate}
 \usepackage{titletoc}
 \usepackage{titlesec}
-% 设置标题格式：section 居中，subsection 及以下左对齐
-\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{\centering}
-\titleformat{name=\section,numberless}{\normalfont\Large\bfseries}{}{0em}{\centering}
-\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}
-\titleformat{name=\subsection,numberless}{\normalfont\large\bfseries}{}{0em}{#1}
-\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
-\titleformat{name=\subsubsection,numberless}{\normalfont\normalsize\bfseries}{}{0em}{#1}
-\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
-\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
-\titlespacing*{\subsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+% 设置章节标题到页眉
+\makeatletter
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+\newcommand{\StartToc}[1]{\@starttoc{#1}}
+\let\saved@numberline\numberline
+\makeatother
+
+\newlength{\titlelabelsep}
+\setlength{\titlelabelsep}{1em}
+
+% 一级标题（章）：三号黑体，水平居中，段前段后正常
+\titleformat{\section}
+  {\normalfont\sanhao\bfseries\heiti\centering}
+  {}                                  % 编号由标题文字自带（如“第一章”），不重复输出
+  {0pt}
+  {}
+\titleformat{name=\section,numberless}
+  {\normalfont\sanhao\bfseries\heiti\centering}
+  {}
+  {0pt}
+  {}
+\titlespacing*{\section}{0pt}{\baselineskip}{0.5\baselineskip}
+
+% 二级标题（节）：黑体四号，居左，段前段后正常
+\titleformat{\subsection}
+  {\normalfont\sihao\bfseries\heiti}
+  {\thesubsection}
+  {\titlelabelsep}
+  {}
+\titleformat{name=\subsection,numberless}
+  {\normalfont\sihao\bfseries\heiti}
+  {}
+  {0pt}
+  {}
+% 标题前后间距（按需更紧凑）
+\titlespacing*{\subsection}{0pt}{0.6\baselineskip}{0.25\baselineskip}
+
+% 三级标题（条）：小四黑体，居左，无额外段落间距
+\titleformat{\subsubsection}
+  {\normalfont\xiaosihao\bfseries\heiti}
+  {\thesubsubsection}
+  {\titlelabelsep}
+  {}
+\titleformat{name=\subsubsection,numberless}
+  {\normalfont\xiaosihao\bfseries\heiti}
+  {}
+  {0pt}
+  {}
+\titlespacing*{\subsubsection}{0pt}{0.35\baselineskip}{0.15\baselineskip}
 \usepackage{epstopdf}
 \usepackage{caption}
 \usepackage{graphicx, subfig}
 \usepackage{float}
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
 \usepackage{fancyhdr} 
-\usepackage[top=2.8cm, bottom=2.5cm, left=3cm, right=3cm]{geometry}
+% 页面设置已在 main.tex 中统一设置，此处删除避免冲突
 %---------------------------------------------------------------------------%
 %-                                  Fonts                                  -%
 %---------------------------------------------------------------------------%
 \newcommand{\song}{\CJKfamily{song}}    % 宋体   (simsun.ttf)
+\makeatletter
+\@ifundefined{songti}{\newcommand{\songti}{\CJKfamily{song}}}{}
+\@ifundefined{heiti}{\newcommand{\heiti}{\CJKfamily{hei}}}{}
+\makeatother
 \newcommand{\fs}{\CJKfamily{fs}}        %仿宋体  (simfs.ttf)
 \newcommand{\kai}{\CJKfamily{kai}}      % 楷体   (simkai.ttf)
 \newcommand{\hei}{\CJKfamily{hei}}      % 黑体   (simhei.ttf)
@@ -52,9 +107,9 @@ gbpunctin=false,gbnamefmt=lowercase,
 \newcommand{\yihao}{\fontsize{28pt}{\baselineskip}\selectfont}
 \newcommand{\erhao}{\fontsize{21pt}{\baselineskip}\selectfont}
 \newcommand{\xiaoerhao}{\fontsize{18pt}{\baselineskip}\selectfont}
-\newcommand{\sanhao}{\fontsize{15.75pt}{\baselineskip}\selectfont}
+\newcommand{\sanhao}{\fontsize{16pt}{18pt}\selectfont}   % 三号，标题用
 \newcommand{\sihao}{\fontsize{14pt}{\baselineskip}\selectfont}
-\newcommand{\xiaosihao}{\fontsize{12pt}{\baselineskip}\selectfont}
+\newcommand{\xiaosihao}{\fontsize{12pt}{14.4pt}\selectfont} % 小四，标题用
 \newcommand{\wuhao}{\fontsize{10.5pt}{\baselineskip}\selectfont}
 \newcommand{\xiaowuhao}{\fontsize{9pt}{\baselineskip}\selectfont}
 \newcommand{\liuhao}{\fontsize{7.875pt}{\baselineskip}\selectfont}
@@ -70,11 +125,15 @@ gbpunctin=false,gbnamefmt=lowercase,
 \renewcommand{\tablename}{\songti 表}
 \renewcommand{\figurename}{\song 图}
 \renewcommand{\refname}{\centerline {参考文献}}
-\renewcommand{\contentsname}{\fontsize{15.75pt}{\baselineskip}\selectfont \textbf{目~~~~录}}
+% 目录、图目录、表目录标题：黑体三号，居中
+\renewcommand{\contentsname}{\centerline{\sanhao\heiti 目~~~~录}}
+\renewcommand{\listfigurename}{\centerline{\sanhao\heiti 图~~~~目~~~~录}}
+\renewcommand{\listtablename}{\centerline{\sanhao\heiti 表~~~~目~~~~录}}
 \renewcommand{\thefootnote}{\arabic{footnote}}
 \renewcommand{\theequation}{\thesection.\arabic{equation}}
-\renewcommand{\thefigure}{\thesection{}.\arabic{figure}}
-\renewcommand{\thetable}{\thesection{}.\arabic{table}}
+% 图表编号格式：按章编号，使用短横线（如"图3-1"、"表2-1"）
+\renewcommand{\thefigure}{\thesection-\arabic{figure}}
+\renewcommand{\thetable}{\thesection-\arabic{table}}
 %---------------------------------------------------------------------------%
 %-                                公式随章编号                               -%
 %---------------------------------------------------------------------------%
@@ -83,14 +142,13 @@ gbpunctin=false,gbnamefmt=lowercase,
 \renewcommand*\l@chapter[2]{%
  \ifnum \c@tocdepth >\m@ne
    \addpenalty{-\@highpenalty}%
-   \vskip 1.0em \@plus\p@
-   \setlength\@tempdima{1.5em}%
+   \vskip 0.4em \@plus\p@
+   \setlength\@tempdima{0em}%
    \begingroup
      \parindent \z@ \rightskip \@pnumwidth
      \parfillskip -\@pnumwidth
      \leavevmode \bfseries
      \advance\leftskip\@tempdima
-     \hskip -\leftskip
      #1\nobreak\leaders\hbox{$\m@th
        \mkern \@dotsep mu\hbox{.}\mkern \@dotsep
        mu$}\hfill \nobreak\hb@xt@\@pnumwidth{\hss #2}\par
@@ -108,8 +166,14 @@ gbpunctin=false,gbnamefmt=lowercase,
 %---------------------------------------------------------------------------%
 %-                              Caption Option                             -%
 %---------------------------------------------------------------------------%
-\captionsetup[figure]{labelsep=space}
-\captionsetup[table]{labelsep=space}
+% 图表标题格式：五号宋体，紧凑间距
+\DeclareCaptionFont{nwucaption}{\wuhao\songti}
+\captionsetup[figure]{labelsep=space,font={nwucaption},skip=3pt,belowskip=3pt}
+\captionsetup[table]{labelsep=space,font={nwucaption},skip=3pt,aboveskip=3pt}
+% 减少图表与正文的间距
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}      % 两个浮动体之间的距离
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}  % 浮动体与正文之间的距离
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}     % 浮动体在文本中的间距
 %---------------------------------------------------------------------------%
 %-                             Reference Resource                          -%
 %---------------------------------------------------------------------------%
@@ -117,17 +181,31 @@ gbpunctin=false,gbnamefmt=lowercase,
 %---------------------------------------------------------------------------%
 %-                                Page Control                             -%
 %---------------------------------------------------------------------------%
-\topmargin=0cm \oddsidemargin=0cm \textwidth=15cm
-\textheight=22cm
-\titlecontents{section}[1em]{\fontsize{12pt}{\baselineskip}\selectfont}{\hspace*{3em}\contentslabel{2em}\ }%
-{}{\titlerule*[0.7pc]{$\cdot$}\contentspage\hspace*{1em}}%
+% 版心由 main.tex 中 \geometry 统一设置，此处不再重复以免冲突
+% 目录格式：符合中文学术论文标准
+% 目录标题：居中，三号黑体（已在上面设置 \contentsname）
 
-\titlecontents{subsection}[1em]{\fontsize{12pt}{\baselineskip}\selectfont}{\hspace*{3em}\contentslabel{2em}\ }%
-{}{\titlerule*[0.7pc]{$\cdot$}\contentspage\hspace*{1em}}%
+% 第一级（章）：黑体四号字，顶格；不显示章前数字（仅显示“第一章”“第二章”等标题文字）
+\titlecontents{section}[0em]{\fontsize{14pt}{16.8pt}\selectfont\heiti\bfseries\renewcommand{\numberline}[1]{}}{}{}%
+{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}\let\numberline\saved@numberline]
 
-\titlecontents{subsubsection}[1em]{\fontsize{12pt}{\baselineskip}\selectfont}{\hspace*{4em}\contentslabel{2em}\ }%
-{}{\titlerule*[0.7pc]{$\cdot$}\contentspage\hspace*{1em}}%
-\renewcommand{\baselinestretch}{1.1}
+% 第二级（节）：宋体小四号字，缩进 2.5em（1.1 等靠后）
+\titlecontents{subsection}[2.5em]{\fontsize{12pt}{14.4pt}\selectfont\songti}{\contentslabel{2.5em}\ }%
+{}{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}]
+
+% 第三级（条）：宋体小四号字，缩进 3.8em（相对节再靠后）
+\titlecontents{subsubsection}[3.8em]{\fontsize{12pt}{14.4pt}\selectfont\songti}{\contentslabel{3em}\ }%
+{}{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}]
+
+% 第四级（段）：宋体小四号字，缩进 4em
+\titlecontents{paragraph}[4em]{\fontsize{12pt}{14.4pt}\selectfont\songti}{\contentslabel{3.5em}\ }%
+{}{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}]
+% 图目录和表目录格式：五号宋体，紧凑间距，与目录格式一致
+\makeatletter
+\renewcommand*\l@figure{\@dottedtocline{1}{0em}{2.3em}}
+\renewcommand*\l@table{\@dottedtocline{1}{0em}{2.3em}}
+\makeatother
+\renewcommand{\baselinestretch}{1.5}  % 正文行间距1.5倍，符合格式要求
 % 设置段落首行缩进
 \usepackage{indentfirst}  % 确保每个段落首行都缩进
 \setlength{\parindent}{2em}  % 每个段落首行缩进2个字符

@@ -1,6 +1,13 @@
 \newpage
-\addcontentsline{toc}{section}{参考文献}
-\renewcommand\refname{参考文献}
+\markboth{参考文献}{参考文献}
+% 参考文献在目录中与摘要、各章同级（chapter 级）
+\addcontentsline{toc}{chapter}{参考文献}
+% 参考文献标题格式：三号黑体，居中
+\begin{center}
+{\fontsize{15.75pt}{\baselineskip}\selectfont\heiti\bfseries 参考文献}
+\end{center}
+\vspace{0.5cm}
 \nocite{*}
-\printbibliography
+% 参考文献内容：五号宋体
+\printbibliography[heading=none]  % 不显示默认标题，使用自定义标题
 \newpage

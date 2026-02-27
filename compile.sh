@@ -1,87 +1,56 @@
 #!/bin/bash
-# 完整编译脚本（使用 xelatex + biber）
-# 使用方法: ./compile.sh
+# 编译脚本：优先使用 latexmk（自动判断需运行的次数，通常更快）
+# 使用: ./compile.sh
 
-eval "$(/usr/libexec/path_helper)"
+eval "$(/usr/libexec/path_helper 2>/dev/null)" || true
 
 MAIN="main.tex"
 OUT="output"
+FINAL_NAME="毕业论文-伍勋高-202333248.pdf"
+
+mkdir -p "$OUT"
 
 echo "=========================================="
 echo "开始编译 LaTeX 文档..."
 echo "=========================================="
 echo ""
 
-# 创建输出目录
-mkdir -p "$OUT"
-
-# 第一步：第一次 xelatex 编译
-echo "[1/4] 第一次 XeLaTeX 编译..."
-xelatex -output-directory="$OUT" -interaction=nonstopmode "$MAIN" > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "✗ 第一次编译失败，查看日志: $OUT/main.log"
-    tail -20 "$OUT/main.log" | grep -E "Error|Fatal" | head -5
-    exit 1
+# 优先使用 latexmk：只运行必要的次数，通常比固定 4 步更快
+if command -v latexmk >/dev/null 2>&1; then
+    echo "使用 latexmk 编译（自动判断运行次数）..."
+    latexmk -pdf -xelatex -outdir="$OUT" -interaction=nonstopmode -silent "$MAIN" 2>&1 | grep -E "^(Latexmk|Output written|xelatex|biber)" || true
+    OK=$?
+else
+    OK=1
 fi
-echo "✓ 完成"
-echo ""
 
-# 第二步：运行 biber 处理参考文献
-if [ -f "$OUT/main.bcf" ]; then
-    echo "[2/4] 运行 Biber 处理参考文献..."
-    cd "$OUT"
-    biber --input-directory=.. main > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo "✗ Biber 失败，查看日志: $OUT/main.blg"
-        cd ..
-        exit 1
+# 若 latexmk 未安装或失败，则回退到分步编译
+if [ $OK -ne 0 ] || [ ! -f "$OUT/main.pdf" ]; then
+    echo "使用分步编译..."
+    echo "[1/4] 第一次 XeLaTeX..."
+    xelatex -output-directory="$OUT" -interaction=nonstopmode "$MAIN" >/dev/null 2>&1
+    [ $? -ne 0 ] && echo "✗ 第一次编译失败，查看 $OUT/main.log" && exit 1
+    if [ -f "$OUT/main.bcf" ]; then
+        echo "[2/4] Biber..."
+        (cd "$OUT" && biber --input-directory=.. main) >/dev/null 2>&1
     fi
-    cd ..
-    echo "✓ 完成"
-else
-    echo "[2/4] 跳过 Biber（未找到 .bcf 文件）"
+    echo "[3/4] 第二次 XeLaTeX..."
+    xelatex -output-directory="$OUT" -interaction=nonstopmode "$MAIN" >/dev/null 2>&1
+    echo "[4/4] 第三次 XeLaTeX..."
+    xelatex -output-directory="$OUT" -interaction=nonstopmode "$MAIN" >/dev/null 2>&1
 fi
-echo ""
 
-# 第三步：第二次 xelatex 编译（处理参考文献）
-echo "[3/4] 第二次 XeLaTeX 编译（处理参考文献）..."
-xelatex -output-directory="$OUT" -interaction=nonstopmode "$MAIN" > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "✗ 第二次编译失败，查看日志: $OUT/main.log"
-    exit 1
-fi
-echo "✓ 完成"
-echo ""
-
-# 第四步：第三次 xelatex 编译（解决交叉引用）
-echo "[4/4] 第三次 XeLaTeX 编译（解决交叉引用）..."
-xelatex -output-directory="$OUT" -interaction=nonstopmode "$MAIN" > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "✗ 第三次编译失败，查看日志: $OUT/main.log"
-    exit 1
-fi
-echo "✓ 完成"
-echo ""
-
-# 检查结果
 if [ -f "$OUT/main.pdf" ]; then
-    echo "=========================================="
-    echo "✓ 编译成功！"
-    echo "=========================================="
-    
-    # 重命名PDF文件
-    FINAL_NAME="毕业论文-伍勋高-202333248.pdf"
-    mv "$OUT/main.pdf" "$OUT/$FINAL_NAME"
-    
-    echo "PDF 文件: $OUT/$FINAL_NAME"
-    ls -lh "$OUT/$FINAL_NAME" | awk '{print "文件大小:", $5}'
+    cp "$OUT/main.pdf" "$OUT/$FINAL_NAME"
     echo ""
-    echo "可以在 Cursor 中打开 output/$FINAL_NAME 查看"
+    echo "=========================================="
+    echo "✓ 编译成功"
+    echo "=========================================="
+    echo "PDF: $OUT/$FINAL_NAME"
+    ls -lh "$OUT/$FINAL_NAME" | awk '{print "大小:", $5}'
 else
     echo "=========================================="
-    echo "✗ 编译失败"
+    echo "✗ 编译失败，查看 $OUT/main.log"
     echo "=========================================="
-    echo "查看日志: $OUT/main.log"
     exit 1
 fi
-

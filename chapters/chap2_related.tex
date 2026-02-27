@@ -1,9 +1,8 @@
 % --- 章节开始 ---
 \newpage
-\section*{第二章\quad 相关理论和技术}
+\section{第二章\quad 相关理论和技术}
 \label{chap:related}
 \setcounter{section}{2} \setcounter{subsection}{0}
-\addcontentsline{toc}{section}{第二章\quad 相关理论和技术}
 
 
 本章将说明本文研究涉及的核心理论与关键技术。首先，介绍推荐系统的基本概念、分类及常用评价指标，并重点阐述图神经网络（GNN）基本原理及其在异构图与超图推荐中的应用机制；其次，概述联邦学习的架构分类，剖析模型压缩策略在联邦场景下的应用；最后，介绍对比学习范式和其在图结构视图增强及缓解数据稀疏性方面的应用。
@@ -33,8 +32,7 @@ y_{uv} = \begin{cases}
 无论是预测矩阵评分 $\hat{y}_{uv}$ 还是预测连接概率 $p(u, v)$，最终系统都会根据预测值对物品进行 Top-K 排序并推荐给目标用户。
 
 \subsubsection{推荐系统的分类}
-根据算法原理及数据利用方式的不同，现有的推荐系统主要可以分为以下几种常见类型：
-
+根据算法原理及数据利用方式的不同，现有的推荐系统主要可以分为以下几种常见类型
 \begin{enumerate}[wide, labelwidth=!, labelindent=\parindent]
     % --- (1) 协同过滤 ---
     \item \textbf{协同过滤推荐（Collaborative Filtering, CF）}
@@ -44,11 +42,11 @@ y_{uv} = \begin{cases}
     \begin{enumerate}[wide, labelwidth=!, labelindent=\parindent]
         \item \textbf{基于用户的协同过滤（UserCF）：} UserCF 的基本假设是"兴趣相似的用户往往喜欢相同的物品"。其算法流程首先是通过历史行为计算目标用户与其他用户的相似度，找到与目标用户兴趣最相近的邻居群体（Nearest Neighbors），然后将邻居群体偏好但目标用户尚未交互的物品进行推荐。
         
-        如图 \ref{fig:usercf} 所示：用户 A 和用户 C 都对物品 A（篮球）和物品 C（足球）表现出兴趣，通过相似度计算可认为两者具有相似的偏好。由于用户 C 还交互过物品 D（电子产品），因此推断用户 A 也可能对物品 D 感兴趣。
+        如图~\ref{fig:usercf} 所示：用户 A 和用户 C 都对物品 A（篮球）和物品 C（足球）表现出兴趣，通过相似度计算可认为两者具有相似的偏好。由于用户 C 还交互过物品 D（电子产品），因此推断用户 A 也可能对物品 D 感兴趣。
 
         \item \textbf{基于物品的协同过滤（ItemCF）：} 与 UserCF 不同，ItemCF 从物品的角度出发，其基本假设是"用户往往喜欢与其过去喜欢的物品相似的物品"。该算法首先计算物品之间的相似度，当用户对某物品产生行为后，系统会向其推荐与该物品相似度较高的其他物品。
-
-        如图 \ref{fig:itemcf} 所示：物品 A（篮球）和物品 C（足球）因被多位共同用户交互而被判定为相似物品。当系统检测到用户 A 对物品 A 有历史交互时，便会基于物品间的相似性，将物品 C 推荐给用户 A。
+        
+        如图~\ref{fig:itemcf} 所示：物品 A（篮球）和物品 C（足球）因被多位共同用户交互而被判定为相似物品。当系统检测到用户 A 对物品 A 有历史交互时，便会基于物品间的相似性，将物品 C 推荐给用户 A。
 \end{enumerate}
 
 \begin{figure}[H]
@@ -59,11 +57,11 @@ y_{uv} = \begin{cases}
 \end{figure}
 
 \begin{figure}[H]
-    \centering
+            \centering
     \includegraphics[width=0.75\textwidth]{images/CF.png}
-    \caption{ItemCF 算法原理示意图}
-    \label{fig:itemcf}
-\end{figure}
+            \caption{ItemCF 算法原理示意图}
+            \label{fig:itemcf}
+        \end{figure}
 
     \textbf{优缺点分析：} 协同过滤算法具有模型通用性强、无需领域知识等优点。然而，其严重依赖历史交互数据，在面对\textbf{数据稀疏（Data Sparsity）}问题时推荐质量会明显下降；同时，对于无历史行为的新用户或新物品，存在严重的\textbf{冷启动（Cold Start）}问题\cite{qiao2018coldstart}。
 
@@ -72,14 +70,14 @@ y_{uv} = \begin{cases}
     
     矩阵分解是协同过滤算法在隐语义挖掘方向的延伸。其核心原理是将高维稀疏的用户-物品评分矩阵 $\mathbf{Y}$ 分解为两个低维的稠密矩阵：用户潜在特征矩阵 $\mathbf{P}$ 和物品潜在特征矩阵 $\mathbf{Q}$。通过将用户和物品映射到同一个低维隐向量空间，利用向量内积来预测用户对物品的评分或偏好程度。
     
-    原理如图 \ref{fig:mf} 所示。
+    原理如图~\ref{fig:mf} 所示。
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/matrix.png}
-    \caption{矩阵分解（MF）示意图}
-    \label{fig:mf}
-\end{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/matrix.png}
+        \caption{矩阵分解（MF）示意图}
+        \label{fig:mf}
+    \end{figure}
 
     % --- (3) 深度学习 ---
     \item \textbf{深度学习方法}
@@ -96,46 +94,68 @@ y_{uv} = \begin{cases}
     因为用户-物品交互数据天然具备图结构特性（即用户和物品可视为节点，交互行为视为边），基于图的推荐方法通过在图结构上来挖掘高阶协同信号。相较于传统方法，图方法能够利用多跳邻居信息，从而更准确地建模用户偏好\cite{he2020lightgcn, mao2021ultragcn}。关于该类方法的详细原理与演进，将在 \ref{sec:gnn_rec} 小节中进行详细阐述。
 \end{enumerate}
 
+\subsubsection{推荐系统的冷启动问题}
+\label{subsec:cold_start}
+冷启动问题（Cold Start Problem）是推荐系统领域长期存在的一个核心挑战，它指的是系统在面对新用户、新物品或新系统时，由于缺乏足够的历史交互数据，难以进行准确的个性化推荐\cite{qiao2018coldstart}。冷启动问题直接影响推荐系统的用户体验和商业价值，是推荐算法在实际应用中必须解决的关键问题。
+
+根据冷启动对象的不同，冷启动问题主要可以分为以下三类：
+
+\textbf{（1）用户冷启动（User Cold Start）}：当新用户首次使用推荐系统时，系统无法获取该用户的历史交互记录，难以准确理解用户的兴趣偏好。在传统集中式推荐系统中，可以通过分析用户的注册信息（如年龄、性别、职业、地理位置等）或利用相似用户的偏好进行推荐。然而，在联邦推荐场景下，新用户数据驻留本地，服务器无法利用全局用户信息进行相似度匹配，使得用户冷启动问题更加严峻\cite{zhang2024ifedrec}。
+
+\textbf{（2）物品冷启动（Item Cold Start）}：当新物品（如新上架的商品、新发布的文章）加入系统时，由于缺乏用户对该物品的交互记录，系统难以判断该物品的特征和潜在受众。物品冷启动问题在内容推荐、新闻推荐等场景中尤为突出，因为新内容需要快速获得推荐机会才能被用户发现。
+
+\textbf{（3）系统冷启动（System Cold Start）}：当一个新的推荐系统刚上线时，整个系统缺乏用户和物品的交互数据，无法建立有效的推荐模型。系统冷启动通常需要通过内容特征、外部知识库或迁移学习等方法进行初始化。
+
+在联邦推荐场景下，冷启动问题变得更加复杂。由于数据本地化的隐私保护要求，服务器无法直接访问用户的原始数据和全局统计信息，传统的基于全局相似度匹配的冷启动方法难以直接应用。此外，联邦学习中的Non-IID数据分布特性进一步加剧了冷启动用户的推荐难度，因为本地模型难以从其他客户端的异质数据中学习到对新用户有用的知识。因此，如何在保护隐私的前提下，利用用户属性信息、图结构信息以及跨客户端知识迁移来解决联邦推荐中的冷启动问题，成为当前研究的热点。在联邦推荐系统的三类冷启动问题中，本文主要关注\textbf{用户冷启动（User Cold Start）}问题。
+
+\subsubsection{特征预处理技术}
+在推荐系统中，原始数据通常包含多种类型的特征（离散型、连续型），需要进行预处理才能输入到机器学习模型中。常用的特征预处理技术包括：
+
+\textbf{（1）One-hot编码（独热编码）}：对于离散型特征（如性别、类别），One-hot编码将其转换为二进制向量表示。假设某个特征有 $n$ 个可能的取值，则将其编码为长度为 $n$ 的向量，其中对应取值的维度为1，其他维度为0。例如，性别特征"男"、"女"、"未知"可以编码为 $[1,0,0]$、$[0,1,0]$、$[0,0,1]$。
+
+\textbf{（2）Min-Max归一化}：对于连续型特征（如年龄、价格），Min-Max归一化将其缩放到 $[0,1]$ 区间内，计算公式为：
+\begin{equation}
+    x_{norm} = \frac{x - x_{min}}{x_{max} - x_{min}}
+\end{equation}
+其中 $x_{min}$ 和 $x_{max}$ 分别为特征的最小值和最大值。归一化可以消除不同特征量纲的影响，使得模型训练更加稳定。
+
+\textbf{（3）余弦相似度}：余弦相似度是一种常用的相似度度量方法，用于衡量两个向量之间的方向相似性，计算公式为：
+\begin{equation}
+    \text{sim}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u}^\top \mathbf{v}}{\|\mathbf{u}\| \cdot \|\mathbf{v}\|} = \cos(\theta)
+    \label{eq:cosine_sim}
+\end{equation}
+其中 $\theta$ 为两个向量之间的夹角。余弦相似度的取值范围为 $[-1, 1]$，值越大表示两个向量越相似。在推荐系统中，余弦相似度常用于计算用户之间或物品之间的相似度，特别适用于稀疏高维特征空间。
+
 \subsubsection{推荐系统常用的衡量指标}
 为了全面、客观地评估推荐算法的性能，验证模型在 Top-K 推荐场景下的有效性，业界中常用的评估指标有：召回率（Recall）、归一化折损累计增益（NDCG）、曲线下面积（AUC）以及命中率（Hit Ratio）等。各指标的具体定义与计算公式如下：
 
-\begin{enumerate}[label=(\arabic*)]
-    \item \textbf{召回率（Recall@K）}
-    
-    Recall@K 是衡量推荐系统检索能力的核心指标，主要考察模型在 Top-K 推荐列表中覆盖用户真实感兴趣项目的比例。该指标关注的是“查全率”，即用户喜欢的物品有多少被模型成功找回。其数值越高，表明模型遗漏的正样本越少，推荐覆盖面越广。对于测试集中的用户集合 $\mathcal{U}$，其计算公式如式 \eqref{eq:recall} 所示：
-    \begin{equation}
-        \text{Recall}@K = \frac{1}{|\mathcal{U}|} \sum_{u \in \mathcal{U}} \frac{|\mathcal{R}_u \cap \mathcal{P}_u@K|}{|\mathcal{R}_u|}
-        \label{eq:recall}
-    \end{equation}
-    式中，$\mathcal{R}_u$ 表示测试集中用户 $u$ 实际交互过的相关项目集合（Ground Truth）；$\mathcal{P}_u@K$ 表示模型为用户 $u$ 生成的前 $K$ 个推荐项目列表；$|\cdot|$ 表示集合中元素的个数。
+\textbf{（1）归一化折损累计增益（NDCG@K）}：NDCG（Normalized Discounted Cumulative Gain）是评估推荐列表排序质量的重要指标。与 Recall 不同，NDCG 不仅关注模型是否推荐了正确的物品，还对物品在列表中的位置极其敏感。根据位置折损原则，排名越靠前的项目对最终分数的贡献越大。NDCG@K 的值介于 0 到 1 之间，值越高代表排序效果越符合用户偏好。其计算过程如式 \eqref{eq:ndcg} 所示：
+\begin{equation}
+    \text{NDCG}@K = \frac{1}{|\mathcal{U}|} \sum_{u \in \mathcal{U}} \frac{\text{DCG}_u@K}{\text{IDCG}_u@K}
+    \label{eq:ndcg}
+\end{equation}
+其中 $\text{DCG}_u@K$ 为折损累计增益，计算公式为 $\sum_{i=1}^{K} \frac{2^{rel_i} - 1}{\log_2(i+1)}$，$rel_i$ 表示第 $i$ 个位置的项目的相关性（在隐式反馈中，交互为1，否则为0）；$\text{IDCG}_u@K$ 为理想状态下的最大累计增益，用于进行归一化处理。
 
-    \item \textbf{归一化折损累计增益（NDCG@K）}
-    
-    NDCG（Normalized Discounted Cumulative Gain）是评估推荐列表排序质量的重要指标。与 Recall 不同，NDCG 不仅关注模型是否推荐了正确的物品，还对物品在列表中的位置极其敏感。根据位置折损原则，排名越靠前的项目对最终分数的贡献越大。NDCG@K 的值介于 0 到 1 之间，值越高代表排序效果越符合用户偏好。其计算过程如式 \eqref{eq:ndcg} 所示：
-    \begin{equation}
-        \text{NDCG}@K = \frac{1}{|\mathcal{U}|} \sum_{u \in \mathcal{U}} \frac{\text{DCG}_u@K}{\text{IDCG}_u@K}
-        \label{eq:ndcg}
-    \end{equation}
-    其中 $\text{DCG}_u@K$ 为折损累计增益，计算公式为 $\sum_{i=1}^{K} \frac{2^{rel_i} - 1}{\log_2(i+1)}$，$rel_i$ 表示第 $i$ 个位置的项目的相关性（在隐式反馈中，交互为1，否则为0）；$\text{IDCG}_u@K$ 为理想状态下的最大累计增益，用于进行归一化处理。
+\textbf{（2）命中率（Hit@K）}：Hit@K（Hit Ratio）是一种直观的准确性指标，用于衡量推荐列表 Top-K 中是否至少包含一个用户实际交互过的正样本。该指标通常用于留一法（Leave-One-Out）评估场景中。Hit@K 关注的是推荐结果的"存在性"，即模型是否"击中"了用户的兴趣点。其计算公式如式 \eqref{eq:hit} 所示：
+\begin{equation}
+    \text{Hit}@K = \frac{1}{|\mathcal{U}|} \sum_{u \in \mathcal{U}} \mathbb{I}(|\mathcal{R}_u \cap \mathcal{P}_u@K| \geq 1)
+    \label{eq:hit}
+\end{equation}
+式中，$\mathcal{R}_u$ 为用户 $u$ 的真实正样本集合，$\mathcal{P}_u@K$ 为模型推荐的前 $K$ 个项目。如果交集非空，说明推荐列表中包含至少一个正样本，指示函数记为 1，否则为 0。
 
-    \item \textbf{曲线下面积（AUC）}
-    
-    AUC（Area Under the Curve）即 ROC 曲线下的面积，在推荐系统中常用于评估模型对正负样本的排序区分能力。从概率角度解释，AUC 代表了随机抽取一个正样本（用户喜欢的）和一个负样本（用户不喜欢的），模型对正样本的预测得分高于负样本得分的概率。AUC = 0.5 表示模型效果等同于随机猜测，AUC 越接近 1 表示模型的排序能力越强。其计算公式如式 \eqref{eq:auc} 所示：
-    \begin{equation}
-        \text{AUC} = \frac{1}{|\mathcal{U}|} \sum_{u \in \mathcal{U}} \frac{1}{|\mathcal{P}_u||\mathcal{N}_u|} \sum_{i \in \mathcal{P}_u} \sum_{j \in \mathcal{N}_u} \mathbb{I}(\hat{y}_{ui} > \hat{y}_{uj})
-        \label{eq:auc}
-    \end{equation}
-    式中，$\mathcal{P}_u$ 和 $\mathcal{N}_u$ 分别表示用户 $u$ 的正样本集合和负样本集合；$\hat{y}_{ui}$ 和 $\hat{y}_{uj}$ 分别为模型对正样本 $i$ 和负样本 $j$ 的预测分数；$\mathbb{I}(\cdot)$ 为指示函数，当条件成立时取值为 1，否则为 0。
+\textbf{（3）召回率（Recall@K）}：Recall@K 是衡量推荐系统检索能力的核心指标，主要考察模型在 Top-K 推荐列表中覆盖用户真实感兴趣项目的比例。该指标关注的是"查全率"，即用户喜欢的物品有多少被模型成功找回。其数值越高，表明模型遗漏的正样本越少，推荐覆盖面越广。对于测试集中的用户集合 $\mathcal{U}$，其计算公式如式 \eqref{eq:recall} 所示：
+\begin{equation}
+    \text{Recall}@K = \frac{1}{|\mathcal{U}|} \sum_{u \in \mathcal{U}} \frac{|\mathcal{R}_u \cap \mathcal{P}_u@K|}{|\mathcal{R}_u|}
+    \label{eq:recall}
+\end{equation}
+式中，$\mathcal{R}_u$ 表示测试集中用户 $u$ 实际交互过的相关项目集合（Ground Truth）；$\mathcal{P}_u@K$ 表示模型为用户 $u$ 生成的前 $K$ 个推荐项目列表；$|\cdot|$ 表示集合中元素的个数。
 
-    \item \textbf{命中率（Hit@K）}
-    
-    Hit@K（Hit Ratio）是一种直观的准确性指标，用于衡量推荐列表 Top-K 中是否至少包含一个用户实际交互过的正样本。该指标通常用于留一法（Leave-One-Out）评估场景中。Hit@K 关注的是推荐结果的“存在性”，即模型是否“击中”了用户的兴趣点。其计算公式如式 \eqref{eq:hit} 所示：
-    \begin{equation}
-        \text{Hit}@K = \frac{1}{|\mathcal{U}|} \sum_{u \in \mathcal{U}} \mathbb{I}(|\mathcal{R}_u \cap \mathcal{P}_u@K| \geq 1)
-        \label{eq:hit}
-    \end{equation}
-    式中，$\mathcal{R}_u$ 为用户 $u$ 的真实正样本集合，$\mathcal{P}_u@K$ 为模型推荐的前 $K$ 个项目。如果交集非空，说明推荐列表中包含至少一个正样本，指示函数记为 1，否则为 0。
-\end{enumerate}
+\textbf{（4）曲线下面积（AUC）}：AUC（Area Under the Curve）即 ROC 曲线下的面积，在推荐系统中常用于评估模型对正负样本的排序区分能力。从概率角度解释，AUC 代表了随机抽取一个正样本（用户喜欢的）和一个负样本（用户不喜欢的），模型对正样本的预测得分高于负样本得分的概率。AUC = 0.5 表示模型效果等同于随机猜测，AUC 越接近 1 表示模型的排序能力越强。其计算公式如式 \eqref{eq:auc} 所示：
+\begin{equation}
+    \text{AUC} = \frac{1}{|\mathcal{U}|} \sum_{u \in \mathcal{U}} \frac{1}{|\mathcal{P}_u||\mathcal{N}_u|} \sum_{i \in \mathcal{P}_u} \sum_{j \in \mathcal{N}_u} \mathbb{I}(\hat{y}_{ui} > \hat{y}_{uj})
+    \label{eq:auc}
+\end{equation}
+式中，$\mathcal{P}_u$ 和 $\mathcal{N}_u$ 分别表示用户 $u$ 的正样本集合和负样本集合；$\hat{y}_{ui}$ 和 $\hat{y}_{uj}$ 分别为模型对正样本 $i$ 和负样本 $j$ 的预测分数；$\mathbb{I}(\cdot)$ 为指示函数，当条件成立时取值为 1，否则为 0。
 
 \subsection{图神经网络推荐技术}
 \label{sec:gnn_rec}
@@ -170,13 +190,9 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 
 \subsubsection{同构图和异构图}
 
-\begin{enumerate}
-    \item \textbf{同构图（Homogeneous Graph）}：
-    
-    同构图是图结构中最简单的形式，图中所有的顶点都属于同一类型，并且所有的边也都属于同一类型。同构图示例如图 \ref{fig:homo_graph} 所示，图中的顶点具有相同的语义和属性集合，边也具有相同的语义和属性集合。
-    
-    用数学语言描述，设图 $G=(V, E)$，其中 $V$ 是顶点的集合，$E$ 是边的集合。对于任意的顶点 $u, v \in V$，它们具有相同的类型；对于任意的边 $(u, v) \in E$，这些边也具有相同的类型。
-\end{enumerate}
+\textbf{（1）同构图（Homogeneous Graph）}：同构图是图结构中最简单的形式，图中所有的顶点都属于同一类型，并且所有的边也都属于同一类型。同构图示例如图~\ref{fig:homo_graph} 所示，图中的顶点具有相同的语义和属性集合，边也具有相同的语义和属性集合。
+
+用数学语言描述，设图 $G=(V, E)$，其中 $V$ 是顶点的集合，$E$ 是边的集合。对于任意的顶点 $u, v \in V$，它们具有相同的类型；对于任意的边 $(u, v) \in E$，这些边也具有相同的类型。
 
 \begin{figure}[H]
     \centering
@@ -185,19 +201,41 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
     \label{fig:homo_graph}
 \end{figure}
 
-\begin{enumerate}
-    \item \textbf{异构图（Heterogeneous Graph）}：
-    
-    异构图是指图中存在多种类型的节点和边，每种类型可能代表不同的实体或关系。在异构图中，节点和边的不同属性赋予了图更丰富的语义信息\cite{yan2024fedhgnn}。
-    
-    形式化地，给定异构图 $\mathcal{G} = (\mathcal{V}, \mathcal{E}, \mathcal{A}, \mathcal{R})$，其中 $\mathcal{V}$ 是顶点集，$\mathcal{E}$ 是边集，$\mathcal{A}$ 是顶点类型集合，$\mathcal{R}$ 是边类型集合。异构图包含两个映射函数：
-    \begin{enumerate}
-        \item 顶点类型映射函数 $\phi: \mathcal{V} \rightarrow \mathcal{A}$，将顶点映射到一个顶点类型集合 $\mathcal{A}$ 中的某一类型；
-        \item 边类型映射函数 $\psi: \mathcal{E} \rightarrow \mathcal{R}$，将边映射到一个边类型集合 $\mathcal{R}$ 中的某一类型。
-    \end{enumerate}
-    且满足 $|\mathcal{A}| > 1$ 或者 $|\mathcal{R}| > 1$（即至少存在两种顶点类型或者两种边类型）。
-\end{enumerate}
+\textbf{（2）异构图（Heterogeneous Graph）}：异构图是指图中存在多种类型的节点和边，每种类型可能代表不同的实体或关系。在异构图中，节点和边的不同属性赋予了图更丰富的语义信息\cite{yan2024fedhgnn}。
+
+形式化地，给定异构图 $\mathcal{G} = (\mathcal{V}, \mathcal{E}, \mathcal{A}, \mathcal{R})$，其中 $\mathcal{V}$ 是顶点集，$\mathcal{E}$ 是边集，$\mathcal{A}$ 是顶点类型集合，$\mathcal{R}$ 是边类型集合。异构图包含两个映射函数：\textbf{（1）顶点类型映射函数} $\phi: \mathcal{V} \rightarrow \mathcal{A}$，将顶点映射到一个顶点类型集合 $\mathcal{A}$ 中的某一类型；\textbf{（2）边类型映射函数} $\psi: \mathcal{E} \rightarrow \mathcal{R}$，将边映射到一个边类型集合 $\mathcal{R}$ 中的某一类型。且满足 $|\mathcal{A}| > 1$ 或者 $|\mathcal{R}| > 1$（即至少存在两种顶点类型或者两种边类型）。
 现实世界的网络结构往往呈现出高度的复杂性，包含多种类型的实体及它们之间错综复杂的交互关系。相比于传统的单一视图建模，采用异构图能够完整保留数据的结构异质性（Structural Heterogeneity），从而更精准地捕捉实体间深层次的语义关联与依赖信息。
+
+\subsubsection{超图与超图卷积网络}
+普通图（Graph）中的每条边只能连接两个节点，这种二元关系限制了图结构对复杂高阶关系的建模能力。超图（Hypergraph）作为一种广义的图结构，其超边（Hyperedge）可以连接任意数量的节点，从而能够更灵活地建模高阶关系（High-order Relations）\cite{feng2019hypergraph}。
+
+形式化地，超图定义为 $\mathcal{G} = (\mathcal{V}, \mathcal{E})$，其中 $\mathcal{V}$ 是节点集合，$\mathcal{E}$ 是超边集合。与普通图不同，超图中的每条超边 $e \in \mathcal{E}$ 可以包含多个节点，即 $e \subseteq \mathcal{V}$ 且 $|e| \geq 2$。超图的结构通过关联矩阵（Incidence Matrix）$\mathbf{H} \in \mathbb{R}^{|\mathcal{V}| \times |\mathcal{E}|}$ 来表示，其中元素 $H_{ve}$ 定义如下：
+\begin{equation}
+    H_{ve} = \begin{cases}
+        1, & \text{if } v \in e \\
+        0, & \text{otherwise}
+    \end{cases}
+\end{equation}
+
+超图在推荐系统中具有独特的优势。首先，超图能够捕捉"一组相似节点"的群组关系，例如，具有相似属性的用户可以通过一条超边连接，从而建模用户群体的共同偏好。其次，超图适合属性相似性建模，在冷启动场景下，当交互数据稀疏时，可以利用属性信息构建超图结构，为图神经网络提供有效的输入。
+
+超图卷积网络（Hypergraph Convolutional Network, HGCN）是专门为超图设计的神经网络架构。超图卷积的基本操作可以表示为：
+\begin{equation}
+    \mathbf{X}^{(l+1)} = \mathbf{D}_v^{-1/2} \mathbf{H} \mathbf{D}_e^{-1} \mathbf{H}^\top \mathbf{D}_v^{-1/2} \mathbf{X}^{(l)} \mathbf{W}^{(l)}
+\end{equation}
+其中，$\mathbf{X}^{(l)}$ 是第 $l$ 层的节点特征矩阵，$\mathbf{D}_v$ 和 $\mathbf{D}_e$ 分别是节点度和超边度的对角矩阵，$\mathbf{W}^{(l)}$ 是可学习的权重矩阵。与普通图卷积相比，超图卷积通过 $\mathbf{H}\mathbf{H}^\top$ 操作实现了超边内节点的信息聚合，能够更好地捕捉高阶语义关联。在推荐系统中，超图卷积网络已被广泛应用于属性相似性建模和冷启动推荐任务\cite{he2024hgca}。
+
+\subsubsection{k-近邻算法}
+k-近邻（k-Nearest Neighbors, k-NN）算法是一种基于实例的学习方法，其核心思想是：对于给定的查询点，找到与其最相似的 $k$ 个邻居节点。在推荐系统中，k-NN算法常用于构建相似度图或超图结构。
+
+\textbf{算法流程：}
+\begin{enumerate}
+    \item \textbf{相似度计算}：对于节点集合中的每个节点对，计算它们之间的相似度（如余弦相似度、欧氏距离等）；
+    \item \textbf{排序与选择}：对于每个节点，根据相似度对所有其他节点进行排序，选择相似度最高的 $k$ 个节点作为其邻居；
+    \item \textbf{图结构构建}：基于选定的邻居关系构建图或超图结构。
+\end{enumerate}
+
+在联邦推荐场景下，k-NN算法可以用于构建属性语义超图。通过计算用户或物品之间的属性相似度（如公式 \ref{eq:cosine_sim}），选择最相似的 $k$ 个邻居节点，构建超边连接，从而为图神经网络提供有效的输入结构。这种方法特别适用于冷启动场景，当交互数据稀疏时，可以利用属性信息构建图结构，弥补交互信息的缺失。
 
 \subsubsection{基于元路径的推荐}
 在异构信息网络（HIN）中，由于节点和边类型的多样性，直接应用传统的同构图算法难以捕捉复杂的语义信息，为了解决这个问题，Sun 等人提出了元路径（Meta-path）的概念。
@@ -208,7 +246,24 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 \begin{equation}
     \mathbf{h}_u^{\mathcal{P}} = \text{AGGREGATE}_{\mathcal{P}} \left( \left\{ \mathbf{h}_v \mid v \in \mathcal{N}_u^{\mathcal{P}} \right\} \right)
 \end{equation}
-其中，$\mathbf{h}_v$ 表示邻居节点的初始特征向量，$\text{AGGREGATE}(\cdot)$ 通常采用平均池化（Mean Pooling）或注意力机制（Attention Mechanism）\cite{wang2019han}。例如，在“User-Movie-User”路径下，聚合操作实际上是在学习“与其观看历史相似的其他用户”的特征分布，从而捕捉协同过滤语义\cite{li2023metapath}。
+其中，$\mathbf{h}_v$ 表示邻居节点的初始特征向量，$\text{AGGREGATE}(\cdot)$ 通常采用平均池化（Mean Pooling）或注意力机制（Attention Mechanism）\cite{wang2019han}。例如，在"User-Movie-User"路径下，聚合操作实际上是在学习"与其观看历史相似的其他用户"的特征分布，从而捕捉协同过滤语义\cite{li2023metapath}。由于不同元路径对用户意图的贡献度不同，简单的平均融合无法适应复杂的推荐场景。语义级注意力机制通过自适应学习各元路径的权重，实现元路径的智能融合。
+
+对于元路径集合 $\mathcal{P} = \{\Phi_1, \Phi_2, \dots, \Phi_P\}$，语义级注意力机制首先计算各元路径的重要性分数：
+\begin{equation}
+    w_{\Phi_p} = \frac{1}{|\mathcal{V}|} \sum_{i \in \mathcal{V}} \mathbf{q}^\top \cdot \tanh(\mathbf{W}_{att} \mathbf{z}_i^{\Phi_p} + \mathbf{b}_{att})
+\end{equation}
+其中 $\mathbf{z}_i^{\Phi_p}$ 为节点 $i$ 在元路径 $\Phi_p$ 下的嵌入表示，$\mathbf{W}_{att}$ 和 $\mathbf{b}_{att}$ 是可学习的权重矩阵和偏置向量，$\mathbf{q}$ 是语义级别的注意力向量。
+
+随后，利用Softmax函数对重要性分数进行归一化，得到最终的元路径权重：
+\begin{equation}
+    \beta_{\Phi_p} = \frac{\exp(w_{\Phi_p})}{\sum_{p'=1}^P \exp(w_{\Phi_{p'}})}
+\end{equation}
+
+最后，基于学习到的权重对不同元路径的嵌入进行加权求和，得到融合了多重语义的最终节点表示：
+\begin{equation}
+    \mathbf{z}_i^* = \sum_{p=1}^P \beta_{\Phi_p} \cdot \mathbf{z}_i^{\Phi_p}
+\end{equation}
+该机制使得模型能够根据数据特性自动调整对结构信息与属性信息的依赖程度。
 
 \begin{figure}[H]
     \centering
@@ -219,7 +274,7 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 
 \subsection{联邦学习概述}
 
-联邦学习是由谷歌（Google）于 2016 年首次提出的一种新兴分布式机器学习范式，旨在打破"数据孤岛"并保护用户隐私\cite{li2025openfgl}。
+联邦学习是由谷歌（Google）于 2016 年首次提出的一种分布式机器学习方式，在不集中原始数据的前提下协同训练，并保护用户隐私\cite{li2025openfgl}。
 
 其核心理念在于"\textbf{数据不动模型动}"，即在不共享原始数据、保护数据隐私的同时，利用分布在不同客户端（Clients）的数据协同训练出一个全局模型。联邦学习通常采用\textbf{客户端-服务器（Client-Server）}架构\cite{deng2023survey}。
 
@@ -228,7 +283,11 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 \begin{enumerate}
     \item \textbf{梯度发送（本地训练）} : 参与训练的客户端首先接收服务器下发的初始全局模型，利用本地数据进行训练，得到本地模型。训练完成后，客户端将计算出的加密梯度上传至服务器。
 
-    \item \textbf{安全聚合} : 服务器收到各个参与客户端上传的加密梯度后，利用聚合算法（如安全聚合）对梯度进行汇总处理，从而更新全局模型。
+    \item \textbf{安全聚合} : 服务器收到各个参与客户端上传的加密梯度后，利用聚合算法对梯度进行汇总处理，从而更新全局模型。最常用的聚合算法是\textbf{加权平均聚合（FedAvg）}，其核心思想是根据各客户端的数据量对模型参数进行加权平均。设第 $t$ 轮训练中，参与训练的客户端集合为 $\mathcal{M}^{(t)}$，客户端 $m$ 的本地模型参数为 $\Theta_m^{(t)}$，数据量为 $|\mathcal{D}_m|$，则全局模型参数的更新公式为：
+    \begin{equation}
+        \Theta^{(t)} = \sum_{m \in \mathcal{M}^{(t)}} \frac{|\mathcal{D}_m|}{|\mathcal{D}|} \Theta_m^{(t)}
+    \end{equation}
+    其中 $|\mathcal{D}| = \sum_{m \in \mathcal{M}^{(t)}} |\mathcal{D}_m|$ 为所有参与客户端的总数据量。这种加权策略确保了数据量大的客户端对全局模型的贡献更大，从而提高了模型的泛化能力。
 
     \item \textbf{模型返回} : 服务器将更新后的全局模型发送回所有参与训练的客户端。
 
@@ -244,45 +303,49 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
     \label{fig:fl_overview}
 \end{figure}
 
-同时根据参与方数据的分布特性（即数据样本与特征空间的重叠情况），联邦学习通常被分为横向联邦学习、纵向联邦学习和联邦迁移学习三类\cite{guo2024fedgnn}。
+同时根据参与方数据的分布特性（即数据样本与特征空间的重叠情况），联邦学习通常被分为横向联邦学习和纵向联邦学习两类\cite{guo2024fedgnn}。
+
 \begin{enumerate}
     \item \textbf{横向联邦学习（Horizontal FL）：} 主要适用于参与方数据特征空间重叠较多、但样本空间重叠较少的场景。这意味着不同参与方拥有相似的业务场景或数据结构，但服务于不同的用户群体。
     
     例如：不同的高校电子图书馆两者拥有相似的数据特征（均包含学生的论文下载记录、检索关键词、浏览时长等），但各自服务于不同的学生群体。通过横向联邦学习，双方可以联合利用更大规模的阅读行为数据，训练出泛化能力更强的论文推荐模型。
-\end{enumerate}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/横向联邦学习.png} 
-    \caption{横向联邦学习示意图}
-    \label{fig:horz_fl}
-\end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/横向联邦学习.png} 
+        \caption{横向联邦学习示意图}
+        \label{fig:horz_fl}
+    \end{figure}
 
-\begin{enumerate}
     \item \textbf{纵向联邦学习（Vertical FL）：} 主要适用于参与方数据样本空间重叠较多、但特征空间重叠较少的场景。这种情况常见于同一地区的不同机构之间，它们拥有同一批用户，但掌握该用户不同维度的属性数据。
     
     例如：一所高校的电子图书馆与该校的科研管理系统。两者服务于同一批师生用户（样本相同），但图书馆掌握用户的论文下载与阅读记录，而科研系统掌握用户的论文发表情况与课题申报信息。通过纵向联邦学习，可以将用户的"阅读输入"与"科研输出"数据相结合，构建画像更立体的推荐模型，向用户推荐更符合其科研产出方向的文献\cite{wang2025p4gcn}。
-\end{enumerate}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/纵向联邦学习.png} 
-    \caption{纵向联邦学习示意图}
-    \label{fig:vert_fl}
-\end{figure}
-
-\begin{enumerate}
-    \item \textbf{迁移联邦学习（Transfer FL）：} 主要适用于参与方数据样本空间与特征空间均存在较大差异，且少量重叠的场景，解决单边数据稀缺或标签不足的问题。 
     
-    例如：英文计算机科学（CS）论文数据库与新兴的中文生物医学论文平台。两者的用户群体和数据特征均存在巨大差异。通过联邦迁移学习，可以在两者仅有的交叉学科（如生物信息学）重叠数据上进行对齐，将CS数据库中成熟的引文图谱结构知识迁移到生物医学平台，解决新兴平台因数据稀缺导致的推荐冷启动问题\cite{li2025fedcsr, chen2024fedgcdr}。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/纵向联邦学习.png} 
+        \caption{纵向联邦学习示意图}
+        \label{fig:vert_fl}
+    \end{figure}
 \end{enumerate}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/迁移学习.png} 
-    \caption{联邦迁移学习示意图}
-    \label{fig:trans_fl}
-\end{figure}
+\textbf{（1）隐私保护机制}：在联邦学习中，虽然原始数据不离开客户端，但上传的模型参数或梯度仍可能泄露用户隐私信息。因此，需要采用隐私保护机制来增强系统的安全性。
+
+\textbf{（2）差分隐私（Differential Privacy）}：差分隐私是一种严格的隐私保护定义，其核心思想是在数据中添加随机噪声，使得攻击者无法从输出结果中推断出单个数据点的信息。$\epsilon$-差分隐私的定义为：对于任意相邻数据集 $D$ 和 $D'$（仅相差一条记录），以及任意输出 $S$，满足：
+\begin{equation}
+    P(\mathcal{M}(D) \in S) \leq e^{\epsilon} \cdot P(\mathcal{M}(D') \in S)
+\end{equation}
+其中 $\mathcal{M}$ 是随机化机制，$\epsilon$ 是隐私预算（Privacy Budget），值越小表示隐私保护程度越高。
+
+\textbf{（3）拉普拉斯机制（Laplace Mechanism）}：拉普拉斯机制是实现差分隐私的常用方法。对于函数 $f: D \rightarrow \mathbb{R}^d$，其敏感度定义为：
+\begin{equation}
+    \Delta f = \max_{D, D'} \|f(D) - f(D')\|_1
+\end{equation}
+拉普拉斯机制通过在输出中添加拉普拉斯噪声实现差分隐私：
+\begin{equation}
+    \mathcal{M}(D) = f(D) + \text{Laplace}(0, \frac{\Delta f}{\epsilon})
+\end{equation}
+在联邦推荐系统中，拉普拉斯机制常用于保护上传的原型或梯度信息，通过在参数中添加噪声，在保护隐私的同时尽可能保持模型的性能。
 
 \subsection{对比学习}
 对比学习（Contrastive Learning)是一种自监督学习方法，其核心思想是通过构造正负样本对，让模型学会区分相似与不相似的样本，从而获得具有判别性的表征\cite{crad2024multiview}。在推荐系统面临数据稀疏（Data Sparsity）和冷启动（Cold Start）问题时，对比学习能够利用数据自身的结构信息或增强视图构建辅助监督信号，从而在缺乏人工标注或交互记录的情况下，依然能学习出高质量的特征表示\cite{zhang2024ifedrec}。
@@ -298,13 +361,21 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
     \label{eq:total_loss}
 \end{equation}
 这种方法不依赖于显式的用户行为标签，而是挖掘样本内在的结构一致性，能在缓解长尾分布和冷启动推荐中表现优异\cite{wang2025fedpcl}。
+在推荐系统中，跨视图对比学习是一种特殊的对比学习范式，其核心思想是通过最大化不同视图（View）之间的互信息，实现语义对齐和知识迁移。在联邦推荐场景下，常见的视图包括：\textbf{（1）属性视图}，基于用户和物品的属性特征构建的语义视图；\textbf{（2）结构视图}，基于用户-物品交互历史构建的交互结构视图。跨视图对比学习的做法是：把同一节点在属性视图和结构视图下的表示视为正样本对，通过最大化互信息，把属性语义迁移到交互空间。这种机制特别适用于冷启动场景，当交互数据稀疏时，可以利用丰富的属性信息弥补拓扑信息的缺失，从而为新用户提供有效的推荐服务\cite{crad2024multiview}。
 
 \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/对比学习.png} 
-    \caption{对比学习示意图}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/对比学习.png} 
+        \caption{对比学习示意图}
     \label{fig:contrastive_learning}
-\end{figure}
+    \end{figure}
+
+\subsection{原型学习与联邦原型对齐}
+原型学习（Prototype Learning）是一种基于类别中心的表示学习方法，其核心思想是学习嵌入空间中某类语义特征的聚类中心（即原型），通过原型来表征该类别的整体特征分布\cite{tan2022fedproto}。在少样本学习（Few-shot Learning）中，原型学习已被证明能够有效利用有限的样本学习到具有代表性的类别表示。
+
+原型对齐的目标是通过约束本地表示向全局原型靠拢，实现语义对齐。在联邦学习场景下，原型对齐机制能够有效缓解Non-IID数据分布导致的客户端漂移问题。具体而言，原型对齐通过以下方式发挥作用：\textbf{（1）纠偏作用}，即使本地数据分布极度倾斜，全局原型也能为本地模型提供全局语义空间的参考，防止本地模型为了拟合局部数据而破坏整体语义空间的结构；\textbf{（2）冷启动增强}，对于新接入的冷启动客户端，全局原型为其提供了高质量的初始化参考系，使其能快速对齐到全局分布。
+
+联邦原型学习是原型学习在联邦学习场景下的扩展。其基本流程包括：\textbf{（1）本地原型计算}，客户端基于当前的节点嵌入表示，计算属于各个语义类别的节点嵌入均值作为本地原型；\textbf{（2）全局原型聚合}，服务器收集各客户端上传的本地原型，采用加权平均策略聚合生成全局语义原型；\textbf{（3）隐私保护}，为满足差分隐私要求，客户端在上传原型前添加拉普拉斯噪声或高斯噪声，保护用户隐私\cite{zhang2024fedtgp}。通过原型对比损失（Prototype-based Contrastive Loss），客户端约束本地节点嵌入尽可能靠近其所属类别的全局原型，同时远离其他类别的原型，从而实现跨客户端的语义对齐。
 
 \subsection{模型剪枝与量化}
 \label{sec:pruning_and_quantization}
@@ -312,22 +383,25 @@ GNN 的核心思想是利用图的拓扑结构，迭代地聚合邻居节点的�
 \subsubsection{模型剪枝 (Model Pruning)}
 模型剪枝是用于去除深度神经网络中的冗余参数与结构（Structure），以降低计算开销并加速推理过程的一种手段\cite{jiang2022fedmp}。 根据剪枝粒度的不同，主要分为以下两类：
 
-\begin{enumerate}[label=(\arabic*)]
-    \item \textbf{非结构化剪枝 (Unstructured Pruning)}：
-    非结构化剪枝是一种细粒度（Fine-grained）的模型压缩方法。不同于结构化剪枝移除完整的通道或层，非结构化剪枝直接作用于神经网络的单个权重参数（Weight Level）。其核心思想是不受限于特定的网络拓扑结构，直接筛选并剔除（置零）那些对模型精度贡献较低的参数。
+\textbf{（1）结构化剪枝 (Structured Pruning)}：该方法以卷积核、通道或完整的网络层为单位进行剪除。例如，基于权重的 $L_1$ 范数删除贡献较小的卷积通道。相比非结构化剪枝，结构化剪枝能直接改变网络拓扑，减少特征图维度，在通用硬件上即可显著降低显存占用并提升推理速度\cite{yi2023fedlpq}。
 
-    \item \textbf{结构化剪枝 (Structured Pruning)}：
-    该方法以卷积核、通道或完整的网络层为单位进行剪除。例如，基于权重的 $L_1$ 范数删除贡献较小的卷积通道。相比非结构化剪枝，结构化剪枝能直接改变网络拓扑，减少特征图维度，在通用硬件上即可显著降低显存占用并提升推理速度\cite{yi2023fedlpq}。
-\end{enumerate}
+\textbf{（2）动态剪枝与语义感知剪枝}：动态剪枝是一种根据训练过程中的重要性动态选择剪枝目标的方法。在异构图推荐系统中，语义感知剪枝特别重要，它需要保留关键的元路径语义结构。与传统的粗粒度剪枝不同，语义感知剪枝基于注意力权重评估不同语义通道的重要性，动态选择对当前任务贡献度高的语义通道进行保留，从而在降低模型复杂度的同时保持语义完整性。
 
 \subsubsection{模型量化 (Model Quantization)}
-模型量化是指将神经网络的权重参数（Weights）和激活值（Activations）从高精度表示（如 32 位浮点数 FP32）转换为低精度表示（如 8 位整数 INT8 或更低比特）的过程。 量化通过减少表示每个参数所需的比特数，能够显著降低模型的存储占用和内存带宽需求，并利用硬件的高效定点运算单元加速推理\cite{khan2025hufe}。根据量化实施阶段的不同，通常分为以下两类：
+模型量化是指将神经网络的权重参数（Weights）和激活值（Activations）从高精度表示（如 32 位浮点数 FP32）转换为低精度表示（如 8 位整数 INT8 或更低比特）的过程。 量化通过减少表示每个参数所需的比特数，能够显著降低模型的存储占用和内存带宽需求，并利用硬件的高效定点运算单元加速推理\cite{khan2025hufe}。根据量化实施阶段的不同，主要分为以下两类：
 
-\begin{enumerate}[label=(\arabic*)]
-    \item \textbf{训练后量化 (Post-Training Quantization, PTQ)}：
-    PTQ 是在模型训练完成并收敛后进行的。它通常只需要少量的校准数据（Calibration Data）来计算量化参数（如缩放因子和零点），无需对整个模型进行重新训练。该方法实施简单、计算成本低，但在极低比特（如 4-bit 以下）情况下可能会导致较大的精度下降\cite{zeng2025feddt}。
+\textbf{（1）量化感知训练 (Quantization-Aware Training, QAT)}：QAT 将量化操作引入到模型的训练或微调过程中。通过在训练的前向传播中模拟量化引入的误差（Quantization Noise），并利用直通估计器（Straight-Through Estimator, STE）在反向传播中更新梯度，使模型能够适应低精度表示。
 
-    \item \textbf{量化感知训练 (Quantization-Aware Training, QAT)}：
-    QAT 将量化操作引入到模型的训练或微调过程中。通过在训练的前向传播中模拟量化引入的误差（Quantization Noise），并利用直通估计器（Straight-Through Estimator, STE）在反向传播中更新梯度，使模型能够适应低精度表示。
-\end{enumerate}
+\textbf{（2）残差梯度量化 (Residual Gradient Quantization)}：残差梯度量化是一种专门针对联邦学习场景的量化技术\cite{alistarh2017qsgd}。其核心思想是通过本地误差累积机制，将量化误差延迟到后续轮次传输，从而在降低通信开销的同时保持模型精度。具体而言，客户端在量化梯度前，先将上一轮累积的量化误差加入当前梯度，然后对修正后的梯度进行量化。量化后的误差被存储在本地，用于下一轮的误差补偿。这种机制理论上保证了压缩算法的收敛速率与全精度训练一致，在联邦学习中被广泛应用\cite{yi2023fedlpq}。
 模型剪枝侧重于减少参数数量，而模型量化侧重于降低参数精度。在实际部署中，这两种技术通常是正交且互补的，常被组合使用（例如"先剪枝后量化"）以在保证精度的同时最大化模型的压缩比\cite{openreview2024fedcomloc}。
+
+\subsection{语义感知压缩策略}
+传统的模型压缩方法（如剪枝和量化）通常是"语义无关"的，即不考虑模型参数所承载的语义信息，直接对参数进行压缩。然而，在异构图推荐系统中，模型参数往往具有明确的语义含义（如不同元路径对应的参数代表不同的语义通道），粗暴的压缩可能会破坏关键的语义信息，导致模型性能显著下降。
+
+ 语义感知压缩是一种考虑模型语义结构的压缩方法，其核心思想是在压缩过程中保留对任务最重要的语义信息。在异构图推荐系统中，语义感知压缩需要：\textbf{（1）语义重要性评估}，基于注意力权重或梯度信息评估不同语义通道（如元路径）的重要性；\textbf{（2）动态语义选择}，根据重要性动态选择保留的语义通道，而非固定地压缩所有参数；\textbf{（3）语义完整性保证}，确保压缩后的模型仍能保持关键的语义结构，从而维持推荐性能。
+
+语义感知剪枝是语义感知压缩的重要组成部分。在异构图推荐中，不同元路径代表不同的语义关系（如"用户-点击-物品"代表显式偏好，"用户-同城-用户"代表社交偏好）。语义感知剪枝通过评估各元路径对推荐任务的贡献度，动态选择保留重要的元路径，剔除冗余的语义通道。这种方法不仅降低了模型复杂度，还起到了"语义去噪"的作用，使模型更专注于核心语义特征。
+
+语义感知量化根据语义通道的重要性，对不同通道采用差异化的量化策略。对于重要的语义通道，采用较高精度的量化（如8-bit），而对于次要的语义通道，可以采用更低精度的量化（如4-bit或2-bit）。这种差异化的量化策略能够在保证关键语义信息的同时，最大化压缩比。
+
+语义感知压缩策略在联邦推荐系统中具有重要意义，它能够在降低通信开销的同时保持模型的语义完整性和推荐性能，为联邦推荐系统的大规模部署提供了可行的技术路径\cite{semfed2024}。

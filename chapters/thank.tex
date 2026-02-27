@@ -2,12 +2,18 @@
 
 % --- 标题设置 ---
 \newpage
-\section*{致\quad 谢}
-\label{sec:thank}
+\markboth{致\quad 谢}{致\quad 谢}
+% 致谢标题：三号黑体，居中
+\begin{center}
+{\fontsize{15.75pt}{\baselineskip}\selectfont\heiti\bfseries 致\quad 谢}
+\end{center}
+\vspace{0.5cm}
 \addcontentsline{toc}{section}{致谢}
+\label{sec:thank}
 
 % --- 正文设置 ---
-    \songti \zihao{-4} % 设置正文为宋体、小四号
+% 致谢正文：小四号宋体
+\songti \zihao{-4} % 设置正文为宋体、小四号
     \setlength{\parindent}{2em}     % 首行缩进2字符
     \setlength{\baselineskip}{22pt} % 行间距固定为22pt（约1.5倍）
 
