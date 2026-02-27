@@ -47,3 +47,9 @@ output/
 # 排除大文件
 *.dmg
 images/Cursor-darwin-*.dmg
+
+# 图片压缩备份（无需版本控制）
+images/backup/
+
+# 编译脚本错误产生的字面目录
+$OutDir/

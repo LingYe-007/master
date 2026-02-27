@@ -8,14 +8,14 @@
 \usepackage[backend=biber,sorting=none,gbpub=false,bibstyle=gb7714-2015,citestyle=numeric,
 gbpunctin=false,gbnamefmt=lowercase,
 ]{biblatex}
-% 引用改为右上角上标 [x] 格式（如 [1] [2]）；仅输出编号，避免 gb7714-2015 输出作者名
-\DeclareCiteCommand{\cite}[\mkbibsuperscript]
+% 引用为正文内 [x] 格式（如 [1] [2]），非上标；仅输出编号，避免 gb7714-2015 输出作者名
+\DeclareCiteCommand{\cite}[\mkbibbrackets]
   {\usebibmacro{citeindex}}
   {\usebibmacro{citeindex}%
    \printfield{labelnumber}}
   {\multicitedelim}
   {}
-\providecommand*{\mkbibsuperscript}[1]{\textsuperscript{[#1]}}
+\providecommand*{\mkbibbrackets}[1]{[#1]}
 
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{booktabs}

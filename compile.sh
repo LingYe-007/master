@@ -6,7 +6,7 @@ eval "$(/usr/libexec/path_helper 2>/dev/null)" || true
 
 MAIN="main.tex"
 OUT="output"
-FINAL_NAME="毕业论文-伍勋高-202333248.pdf"
+FINAL_NAME="伍勋高-202333248.pdf"
 
 mkdir -p "$OUT"
 
