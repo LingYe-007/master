@@ -8,14 +8,14 @@
 \usepackage[backend=biber,sorting=none,gbpub=false,bibstyle=gb7714-2015,citestyle=numeric,
 gbpunctin=false,gbnamefmt=lowercase,
 ]{biblatex}
-% 引用为正文内 [x] 格式（如 [1] [2]），非上标；仅输出编号，避免 gb7714-2015 输出作者名
-\DeclareCiteCommand{\cite}[\mkbibbrackets]
+% 引用为右上角上标格式，带方括号 [1] [2]
+\DeclareCiteCommand{\cite}[\mkbibbracketsuper]
   {\usebibmacro{citeindex}}
   {\usebibmacro{citeindex}%
    \printfield{labelnumber}}
   {\multicitedelim}
   {}
-\providecommand*{\mkbibbrackets}[1]{[#1]}
+\newcommand*{\mkbibbracketsuper}[1]{\textsuperscript{[#1]}}
 
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{booktabs}
@@ -51,7 +51,7 @@ gbpunctin=false,gbnamefmt=lowercase,
   {}
   {0pt}
   {}
-\titlespacing*{\section}{0pt}{\baselineskip}{0.5\baselineskip}
+\titlespacing*{\section}{0pt}{24pt}{18pt}
 
 % 二级标题（节）：黑体四号，居左，段前段后正常
 \titleformat{\subsection}
@@ -65,7 +65,7 @@ gbpunctin=false,gbnamefmt=lowercase,
   {0pt}
   {}
 % 标题前后间距（按需更紧凑）
-\titlespacing*{\subsection}{0pt}{0.6\baselineskip}{0.25\baselineskip}
+\titlespacing*{\subsection}{0pt}{18pt}{12pt}
 
 % 三级标题（条）：小四黑体，居左，无额外段落间距
 \titleformat{\subsubsection}
@@ -78,7 +78,7 @@ gbpunctin=false,gbnamefmt=lowercase,
   {}
   {0pt}
   {}
-\titlespacing*{\subsubsection}{0pt}{0.35\baselineskip}{0.15\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{6pt}{6pt}
 \usepackage{epstopdf}
 \usepackage{caption}
 \usepackage{graphicx, subfig}
@@ -114,6 +114,8 @@ gbpunctin=false,gbnamefmt=lowercase,
 \newcommand{\xiaowuhao}{\fontsize{9pt}{\baselineskip}\selectfont}
 \newcommand{\liuhao}{\fontsize{7.875pt}{\baselineskip}\selectfont}
 \newcommand{\qihao}{\fontsize{5.25pt}{\baselineskip}\selectfont}
+% 目录条目统一字号（章、节、条同大）：小四号 1.5 倍行距
+\newcommand{\tocentrysize}{\fontsize{12pt}{18pt}\selectfont}
 %---------------------------------------------------------------------------%
 %-                               Chinesization                             -%
 %---------------------------------------------------------------------------%
@@ -131,14 +133,16 @@ gbpunctin=false,gbnamefmt=lowercase,
 \renewcommand{\listtablename}{\centerline{\sanhao\heiti 表~~~~目~~~~录}}
 \renewcommand{\thefootnote}{\arabic{footnote}}
 \renewcommand{\theequation}{\thesection.\arabic{equation}}
-% 图表编号格式：按章编号，使用短横线（如"图3-1"、"表2-1"）
-\renewcommand{\thefigure}{\thesection-\arabic{figure}}
-\renewcommand{\thetable}{\thesection-\arabic{table}}
+% 图表编号：按章编号（图2-1、表3-1），与公式一致
+% 图、表：全文从 1 起连续编号，与图/表目录一致（图1、表1、…）
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thetable}{\arabic{table}}
 %---------------------------------------------------------------------------%
 %-                                公式随章编号                               -%
 %---------------------------------------------------------------------------%
 \date{}
 \makeatletter
+% 目录中“章”级条目（摘要、第一章、参考文献等）：与节同字号（小四号），黑体
 \renewcommand*\l@chapter[2]{%
  \ifnum \c@tocdepth >\m@ne
    \addpenalty{-\@highpenalty}%
@@ -147,7 +151,7 @@ gbpunctin=false,gbnamefmt=lowercase,
    \begingroup
      \parindent \z@ \rightskip \@pnumwidth
      \parfillskip -\@pnumwidth
-     \leavevmode \bfseries
+     \leavevmode \tocentrysize\heiti\bfseries
      \advance\leftskip\@tempdima
      #1\nobreak\leaders\hbox{$\m@th
        \mkern \@dotsep mu\hbox{.}\mkern \@dotsep
@@ -157,8 +161,7 @@ gbpunctin=false,gbnamefmt=lowercase,
  \fi}
 \date{}
 \numberwithin{equation}{section}
-\numberwithin{figure}{section}
-\numberwithin{table}{section}
+% 图、表均全文连续，不按章重置
 %---------------------------------------------------------------------------%
 %-                              Tabular Option                             -%
 %---------------------------------------------------------------------------%
@@ -166,14 +169,16 @@ gbpunctin=false,gbnamefmt=lowercase,
 %---------------------------------------------------------------------------%
 %-                              Caption Option                             -%
 %---------------------------------------------------------------------------%
-% 图表标题格式：五号宋体，紧凑间距
-\DeclareCaptionFont{nwucaption}{\wuhao\songti}
-\captionsetup[figure]{labelsep=space,font={nwucaption},skip=3pt,belowskip=3pt}
-\captionsetup[table]{labelsep=space,font={nwucaption},skip=3pt,aboveskip=3pt}
-% 减少图表与正文的间距
-\setlength{\floatsep}{6pt plus 2pt minus 2pt}      % 两个浮动体之间的距离
-\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}  % 浮动体与正文之间的距离
-\setlength{\intextsep}{6pt plus 2pt minus 2pt}     % 浮动体在文本中的间距
+% 图表题：编号五号宋体不加粗，题目五号宋体加粗；编号与题之间空半角2格（1em≈2半角）
+\DeclareCaptionFont{nwulabel}{\wuhao\songti}
+\DeclareCaptionFont{nwucaption}{\wuhao\bfseries\songti}
+% labelsep=quad 约 1em，相当于编号与题之间空半角 2 格
+\captionsetup[figure]{labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=2pt,belowskip=2pt}
+\captionsetup[table]{labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=2pt,aboveskip=2pt}
+% 图片/表格与正文间距（收紧，避免上下留白过大）
+\setlength{\floatsep}{4pt plus 1pt minus 1pt}       % 两个浮动体之间
+\setlength{\textfloatsep}{5pt plus 1pt minus 1pt}  % 浮动体与页面顶部/底部正文
+\setlength{\intextsep}{4pt plus 1pt minus 1pt}     % 浮动体在正文中时的上下间距
 %---------------------------------------------------------------------------%
 %-                             Reference Resource                          -%
 %---------------------------------------------------------------------------%
@@ -182,23 +187,21 @@ gbpunctin=false,gbnamefmt=lowercase,
 %-                                Page Control                             -%
 %---------------------------------------------------------------------------%
 % 版心由 main.tex 中 \geometry 统一设置，此处不再重复以免冲突
-% 目录格式：符合中文学术论文标准
-% 目录标题：居中，三号黑体（已在上面设置 \contentsname）
-
-% 第一级（章）：黑体四号字，顶格；不显示章前数字（仅显示“第一章”“第二章”等标题文字）
-\titlecontents{section}[0em]{\fontsize{14pt}{16.8pt}\selectfont\heiti\bfseries\renewcommand{\numberline}[1]{}}{}{}%
+% 目录格式：章、节、条统一小四号（\tocentrysize），仅字体区分：章黑体、节条宋体
+% 第一级（章）：小四号黑体，顶格
+\titlecontents{section}[0em]{\tocentrysize\heiti\bfseries\renewcommand{\numberline}[1]{}}{}{}%
 {\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}\let\numberline\saved@numberline]
 
-% 第二级（节）：宋体小四号字，缩进 2.5em（1.1 等靠后）
-\titlecontents{subsection}[2.5em]{\fontsize{12pt}{14.4pt}\selectfont\songti}{\contentslabel{2.5em}\ }%
+% 第二级（节）：小四号宋体，与章同字号，缩进 2.5em
+\titlecontents{subsection}[2.5em]{\tocentrysize\songti}{\contentslabel{2.5em}\ }%
 {}{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}]
 
-% 第三级（条）：宋体小四号字，缩进 3.8em（相对节再靠后）
-\titlecontents{subsubsection}[3.8em]{\fontsize{12pt}{14.4pt}\selectfont\songti}{\contentslabel{3em}\ }%
+% 第三级（条）：小四号宋体，与章同字号，缩进 3.8em
+\titlecontents{subsubsection}[3.8em]{\tocentrysize\songti}{\contentslabel{3em}\ }%
 {}{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}]
 
-% 第四级（段）：宋体小四号字，缩进 4em
-\titlecontents{paragraph}[4em]{\fontsize{12pt}{14.4pt}\selectfont\songti}{\contentslabel{3.5em}\ }%
+% 第四级（段）：小四号宋体，缩进 4em
+\titlecontents{paragraph}[4em]{\tocentrysize\songti}{\contentslabel{3.5em}\ }%
 {}{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}]
 % 图目录和表目录格式：五号宋体，紧凑间距，与目录格式一致
 \makeatletter

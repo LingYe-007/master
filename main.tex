@@ -1,6 +1,8 @@
-% 设置正文字体为小四号宋体（12pt对应小四号）
-\documentclass[oneside,12pt,reqno]{ctexart}
-% ctexart默认使用宋体，12pt对应小四号
+% 设置正文字体为小四号宋体（12pt对应小四号）；twoside 用于奇偶页眉
+\documentclass[twoside,12pt,reqno]{ctexart}
+% geometry 必须早于 fancyhdr 加载，否则页眉/页脚居中会相对于版心而非纸张
+\usepackage{geometry}
+\geometry{left=3cm, right=2cm, top=30mm, bottom=2.5cm, headheight=6mm, headsep=15mm}
 \input{images/option}
 \renewcommand{\textfraction}{0.15}    % 正文至少占页面的15%（避免图片占满整页）
 % \renewcommand{\floatpagefraction}{0.8}% 图片占页面80%以上才会单独占页
@@ -14,8 +16,8 @@
 \usepackage{indentfirst}
 \usepackage{graphicx}   % 图片
 \usepackage{booktabs}   % 三线表
-\usepackage{geometry}   % 页面设置
-\usepackage{fancyhdr}   % 页眉页脚
+\usepackage{fancyhdr}   % 页眉页脚（geometry 已在文件开头加载）
+\usepackage{eso-pic}    % 用于在纸张坐标系中绝对居中绘制页眉
 \usepackage{hyperref}   % 超链接
 \usepackage{titletoc}   % 目录格式
 \usepackage{enumitem}
@@ -32,28 +34,44 @@
 % \usepackage{algorithmic} % 已注释：与 algpseudocode 冲突，建议不用
 
 
-% --- 3. 页面设置 (参考西北大学标准) ---
-% 版心仅由此处 geometry 统一设置，option.tex 中不再重复以免冲突
-\geometry{left=3cm, right=2.5cm, top=3cm, bottom=2.5cm}
-\setlength{\headheight}{14.5pt}  % 消除 fancyhdr 页眉高度过小警告
-
-% --- 4. 页眉页脚设置 ---
-% 页眉统一：宋体五号（10.5pt），水平居中（目录、图目录、表目录等均同）
-\newcommand{\headerfont}{\wuhao\songti}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[C]{\headerfont\leftmark}
-\renewcommand{\headrulewidth}{0.4pt}
-\fancyfoot[C]{\small \thepage}
-% plain 样式同样使用宋体五号页眉
+% --- 3. 页眉页脚（西北大学：从绪论开始）---
+% 分析：fancyhdr 的 [C] 以 typeblock 为基准，\headwidth=\paperwidth 无法改变起始位置，故无法相对纸张居中。
+% 方案：用 eso-pic 在 shipout 时于纸张坐标 (paperwidth/2, paperheight-12mm) 处绘制页眉，实现物理居中。
+\newcommand{\headerfont}{\xiaowuhao\songti}
+\newcounter{usefancyheader}
+\pagestyle{empty}
+% 前置部分（摘要、目录）页码：小五号 Times New Roman 罗马数字
+\fancypagestyle{front}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyfoot[C]{\wuhao\rmfamily\thepage}
+}
+% eso-pic：仅在主体部分（绪论起）绘制相对纸张物理居中的页眉
+% 使用 \AtPageCenter 确保奇偶页均以纸张物理中心为基准，再用 \raisebox 上移到距顶 12mm
+\AddToShipoutPictureFG{%
+  \ifnum\value{usefancyheader}=1
+    \AtPageCenter{%
+      \raisebox{\dimexpr0.5\paperheight-12mm\relax}{%
+        \makebox(0,0)[c]{\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士学位论文\fi}%
+      }%
+    }%
+  \fi
+}
+% fancy/plain：清空页眉文字（由 eso-pic 绘制），保留页眉线和页脚
+\fancypagestyle{fancy}{%
+  \fancyhf{}
+  \fancyhead[CE,CO,LE,RE,LO,RO]{}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \fancyfoot[CE,CO]{\wuhao\thepage}
+}
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \fancyhead[C]{\headerfont\leftmark}
+  \fancyhead[CE,CO,LE,RE,LO,RO]{}
   \renewcommand{\headrulewidth}{0.4pt}
-  \fancyfoot[C]{\small \thepage}
+  \fancyfoot[CE,CO]{\wuhao\thepage}
 }
-% 每章结束后留一页空页
-\newcommand{\chapterblank}{\clearpage\thispagestyle{empty}\null\newpage}
+% 每章另起一页（方案A：不再插整页空白，仅换页）
+\newcommand{\chapterblank}{\clearpage}
 % ctexart 无 \mainmatter，定义为空操作以免报错
 \providecommand{\mainmatter}{}
 
@@ -63,8 +81,6 @@
 \date{2025年6月}
 
 \begin{document}
-\let\maketitle\relax  % 不输出标题页，避免摘要前出现 *、[1]¹ 等
-
 
 % =========================================================
 %   前置部分 (Front Matter)
@@ -72,18 +88,17 @@
 % =========================================================
 % \frontmatter  % 已注释：避免首页出现 * [1]1 等
 
-% 1. 封面页（已删除）
-% \input{chapters/titlePage}
+% 1. 封面页
+\input{chapters/titlePage}
 
-% 2. 声明页 (独创性声明)（已删除）
-% \input{chapters/statement}
+% 2. 声明页 (知识产权声明书和独创性声明)
+\input{chapters/statement}
 
 % 3. 摘要页 (中英文摘要)
 \input{chapters/abstract}
 
-% 4. 目录       % 自动生成目录
-% 设置目录深度为4级（显示章、节、条、段）
-\setcounter{tocdepth}{4}
+% 4. 目录（西北大学规范：一般为二级或三级）
+\setcounter{tocdepth}{3}
 \input{TableofContents}  % 目录页（包含 \tableofcontents）
 \newpage
 % 图目录
@@ -105,10 +120,11 @@
 
 % =========================================================
 %   主体部分 (Main Matter)
-%   特点：页码重置为阿拉伯数字 (1, 2, 3...)
+%   特点：页码重置为阿拉伯数字 (1, 2, 3...)；绪论从奇数页起，页眉从绪论开始
 % =========================================================
 \mainmatter
-
+\cleardoublepage
+\setcounter{usefancyheader}{1}  % 启用 eso-pic 绘制相对纸张居中的页眉
 \input{chapters/chap1_intro}
 \chapterblank
 \input{chapters/chap2_related}
@@ -137,8 +153,8 @@
 \input{chapters/thank} 
 % \input{backmatter/ack} % 已注释：避免重复致谢
 
-% 3. 科研成果/简历（已删除）
-% \input{backmatter/resume}
+% 3. 攻读硕士学位期间取得的科研成果
+\input{backmatter/resume}
 
 % \input{} % 已删除：空的 input 会导致编译错误
 
