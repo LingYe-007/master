@@ -401,7 +401,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
 为了模拟联邦学习环境，我们利用狄利克雷分布 $\text{Dir}(\alpha)$ 将交互数据划分到 $N_{client}=50$ 个客户端中。其中 $\alpha$ 控制数据异构程度，$\alpha$ 越小表示 Non-IID 程度越高。除非特殊说明，默认设置 $\alpha=1.0$。
 
 \subsubsection{对比基线模型}
-本实验选取了三类主流算法作为对比基准：经典联邦推荐 FedNCF\cite{luo2024perfedrec}，联邦图神经网络 FedGNN\cite{wu2021fedgnn}、FedPerGNN\cite{wu2022fedpergnn}、FedHGNN\cite{yan2024fedhgnn}，以及联邦原型学习 FedProto\cite{tan2022fedproto}。
+本实验选取了三类主流算法作为对比基准：经典联邦推荐 FedNCF\cite{jiang2022fedncf}，联邦图神经网络 FedGNN\cite{wu2021fedgnn}、FedPerGNN\cite{wu2022fedpergnn}、FedHGNN\cite{yan2024fedhgnn}，以及联邦原型学习 FedProto\cite{tan2022fedproto}。
 
 \subsubsection{参数设置}
 评估指标采用 HR@K 和 NDCG@K（$K=10, 20$；分别表示前 $K$ 个推荐结果中的命中率与前 $K$ 位的归一化折损累积增益）。关键超参数设置如下：属性近邻数 $k=10$，对比学习温度 $\tau=0.2$，原型温度 $\tau_p=0.5$，损失权重 $\lambda_1=\lambda_2=0.1$。每轮随机采样 20\% 的客户端参与训练。
@@ -411,7 +411,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
 \subsubsection{总体性能对比 (RQ1)}
 \label{subsubsec:overall_performance}
 
-表 \ref{tab:overall_performance} 展示了各算法在三个数据集上的总体性能对比。
+表~\ref{tab:overall_performance} 展示了各算法在三个数据集上的总体性能对比。
 
 \begin{figure}[H]
     \centering
@@ -477,7 +477,7 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
 \subsubsection{Non-IID 鲁棒性分析 (RQ3)}
 \label{subsubsec:non_iid}
 
-为了验证模型对数据异构的鲁棒性，我们调整 Dirichlet 参数 $\alpha$，观察模型在 MovieLens-1M 上的 NDCG@10 变化。图 \ref{fig:non_iid_robustness} 展示了不同 $\alpha$ 值下各算法的训练过程，表 \ref{tab:non_iid_data} 总结了最终的性能对比。
+为了验证模型对数据异构的鲁棒性，我们调整 Dirichlet 参数 $\alpha$，观察模型在 MovieLens-1M 上的 NDCG@10 变化。图~\ref{fig:non_iid_robustness} 展示了不同 $\alpha$ 值下各算法的训练过程，表~\ref{tab:non_iid_data} 总结了最终的性能对比。
 
 \begin{figure}[H]
     \centering
@@ -505,9 +505,9 @@ FedASCL 的时间开销主要由三个阶段组成：属性图构建、双视图
     \end{tabular}
 \end{table}
 
-从图 \ref{fig:non_iid_robustness} 可以看出，所有算法在极端异质性（$\alpha=0.1$）下的性能均低于 IID 场景（$\alpha=\infty$），但随着 $\alpha$ 值的增大（数据异质性降低），各算法的性能均逐渐提升。值得注意的是，当 $\alpha$ 达到 0.5 后，各算法的性能提升趋于稳定，这表明降低异质性带来的收益存在饱和点。
+从图~\ref{fig:non_iid_robustness} 可以看出，所有算法在极端异质性（$\alpha=0.1$）下的性能均低于 IID 场景（$\alpha=\infty$），但随着 $\alpha$ 值的增大（数据异质性降低），各算法的性能均逐渐提升。值得注意的是，当 $\alpha$ 达到 0.5 后，各算法的性能提升趋于稳定，这表明降低异质性带来的收益存在饱和点。
 
-从表 \ref{tab:non_iid_data} 可以看出，当数据分布极端倾斜（$\alpha=0.1$）时，FedASCL 的性能衰减最小（仅 7.9\%），明显优于 FedGNN 的 25.1\% 和 FedHGNN 的 18.1\%。此外，FedASCL 在所有 $\alpha$ 值下均保持了最优性能，说明了全局语义原型能够校正本地模型的语义漂移，使模型在不同数据分布下都具有良好的鲁棒性。
+从表~\ref{tab:non_iid_data} 可以看出，当数据分布极端倾斜（$\alpha=0.1$）时，FedASCL 的性能衰减最小（仅 7.9\%），明显优于 FedGNN 的 25.1\% 和 FedHGNN 的 18.1\%。此外，FedASCL 在所有 $\alpha$ 值下均保持了最优性能，说明了全局语义原型能够校正本地模型的语义漂移，使模型在不同数据分布下都具有良好的鲁棒性。
 
 \subsubsection{消融实验}
 \label{subsubsec:ablation}

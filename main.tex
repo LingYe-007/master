@@ -1,12 +1,8 @@
-% 设置正文字体为小四号宋体（12pt对应小四号）；oneside 使每页版心位置一致，避免奇偶页内容一偏左一偏右
+% 设置正文字体为小四号宋体（12pt对应小四号）；oneside 单面打印
 \documentclass[oneside,12pt,reqno]{ctexart}
-% geometry 必须早于 fancyhdr 加载
+% geometry 必须早于 fancyhdr 加载，否则页眉/页脚居中会相对于版心而非纸张
 \usepackage{geometry}
-\geometry{left=2.5cm, right=2.5cm, top=30mm, bottom=2.5cm, headheight=6mm, headsep=15mm, bindingoffset=0pt}
-% 强制左右留白相等（防止 ctex 等后续覆盖）：版心左缘 2.5cm，宽度 = 纸宽 - 5cm
-\setlength{\oddsidemargin}{\dimexpr2.5cm-1in\relax}
-\setlength{\evensidemargin}{\dimexpr2.5cm-1in\relax}
-\setlength{\textwidth}{\dimexpr\paperwidth-5cm\relax}
+\geometry{left=3cm, right=2cm, top=30mm, bottom=2.5cm, headheight=6mm, headsep=15mm}
 \input{images/option}
 \renewcommand{\textfraction}{0.15}    % 正文至少占页面的15%（避免图片占满整页）
 % \renewcommand{\floatpagefraction}{0.8}% 图片占页面80%以上才会单独占页
@@ -39,8 +35,10 @@
 
 
 % --- 3. 页眉页脚（西北大学：从绪论开始）---
-% 页眉恢复为 fancyhdr：版心内居中，奇页章名、偶页“西北大学硕士学位论文”；oneside 下每页版心一致，无偏左偏右。
+% 分析：fancyhdr 的 [C] 以 typeblock 为基准，\headwidth=\paperwidth 无法改变起始位置，故无法相对纸张居中。
+% 方案：用 eso-pic 在 shipout 时于纸张坐标 (paperwidth/2, paperheight-12mm) 处绘制页眉，实现物理居中。
 \newcommand{\headerfont}{\xiaowuhao\songti}
+\newcounter{usefancyheader}
 \pagestyle{empty}
 % 前置部分（摘要、目录）页码：小五号 Times New Roman 罗马数字
 \fancypagestyle{front}{%
@@ -48,17 +46,28 @@
   \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[C]{\wuhao\rmfamily\thepage}
 }
-% 主体部分（绪论起）：页眉与页眉线由 fancyhdr 在版心内居中
+% eso-pic：仅在主体部分（绪论起）绘制相对纸张物理居中的页眉
+% 策略：\AtPageUpperLeft 原点在页顶左；\makebox[\paperwidth][c] 撑满整页使文字居中；
+%       页眉线也用 eso-pic 绘制，保证奇偶页都相对纸张居中
+\AddToShipoutPictureFG{%
+  \ifnum\value{usefancyheader}=1
+    \AtPageUpperLeft{%
+      \put(\dimexpr0.5\paperwidth\relax,-\dimexpr12mm\relax){\makebox(0,0)[c]{\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士学位论文\fi}}%
+      \put(0,-\dimexpr18mm\relax){\rule{\paperwidth}{0.4pt}}%
+    }%
+  \fi
+}
+% fancy/plain：页眉文字和线由 eso-pic 绘制，此处仅保留页脚
 \fancypagestyle{fancy}{%
   \fancyhf{}
-  \fancyhead[CE,CO]{\centering\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士学位论文\fi}
-  \renewcommand{\headrulewidth}{0.4pt}
+  \fancyhead[CE,CO,LE,RE,LO,RO]{}
+  \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[CE,CO]{\wuhao\thepage}
 }
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \fancyhead[CE,CO]{\centering\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士学位论文\fi}
-  \renewcommand{\headrulewidth}{0.4pt}
+  \fancyhead[CE,CO,LE,RE,LO,RO]{}
+  \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[CE,CO]{\wuhao\thepage}
 }
 % 每章另起一页（方案A：不再插整页空白，仅换页）
@@ -75,18 +84,17 @@
 
 % =========================================================
 %   前置部分 (Front Matter)
-%   特点：页码为罗马数字 (i, ii, iii...)；不用 \frontmatter 避免摘要前出现多余空白与符号
+%   特点：页码为罗马数字 (i, ii, iii...)
 % =========================================================
-% \frontmatter  % 已注释：避免首页出现 * [1]1 等
 
 % 1. 摘要页 (中英文摘要)
 \input{chapters/abstract}
 
-% 2. 目录（西北大学规范：一般为二级或三级）
+% 4. 目录（西北大学规范：一般为二级或三级）
 \setcounter{tocdepth}{3}
 \input{TableofContents}  % 目录页（包含 \tableofcontents）
 \newpage
-% 3. 图目录
+% 图目录
 \markboth{图\quad 目\quad 录}{图\quad 目\quad 录}
 \begin{center}
 \sanhao\heiti 图~~~~目~~~~录
@@ -94,7 +102,7 @@
 \addvspace{1em}
 \StartToc{lof}
 \newpage
-% 4. 表目录
+% 表目录
 \markboth{表\quad 目\quad 录}{表\quad 目\quad 录}
 \begin{center}
 \sanhao\heiti 表~~~~目~~~~录
@@ -108,8 +116,8 @@
 %   特点：页码重置为阿拉伯数字 (1, 2, 3...)；绪论从奇数页起，页眉从绪论开始
 % =========================================================
 \mainmatter
-\cleardoublepage
-\pagestyle{fancy}
+\clearpage
+\setcounter{usefancyheader}{1}  % 启用 eso-pic 绘制相对纸张居中的页眉
 \input{chapters/chap1_intro}
 \chapterblank
 \input{chapters/chap2_related}

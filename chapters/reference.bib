@@ -81,6 +81,14 @@
   year={2021}
 }
 
+@inproceedings{jiang2022fedncf,
+  title={FedNCF: Federated Neural Collaborative Filtering for Privacy-preserving Recommender System},
+  author={Jiang, Xueyong and Liu, Baisong and Qin, Jiangcheng and Zhang, Yunchong and Qian, Jiangbo},
+  booktitle={Proceedings of the International Joint Conference on Neural Networks (IJCNN)},
+  year={2022},
+  organization={IEEE}
+}
+
 @inproceedings{wang2024macrec,
   title={MACRec: A Multi-Agent Collaboration Framework for Recommendation},
   author={Wang, Zhefan and Yu, Yuanqing and Zhang, Wentao},
@@ -107,11 +115,16 @@
   publisher={IEEE}
 }
 
-@inproceedings{he2024hgca,
-  title={HGCA: Heterogeneous Graph Contrastive Learning for Attribute Completion},
-  author={He, Yijun and others},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  year={2024}
+@article{he2024hgca,
+  title={Analyzing Heterogeneous Networks With Missing Attributes by Unsupervised Contrastive Learning},
+  author={He, Dongxiao and Liang, Chundong and Huo, Cuiying and Feng, Zhiyong and Jin, Di and Yang, Liang and Zhang, Weixiong},
+  journal={IEEE Transactions on Neural Networks and Learning Systems},
+  volume={35},
+  number={4},
+  pages={4438--4450},
+  year={2024},
+  publisher={IEEE},
+  note={Method referred to as HGCA}
 }
 
 @inproceedings{wu2023fccf,
@@ -186,20 +199,21 @@
 }
 
 @article{zeng2025feddt,
-  title={A Dynamic Knowledge Distillation and Ternary Quantization Method for Federated Learning in Heterogeneous Scenarios (FedDT)},
-  author={Zeng, Jun and others},
+  title={FedDT: A Communication-Efficient Federated Learning via Knowledge Distillation and Ternary Compression},
+  author={He, Zixiao and Zhu, Gengming and Zhang, Shaobo and Luo, Entao and Zhao, Yijiang},
   journal={Electronics},
   volume={14},
   number={11},
   pages={2183},
-  year={2025}
+  year={2025},
+  publisher={MDPI}
 }
 
-@inproceedings{semfed2024,
+@article{semfed2024,
   title={SEMFED: Semantic-Aware Resource-Efficient Federated Learning for Heterogeneous NLP Tasks},
-  author={Author, Anonymous},
-  booktitle={Conference on Empirical Methods in Natural Language Processing (EMNLP)},
-  year={2024}
+  author={Hussain, Sajid and Sohail, Muhammad and Khan, Nauman Ali},
+  journal={arXiv preprint arXiv:2505.23801},
+  year={2025}
 }
 
 @article{yi2023fedlpq,
@@ -219,11 +233,12 @@
   year={2022}
 }
 
-@inproceedings{openreview2024fedcomloc,
-  title={FedComLoc: Communication-Efficient Federated Learning via Compression and Local Training},
-  author={Unknown},
-  booktitle={OpenReview},
-  year={2024},
+@article{openreview2024fedcomloc,
+  title={FedComLoc: Communication-Efficient Distributed Training of Sparse and Quantized Models},
+  author={Yi, Kai and Meinhardt, Georg and Condat, Laurent and Richt{\'a}rik, Peter},
+  journal={Transactions on Machine Learning Research},
+  year={2025},
+  note={ICLR 2025 Withdrawn, accepted by TMLR},
   url={https://openreview.net/forum?id=0jmFRA64Vw}
 }
 
@@ -267,6 +282,16 @@
   pages={4395--4411},
   year={2024},
   publisher={IEEE}
+}
+
+@inproceedings{ding2025lbifl,
+  title={LBI-FL: Low-Bit Integerized Federated Learning with Temporally Dynamic Bit-Width Allocation},
+  author={Ding, Li and Zhang, Hao and Dai, Wenrui and Li, Chenglin and Lu, Weijia and Yang, Zhifei and Zhang, Xiaodong and Ma, Xiaofeng and Zou, Junni and Xiong, Hongkai},
+  booktitle={Proceedings of the 42nd International Conference on Machine Learning},
+  pages={13885--13899},
+  year={2025},
+  volume={267},
+  publisher={PMLR}
 }
 
 % ==================================================================
@@ -384,10 +409,14 @@
 }
 
 @article{li2023metapath,
-  title={基于元路径的异构图神经网络推荐算法研究},
-  author={李某某},
-  journal={计算机应用研究},
-  year={2023},
+  title={多阶元路径引导的异质图神经网络新闻推荐模型},
+  author={王菲菲 and 林中潭 and 吴昆 and 韩树庭 and 孙立博 and 吕晓玲},
+  journal={系统工程理论与实践},
+  volume={44},
+  number={5},
+  pages={1561--1576},
+  year={2024},
+  doi={10.12011/SETP2023-0313},
   lang={zh}
 }
 
@@ -415,6 +444,36 @@
 % Part 6: Foundation Theory & Regulations
 % 基础理论与法规
 % ==================================================================
+@article{konecny2016federated,
+  title={Federated Optimization: Distributed Machine Learning for On-Device Intelligence},
+  author={Kone{\v{c}}n{\'y}, Jakub and McMahan, H. Brendan and Ramage, Daniel and Richt{\'a}rik, Peter},
+  journal={arXiv preprint arXiv:1610.02527},
+  year={2016},
+  note={NIPS 2016 Workshop}
+}
+
+@inproceedings{mcmahan2017fedavg,
+  title={Communication-Efficient Learning of Deep Networks from Decentralized Data},
+  author={McMahan, Brendan and Moore, Eider and Ramage, Daniel and Hampson, Seth and {Arcas, Blaise Aguera y}},
+  booktitle={Proceedings of the 20th International Conference on Artificial Intelligence and Statistics},
+  pages={1273--1282},
+  year={2017},
+  volume={54},
+  publisher={PMLR}
+}
+
+@article{liu2021fesog,
+  title={Federated Social Recommendation with Graph Neural Network},
+  author={Liu, Zhiwei and Yang, Liangwei and Fan, Ziwei and Peng, Hao and Yu, Philip S.},
+  journal={ACM Transactions on Intelligent Systems and Technology},
+  volume={13},
+  number={4},
+  pages={1--24},
+  year={2022},
+  publisher={ACM},
+  note={arXiv:2111.10778, 2021}
+}
+
 @article{kipf2016semi,
   title={Semi-supervised classification with graph convolutional networks},
   author={Kipf, Thomas N and Welling, Max},
@@ -541,7 +600,7 @@
 % ==================================================================
 % 补充：正文引用中缺失的 key（已按文献信息补全）
 % ==================================================================
-@article{transfr2026,
+@article{transfr2024,
   title={Federated Adaptation for Foundation Model-based Recommendations},
   author={Zhang, Chunxu and Long, Guodong and Guo, Hongkuan and Fang, Xiao and Song, Yang and Liu, Zhaojie and Zhou, Guorui and Zhang, Zijian and Liu, Yang and Yang, Bo},
   journal={arXiv preprint arXiv:2405.04840},
@@ -571,7 +630,7 @@
   doi={10.18653/v1/2025.findings-naacl.155}
 }
 
-@article{metafrs2025,
+@article{metafrs2018,
   title={Federated Meta-Learning for Recommendation},
   author={Chen, Fei and Dong, Zhenhua and Li, Zhenguo and He, Xiuqiang},
   journal={arXiv preprint arXiv:1802.03976},

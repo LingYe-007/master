@@ -4,14 +4,11 @@
 % ctex + xeCJK 环境下不再需要 CJK 宏包（避免与 xeCJK 冲突）
 % \usepackage{CJK,CJKnumb}
 \usepackage{url}
-% 正文引用只显示文献编号，右上角上标；参考文献表按 GB/T 7714-2015 顺序编码制（纯数字标号）
-% 使用 style=gb7714-2015 统一为顺序编码制；sorting=none 按引用顺序分配数字
-\usepackage[backend=biber,style=gb7714-2015,sorting=none,gbpub=false,
-gbpunctin=false,gbnamefmt=lowercase,gbbiblabel=bracket,
+% 正文引用只显示文献编号，右上角上标；参考文献表仍按 GB/T 7714-2015 格式
+\usepackage[backend=biber,sorting=none,gbpub=false,bibstyle=gb7714-2015,citestyle=gb7714-2015,
+gbpunctin=false,gbnamefmt=lowercase,gbcitelabel=bracket,
 ]{biblatex}
-% 强制按引用顺序分配数字标号，避免部分条目使用字母标号
-\ExecuteBibliographyOptions{sorting=none}
-% 引用为右上角上标格式，带方括号 [1] [2]，仅输出 labelnumber
+% 引用为右上角上标格式，带方括号 [1] [2]
 \DeclareCiteCommand{\cite}[\mkbibbracketsuper]
   {\usebibmacro{citeindex}}
   {\usebibmacro{citeindex}%

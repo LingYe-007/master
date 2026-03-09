@@ -99,7 +99,7 @@
         \item 量化机制将位宽降低至 $b$ bits ($b \ll 32$)；
     \item 额外开销包括元路径索引（$K \cdot \lceil \log_2 M \rceil$ bits）和缩放因子（$K \cdot 32$ bits）。
     \end{enumerate}
-因此，本章策略的通信开销约为 $O(K \cdot d \cdot b + K \cdot \log_2 M + K \cdot 32)$ bits。压缩倍数（Compression Factor, CF）定义为原始通信量与压缩后通信量的比值：
+因此，本章策略的通信开销约为 $O(K \cdot d \cdot b + K \cdot \log_2 M + K \cdot 32)$ bits。压缩比（Compression Factor, CF）定义为原始通信量与压缩后通信量的比值：
 \begin{equation}
     \text{CF} = \frac{M \cdot d \cdot 32}{K \cdot d \cdot b + K \cdot \lceil \log_2 M \rceil + K \cdot 32} \approx \frac{M \cdot 32}{K \cdot b} = \frac{32}{\rho \cdot b}
     \label{eq:compression_factor}
@@ -111,7 +111,7 @@
 
 为评估该策略，本节在 MovieLens-1M 和 Yelp 数据集上做实验，并讨论以下三个问题：
 \begin{enumerate}
-    \item \textbf{RQ1（性能保持）：} 在高压缩倍数下，FedASCL-Compress 能否保持甚至超越全精度模型的推荐准确率？
+    \item \textbf{RQ1（性能保持）：} 在高压缩比下，FedASCL-Compress 能否保持甚至超越全精度模型的推荐准确率？
     \item \textbf{RQ2（机制效果）：} 动态元路径选择器（剪枝）和残差梯度量化（量化）各自对模型性能有何贡献？是否确实存在"语义去噪"效应？
     \item \textbf{RQ3（通信效率）：} 相比现有压缩方法，该策略在通信开销和训练时间上能带来多大的缩减？
 \end{enumerate}
@@ -130,18 +130,18 @@
 
 \textbf{（3）Top-k Sparsification}：基于梯度幅值的稀疏化方法，仅保留绝对值最大的 $k\%$ 参数\cite{jiang2022fedmp}。
 
-\textbf{（4）QSGD}：标准的随机梯度量化方法，将梯度随机量化为低比特表示，但不包含结构剪枝和残差补偿机制\cite{openreview2024fedcomloc}。
+\textbf{（4）QSGD}：标准的随机梯度量化方法，将梯度随机量化为低比特表示，但不包含结构剪枝和残差补偿机制\cite{alistarh2017qsgd}。
 
 \subsubsection{参数设置}
 实验默认设置如下：元路径保留率 $\rho \in \{0.1, 0.3, 0.5, 0.7, 0.9\}$（即 $K = \rho \cdot M$）；量化比特数 $b \in \{2, 4, 8\}$。模拟带宽限制设置为 10 Mbps。
 
 \subsection{总体推荐性能对比 (RQ1)}
 
-表~\ref{tab:performance_comparison} 展示了不同方法在约 20 倍压缩倍数（$\rho=0.2$ 即保留前 20\% 元路径 + 4-bit 量化）下的 Recall@20 和 NDCG@20 表现。
+表~\ref{tab:performance_comparison} 展示了不同方法在约 20 倍压缩比（$\rho=0.2$ 即保留前 20\% 元路径 + 4-bit 量化）下的 Recall@20 和 NDCG@20 表现。
 
 \begin{table}[H]
     \centering
-    \caption{不同压缩策略下的推荐性能对比（压缩倍数 $\approx 20\times$，$\rho=0.2$，$b=4$）}
+    \caption{不同压缩策略下的推荐性能对比（压缩比 $\approx 20\times$，$\rho=0.2$，$b=4$）}
     \label{tab:performance_comparison}
     \begin{tabular}{l|cc|cc}
         \toprule
@@ -158,7 +158,7 @@
     \end{tabular}
 \end{table}
 
-在相同压缩倍数下，FedASCL-Compress 明显优于 Random-k 和 Top-k，说明了保留完整关键语义通道的重要性。为了验证训练的稳定性，图~\ref{fig:convergence} 展示了模型在训练过程中的收敛曲线。
+在相同压缩比下，FedASCL-Compress 明显优于 Random-k 和 Top-k，说明了保留完整关键语义通道的重要性。为了验证训练的稳定性，图~\ref{fig:convergence} 展示了模型在训练过程中的收敛曲线。
 
 \begin{figure}[H]
     \centering
@@ -195,7 +195,7 @@
 
 \subsection{通信开销与收敛效率 (RQ3)}
 
-表 \ref{tab:communication_cost} 记录了各模型达到收敛精度所需的累计通信流量和训练挂钟时间（Wall-clock Time）。
+表~\ref{tab:communication_cost} 记录了各模型达到收敛精度所需的累计通信流量和训练挂钟时间（Wall-clock Time）。
 
 \begin{table}[H]
     \centering
@@ -213,7 +213,7 @@
     \end{tabular}
 \end{table}
 
-为了直观展示通信开销与性能的权衡，图 \ref{fig:pareto} 展示了不同方法在“通信量-精度”空间的分布。
+为了直观展示通信开销与性能的权衡，图~\ref{fig:pareto} 展示了不同方法在“通信量-精度”空间的分布。
 
 \begin{figure}[H]
     \centering
@@ -222,7 +222,7 @@
     \label{fig:pareto}
 \end{figure}
 
-结果表明，本章算法将总通信流量降低了约一个数量级（$20\times$），并将训练时间缩短了近 8 倍。在图 \ref{fig:pareto} 中，FedASCL-Compress 明显处于左上角的优势区域（低开销、高精度），证明了该策略在带宽受限环境下的部署潜力。
+结果表明，本章算法将总通信流量降低了约一个数量级（$20\times$），并将训练时间缩短了近 8 倍。在图~\ref{fig:pareto} 中，FedASCL-Compress 明显处于左上角的优势区域（低开销、高精度），证明了该策略在带宽受限环境下的部署潜力。
 
 \subsection{本章小结}
 本章通过一系列实验验证了基于语义感知的参数压缩策略的效果。实验结果不仅说明了该策略能在明显降低通信开销的同时保持高推荐精度，还揭示了结构剪枝带来的额外"语义去噪"收益，为联邦异构图推荐系统的轻量化落地提供了实证支持。
