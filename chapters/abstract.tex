@@ -2,7 +2,7 @@
 \pagenumbering{Roman} % 设置页码为罗马数字 I, II, III
 \setcounter{page}{1} % 重置页码为 I
 \pagestyle{front}    % 摘要、目录页脚：小五号 Times New Roman 罗马数字
-\markboth{中文摘要}{中文摘要}
+\markboth{摘要}{摘要}
 % 抑制首页可能出现的脚注标记等多余输出
 \makeatletter
 \let\@makefnmark\relax
@@ -12,7 +12,7 @@
 % --- 中文摘要：标题“中文摘要”与章标题一致（三号黑体居中），正文与正文部分一致（小四宋体、首行缩进2字符、1.5倍行距）---
 \begin{center}
     \par\vspace{2cm}
-    {\sanhao\heiti\bfseries 中\quad 文\quad 摘\quad 要}
+    {\sanhao\heiti\bfseries 摘\quad 要}
     \par\vspace{0.8em}
 \end{center}
 
@@ -37,19 +37,19 @@
 \xiaosihao\heiti\bfseries 关键词：\xiaosihao\songti 联邦学习，异构图推荐，对比学习，冷启动，模型轻量化
 \end{center}
 
-\addcontentsline{toc}{chapter}{中文摘要}
+\addcontentsline{toc}{chapter}{摘要}
 
 % --- 英文摘要：标题与章标题一致（三号加粗居中），正文与正文部分一致 ---
 \newpage
-\markboth{英文摘要}{英文摘要}
+\markboth{ABSTRACT}{ABSTRACT}
 \begin{center}
     \par\vspace{2cm}
-    {\sanhao\heiti\bfseries 英\quad 文\quad 摘\quad 要}
+    {\sanhao\heiti\bfseries ABSTRACT}
     \par\vspace{0.8em}
 \end{center}
 
 \phantomsection
-\addcontentsline{toc}{chapter}{英文摘要}
+\addcontentsline{toc}{chapter}{ABSTRACT}
 
 % 英文摘要正文 (已填充你的文档内容)
 {\fontsize{12pt}{18pt}\selectfont
