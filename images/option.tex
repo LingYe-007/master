@@ -4,12 +4,12 @@
 % ctex + xeCJK 环境下不再需要 CJK 宏包（避免与 xeCJK 冲突）
 % \usepackage{CJK,CJKnumb}
 \usepackage{url}
-% 正文引用只显示文献编号，右上角上标；参考文献表按顺序编码制 [1][2][3]
-\usepackage[backend=biber,sorting=none,gbpub=false,bibstyle=gb7714-2015,citestyle=gb7714-2015,
-gbpunctin=false,gbnamefmt=lowercase,gbcitelabel=bracket,
+% 正文引用只显示文献编号 [1][2][3]，右上角上标；参考文献表顺序编码制，标签为方括号数字
+\usepackage[backend=biber,style=gb7714-2015,sorting=none,gbpub=false,
+gbpunctin=false,gbnamefmt=lowercase,gbcitelabel=bracket,gbbiblabel=bracket,
 gbalign=right,
 ]{biblatex}
-% 引用样式由 biblatex-gb7714-2015 的 cbx 文件统一控制（默认即为右上角上标+方括号）。
+% 使用 style=gb7714-2015 统一为顺序编码制，正文与参考文献均为数字标签 [1][2][3]。
 
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{booktabs}

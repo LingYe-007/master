@@ -27,7 +27,6 @@ $pdf_update_method = 0;  # 不自动更新外部查看器
 $max_repeat = 5;  # 最大重复编译次数
 $force_mode = 0;  # 不强制，但确保文件监听正常工作
 
-# 每次编译成功后复制 PDF 为定稿文件名
-$success_cmd = 'cp output/main.pdf output/伍勋高-202333248.pdf';
+# 定稿 PDF 由 compile.sh 通过 mv main.pdf 得到，此处不复制，避免多份 PDF
 
 

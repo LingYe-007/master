@@ -50,12 +50,12 @@ if [ $OK -ne 0 ] || [ ! -f "$OUT/main.pdf" ]; then
 fi
 
 if [ -f "$OUT/main.pdf" ]; then
-    cp "$OUT/main.pdf" "$OUT/$FINAL_NAME"
+    mv "$OUT/main.pdf" "$OUT/$FINAL_NAME"
     echo ""
     echo "=========================================="
     echo "✓ 编译成功"
     echo "=========================================="
-    echo "PDF: $OUT/$FINAL_NAME"
+    echo "PDF: $OUT/$FINAL_NAME（仅保留此一份）"
     ls -lh "$OUT/$FINAL_NAME" | awk '{print "大小:", $5}'
 else
     echo "=========================================="
