@@ -9,25 +9,26 @@
 \renewcommand\@makefntext[1]{\relax}
 \makeatother
 
-% --- 中文摘要：标题“中文摘要”与章标题一致（三号黑体居中），正文与正文部分一致（小四宋体、首行缩进2字符、1.5倍行距）---
+% --- 中文摘要：标题“摘要”与章标题一致（三号黑体居中），正文与正文部分一致（小四宋体、首行缩进2字符、1.5倍行距）---
+\vspace{2cm}
 \begin{center}
-    \par\vspace{2cm}
+    \centering
     {\sanhao\heiti\bfseries 摘\quad 要}
-    \par\vspace{0.8em}
 \end{center}
+\vspace{0.8em}
 
 \phantomsection
 \setlength{\parindent}{2em}
 {\fontsize{12pt}{18pt}\selectfont\songti
-推荐系统已从单纯的流量分发转向对用户深度兴趣的挖掘。异构信息网络（Heterogeneous Information Network），因为能够整合多种异构数据源，挖掘隐藏的语义信息，成为提升推荐精度的可行技术。同时，在《个人信息保护法》与GDPR的合规要求下，以及各大平台之间的“数据围墙”日益增高，传统的集中式大图训练模式满足不了跨域数据融合与隐私合规的要求。联邦学习（Federated Learning, FL）通过"数据不动模型动"的分布式训练方式，允许参与方在本地保留原始数据的同时，仅上传加密后交互的模型参数，满足了隐私合规的要求。然而，由于联邦学习场景的特性，现有联邦异构图推荐研究仍面临冷启动、推荐效果变差、通信瓶颈与落地困难等问题。
+推荐系统已从单纯的流量分发转向对用户深度兴趣的挖掘。异构信息网络（Heterogeneous Information Network），因为能够整合多种异构数据源，挖掘隐藏的语义信息，成为提升推荐精度的可行技术。同时，在《个人信息保护法》与GDPR的合规要求下，以及各大平台之间的“数据围墙”日益增高，传统的集中式大图训练模式满足不了跨域数据融合与隐私合规的要求。联邦学习（Federated Learning, FL）通过"数据不动模型动"的分布式训练方式，允许参与方在本地保留原始数据的同时，仅上传经加密的模型参数参与协作，满足了隐私合规的要求。然而，由于联邦学习场景的特性，现有联邦异构图推荐研究仍面临冷启动、推荐效果变差、通信瓶颈与落地困难等问题。
 
-基于此，本文做了以下工作。以跨视图语义融合与结构化模型压缩为切入点，提出属性-结构双视图对比学习机制解决联邦推荐中的冷启动问题，并将语义感知压缩策略应用于异构图模型，通过研究冷启动、非IID数据适配及端侧轻量化等问题，提出了高效、保护隐私、可落地的联邦异构图推荐框架，从算法与系统两方面给出了解决方案。本文在MovieLens-1M、Yelp和ACM三个公开数据集上进行了广泛的实验验证，与FedNCF、FedGNN、FedPerGNN、FedHGNN、FedProto等5个基线方法进行了对比，使用 HR@K 和 NDCG@K（分别为命中率 Hit Rate at K 与归一化折损累积增益 Normalized Discounted Cumulative Gain at K）作为评估指标，实验表明所提模型在 HR@10、NDCG@10 等指标上有所提升。本文的研究工作如下：
+本文以跨视图语义融合与结构化模型压缩为切入点，提出属性-结构双视图对比学习机制以应对联邦推荐中的冷启动问题，并将语义感知压缩策略应用于异构图模型，在冷启动、非IID 数据适配及端侧轻量化等方面形成高效、保护隐私、可落地的联邦异构图推荐框架，在算法与系统两个层面给出完整方案。在 MovieLens-1M、Yelp 和 ACM 三个公开数据集上，与 FedNCF、FedGNN、FedPerGNN、FedHGNN、FedProto 等五种基线方法对比，采用 HR@K 与 NDCG@K（命中率 Hit Rate at K、归一化折损累积增益 Normalized Discounted Cumulative Gain at K）作为评估指标，所提模型在 HR@10、NDCG@10 等指标上均优于基线。主要工作包括：
 
-1) 为解决\textbf{冷启动}和\textbf{数据异质性}的问题，本文提出了\textbf{基于属性-结构双视图对比学习的联邦异构图推荐框架（Federated Attribute-Structure Contrastive Learning, FedASCL）}。框架利用\textbf{跨视图对比学习机制}在潜在空间对齐用户属性与图结构语义，利用属性特征重构缺失的拓扑信息以解决\textbf{零交互用户的冷启动难题}；并引入\textbf{全局语义原型对齐（Global Semantic Prototype Alignment）机制}，通过约束本地模型表征向全局一致的语义原型靠拢，纠正\textbf{客户端模型漂移（Client Drift）}。实验表明，在冷启动场景下 FedASCL 相比现有方法性能有所提升，在高度异构环境下亦有明显提升。
+1) 针对冷启动与数据异质性，提出基于属性-结构双视图对比学习的联邦异构图推荐框架 FedASCL（Federated Attribute-Structure Contrastive Learning）。框架通过跨视图对比学习在潜在空间对齐用户属性与图结构语义，用属性特征重构缺失的拓扑信息以应对零交互用户；并引入全局语义原型对齐（Global Semantic Prototype Alignment），约束本地表征向全局语义原型靠拢，缓解客户端模型漂移（Client Drift）。冷启动与高异构（Non-IID）设定下，FedASCL 均优于对比基线。
 
-2) 为降低联邦异构图模型的通信开销，本文提出了\textbf{语义感知的模型参数压缩策略}。该策略设计了轻量级的\textbf{元路径选择器}，在本地训练阶段动态剔除对用户贡献度低的冗余通道，并结合\textbf{残差梯度量化技术}压缩传输数据。实验结果表明，在约20倍压缩比下，该策略在保持推荐精度的同时，将通信开销降低了约一个数量级（表\ref{tab:communication_cost}），缓解了联邦推荐系统的通信瓶颈问题。
+2) 为降低通信开销，提出语义感知的模型参数压缩策略：设计轻量级元路径选择器，在本地训练中动态剔除低贡献冗余通道，并采用残差梯度量化压缩传输。约 20 倍压缩比下，在保持推荐精度的同时将通信开销降低约一个数量级（表\ref{tab:communication_cost}），缓解联邦推荐的通信瓶颈。
 
-3) 为解决联邦推荐系统落地困难的问题，本文构建了支持\textbf{异构设备协同}的\textbf{联邦论文推荐系统}。该系统采用\textbf{端云协同的异步聚合架构}以适配不同性能的终端设备，并集成了\textbf{本地差分隐私模块}，完成了联邦推荐系统的落地。
+3) 为支撑工程落地，构建了支持异构设备协同的联邦论文推荐系统，采用端云协同的异步聚合架构适配不同性能终端，并集成本地差分隐私模块，完成从算法到系统的闭环验证。
 \par
 }
 
@@ -41,29 +42,30 @@
 
 % --- 英文摘要：标题与章标题一致（三号加粗居中），正文与正文部分一致 ---
 \newpage
-\markboth{Abstract}{Abstract}
+\markboth{ABSTRACT}{ABSTRACT}
+\vspace{2cm}
 \begin{center}
-    \par\vspace{2cm}
-    {\sanhao\heiti\bfseries Abstract}
-    \par\vspace{0.8em}
+    \centering
+    {\sanhao\heiti\bfseries ABSTRACT}
 \end{center}
+\vspace{0.8em}
 
 \phantomsection
-\addcontentsline{toc}{chapter}{Abstract}
+\addcontentsline{toc}{chapter}{ABSTRACT}
 
-% 英文摘要正文 (已填充你的文档内容)
+% 英文摘要正文 (已填充你的文档内容，每词首字母大写)
 {\fontsize{12pt}{18pt}\selectfont
-With the rapid development of the mobile Internet, recommendation systems have shifted from mere traffic distribution to deep interest mining of users. Heterogeneous Information Networks (HINs) have emerged as a practical technology to improve recommendation accuracy by integrating diverse heterogeneous data sources and excavating hidden semantic information. Meanwhile, under the compliance requirements of the Personal Information Protection Law and GDPR, as well as the increasing "data silos" between major platforms, the traditional centralized large-graph training paradigm can no longer meet the demands of cross-domain data fusion and privacy compliance. Federated Learning (FL), through a distributed training paradigm of "models move while data stays", allows participants to retain raw data locally and only upload encrypted model parameters for exchange, thus satisfying privacy compliance requirements. However, due to the characteristics of the federated scenario, existing research on federated heterogeneous graph recommendation still faces the cold start problem, recommendation performance constrained by Non-Independent and Identically Distributed (Non-IID) data, and communication bottlenecks and deployment difficulties brought by high-dimensional heterogeneous models.
+With The Rapid Development Of The Mobile Internet, Recommendation Systems Have Shifted From Mere Traffic Distribution To Deep Interest Mining Of Users. Heterogeneous Information Networks (HINs) Have Emerged As A Practical Technology To Improve Recommendation Accuracy By Integrating Diverse Heterogeneous Data Sources And Excavating Hidden Semantic Information. Meanwhile, Under The Compliance Requirements Of The Personal Information Protection Law And GDPR, As Well As The Increasing "Data Silos" Between Major Platforms, The Traditional Centralized Large-Graph Training Paradigm Can No Longer Meet The Demands Of Cross-Domain Data Fusion And Privacy Compliance. Federated Learning (FL), Through A Distributed Training Paradigm Of "Models Move While Data Stays", Allows Participants To Retain Raw Data Locally And Only Upload Encrypted Model Parameters For Exchange, Thus Satisfying Privacy Compliance Requirements. However, Due To The Characteristics Of The Federated Scenario, Existing Research On Federated Heterogeneous Graph Recommendation Still Faces The Cold Start Problem, Recommendation Performance Constrained By Non-Independent And Identically Distributed (Non-IID) Data, And Communication Bottlenecks And Deployment Difficulties Brought By High-Dimensional Heterogeneous Models.
 
-This paper addresses the above issues as follows. Taking cross-view semantic fusion and structured model compression as entry points, it proposes an attribute-structure dual-view contrastive learning mechanism to solve the cold start problem in federated recommendation, and applies a semantics-aware compression strategy to heterogeneous graph models. By investigating cold start, Non-IID data adaptation, and edge-side lightweighting, it proposes an efficient, privacy-preserving, and deployable federated heterogeneous graph recommendation framework, with solutions at both algorithm and system levels. Extensive experiments are conducted on three public datasets (MovieLens-1M, Yelp, and ACM), comparing with five baseline methods including FedNCF, FedGNN, FedPerGNN, FedHGNN, and FedProto, using HR@K and NDCG@K (Hit Rate at K and Normalized Discounted Cumulative Gain at K) as evaluation metrics, achieving noticeable improvements. 
+This Paper Addresses The Above Issues As Follows. Taking Cross-View Semantic Fusion And Structured Model Compression As Entry Points, It Proposes An Attribute-Structure Dual-View Contrastive Learning Mechanism To Solve The Cold Start Problem In Federated Recommendation, And Applies A Semantics-Aware Compression Strategy To Heterogeneous Graph Models. By Investigating Cold Start, Non-IID Data Adaptation, And Edge-Side Lightweighting, It Proposes An Efficient, Privacy-Preserving, And Deployable Federated Heterogeneous Graph Recommendation Framework, With Solutions At Both Algorithm And System Levels. Extensive Experiments Are Conducted On Three Public Datasets (MovieLens-1M, Yelp, And ACM), Comparing With Five Baseline Methods Including FedNCF, FedGNN, FedPerGNN, FedHGNN, And FedProto, Using HR@K And NDCG@K (Hit Rate At K And Normalized Discounted Cumulative Gain At K) As Evaluation Metrics, Achieving Noticeable Improvements. 
 
-Specifically, the research work of this paper is as follows:
+Specifically, The Research Work Of This Paper Is As Follows:
 
-1) To tackle the poor recommendation performance caused by cold start and Non-IID data, this paper proposes a federated heterogeneous graph recommendation framework based on Federated Attribute-Structure Contrastive Learning (FedASCL). The framework employs a cross-view contrastive learning mechanism to align user attribute and graph structure semantics in the latent space and reconstructs missing topological information using attribute features; it also introduces a \textbf{Global Semantic Prototype Alignment} mechanism to correct \textbf{Client Drift}. Experiments show that FedASCL achieves noticeable performance improvement in cold start scenarios and noticeable improvement in highly heterogeneous environments.
+1) To Tackle The Poor Recommendation Performance Caused By Cold Start And Non-IID Data, This Paper Proposes A Federated Heterogeneous Graph Recommendation Framework Based On Federated Attribute-Structure Contrastive Learning (FedASCL). The Framework Employs A Cross-View Contrastive Learning Mechanism To Align User Attribute And Graph Structure Semantics In The Latent Space And Reconstructs Missing Topological Information Using Attribute Features; It Also Introduces A Global Semantic Prototype Alignment Mechanism To Correct Client Drift. Experiments Show That FedASCL Achieves Noticeable Performance Improvement In Cold Start Scenarios And Noticeable Improvement In Highly Heterogeneous Environments.
 
-2) To address the problems of large parameter size and low communication efficiency in federated heterogeneous graph models, this paper proposes a semantics-aware model parameter compression strategy. This strategy designs a lightweight meta-path selector to dynamically eliminate redundant channels with low contribution to users during local training, and combines residual gradient quantization technology to compress transmitted data. Experimental results show that at approximately 20$\times$ compression ratio, the strategy maintains recommendation accuracy while reducing communication overhead by approximately one order of magnitude (see Chapter 4 Table \ref{tab:communication_cost}), alleviating the communication bottleneck in federated recommendation systems.
+2) To Address The Problems Of Large Parameter Size And Low Communication Efficiency In Federated Heterogeneous Graph Models, This Paper Proposes A Semantics-Aware Model Parameter Compression Strategy. This Strategy Designs A Lightweight Meta-Path Selector To Dynamically Eliminate Redundant Channels With Low Contribution To Users During Local Training, And Combines Residual Gradient Quantization Technology To Compress Transmitted Data. Experimental Results Show That At Approximately 20$\times$ Compression Ratio, The Strategy Maintains Recommendation Accuracy While Reducing Communication Overhead By Approximately One Order Of Magnitude (See Chapter 4 Table \ref{tab:communication_cost}), Alleviating The Communication Bottleneck In Federated Recommendation Systems.
 
-3) To solve the difficulty in deploying current federated recommendation systems, this paper constructs a federated recommendation system supporting heterogeneous device collaboration. The system adopts an edge-cloud collaborative asynchronous aggregation architecture to adapt to terminal devices with different performances, and integrates a local differential privacy module to complete the deployment of the federated recommendation system.
+3) To Solve The Difficulty In Deploying Current Federated Recommendation Systems, This Paper Constructs A Federated Recommendation System Supporting Heterogeneous Device Collaboration. The System Adopts An Edge-Cloud Collaborative Asynchronous Aggregation Architecture To Adapt To Terminal Devices With Different Performances, And Integrates A Local Differential Privacy Module To Complete The Deployment Of The Federated Recommendation System.
 \par
 }
 

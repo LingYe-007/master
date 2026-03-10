@@ -1,693 +1,654 @@
-% ==================================================================
-% Part 1: Federated Heterogeneous Graph & Recommendation (Top Tier)
-% 联邦异构图与推荐系统 (WWW, KDD, NeurIPS, VLDB)
-% ==================================================================
-@inproceedings{yan2024fedhgnn,
-  title={Federated Heterogeneous Graph Neural Network for Privacy-preserving Recommendation},
-  author={Yan, Bo and Cao, Yang and Wang, Haoyu and Yang, Wenchuan and Du, Junping and Shi, Chuan},
-  booktitle={Proceedings of the ACM Web Conference (WWW)},
-  pages={3919--3929},
-  year={2024},
-  publisher={ACM}
-}
-
-@article{wu2022fedpergnn,
-  title={A Federated Graph Neural Network Framework for Privacy-preserving Personalization},
-  author={Wu, Chuhan and Wu, Fangzhao and Lyu, Lingjuan and Qi, Tao and Huang, Yongfeng and Xie, Xing},
-  journal={Nature Communications},
-  volume={13},
-  number={1},
-  pages={3091},
-  year={2022},
-  publisher={Nature Publishing Group}
-}
-
-@article{li2025openfgl,
-  title={OpenFGL: A Comprehensive Benchmark for Federated Graph Learning},
-  author={Li, Xunkai and Wu, Zhengyu and Zhang, Wentao and Zhu, Yinlin and Li, Rong-Hua and Wang, Guoren},
-  journal={Proceedings of the VLDB Endowment},
-  volume={18},
-  year={2025},
-  publisher={VLDB Endowment}
-}
-
-@inproceedings{zhang2024ifedrec,
-  title={When Federated Recommendation Meets Cold-Start Problem: Separating Item Attributes and User Interactions},
-  author={Zhang, Chunxu and Long, Guodong and Zhou, Tianyi and Zhang, Zijian and Yan, Peng and Yang, Bo},
-  booktitle={Proceedings of the ACM Web Conference (WWW)},
-  pages={3632--3642},
-  year={2024}
-}
-
-@inproceedings{wang2025p4gcn,
-  title={P4GCN: Vertical Federated Social Recommendation with Privacy-Preserving Two-Party Graph Convolution Network},
-  author={Wang, Zheng and Wang, Wanwan and Huang, Yimin and Peng, Zhaopeng and Yang, Ziqi and Yao, Ming},
-  booktitle={Proceedings of the ACM Web Conference (WWW)},
-  year={2025}
-}
-
-@article{zheng2024fedego,
-  title={FedEgo: Privacy-preserving Personalized Federated Graph Learning with Ego-graphs},
-  author={Zheng, Ruiqi and Qu, Liang and Nguyen, Quoc Viet Hung and Huang, Zi and Yin, Hongzhi},
-  journal={ACM Transactions on Knowledge Discovery from Data (TKDD)},
-  volume={18},
-  number={2},
-  pages={1--27},
-  year={2024},
-  publisher={ACM}
-}
-
-@inproceedings{tan2023fedstar,
-  title={Federated Learning on Non-IID Graphs via Structural Knowledge Sharing},
-  author={Tan, Yue and Liu, Yixin and Long, Guodong and Jiang, Jing and Lu, Qinghua and Zhang, Chengqi},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  volume={37},
-  number={8},
-  pages={9953--9961},
-  year={2023}
-}
-
-@inproceedings{chen2024fedgcdr,
-  title={Federated Graph Learning for Cross-Domain Recommendation},
-  author={Chen, Chaochao and Yang, Yao},
-  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
-  year={2024}
-}
-
-@article{wu2021fedgnn,
-  title={FedGNN: Federated Graph Neural Network for Privacy-Preserving Recommendation},
-  author={Wu, Chuhan and Wu, Fangzhao and Yang, Yang and Huang, Yongfeng and Xie, Xing},
-  journal={arXiv preprint arXiv:2102.04925},
-  year={2021}
-}
-
-@inproceedings{jiang2022fedncf,
-  title={FedNCF: Federated Neural Collaborative Filtering for Privacy-preserving Recommender System},
-  author={Jiang, Xueyong and Liu, Baisong and Qin, Jiangcheng and Zhang, Yunchong and Qian, Jiangbo},
-  booktitle={Proceedings of the International Joint Conference on Neural Networks (IJCNN)},
-  year={2022},
-  organization={IEEE}
-}
-
-@inproceedings{wang2024macrec,
-  title={MACRec: A Multi-Agent Collaboration Framework for Recommendation},
-  author={Wang, Zhefan and Yu, Yuanqing and Zhang, Wentao},
-  booktitle={Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval},
-  year={2024}
-}
-
-@inproceedings{li2025fedcsr,
-  title={FedCSR: A Federated Framework for Multi-Platform Cross-Domain Sequential Recommendation with Dual Contrastive Learning},
-  author={Zhai, Jianyang and Zhong, Lin and Wang, Li and Feng, Jiyuan and Liao, Xu and Tian, Yonghong},
-  booktitle={Proceedings of the 30th International Conference on Computational Linguistics (COLING)},
-  year={2025}
-}
-
-% ==================================================================
-% Part 2: Contrastive Learning & Cold Start (Core Methodology)
-% 对比学习与冷启动（核心方法论）
-% ==================================================================
-@article{wang2025fedpcl,
-  title={Personalized Federated Contrastive Learning for Recommendation},
-  author={Wang, Shanfeng and Zhou, Yuxi and Fan, Xiaolong},
-  journal={IEEE Transactions on Computational Social Systems},
-  year={2025},
-  publisher={IEEE}
-}
-
-@article{he2024hgca,
-  title={Analyzing Heterogeneous Networks With Missing Attributes by Unsupervised Contrastive Learning},
-  author={He, Dongxiao and Liang, Chundong and Huo, Cuiying and Feng, Zhiyong and Jin, Di and Yang, Liang and Zhang, Weixiong},
-  journal={IEEE Transactions on Neural Networks and Learning Systems},
-  volume={35},
-  number={4},
-  pages={4438--4450},
-  year={2024},
-  publisher={IEEE},
-  note={Method referred to as HGCA}
-}
-
-@inproceedings{wu2023fccf,
-  title={Win-Win: A Privacy-Preserving Federated Framework for Dual-Target Cross-Domain Recommendation (FCCF)},
-  author={Ji, Jiahao and Wang, Jingyuan and Huang, Chao and Wu, Junjie and Xu, Boren and Wu, Zhenhe},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  volume={37},
-  number={4},
-  pages={4149--4156},
-  year={2023}
-}
-
-@inproceedings{zhang2024fedtgp,
-  title={FedTGP: Trainable Global Prototypes with Adaptive-Margin-Enhanced Contrastive Learning for Data and Model Heterogeneity},
-  author={Zhang, Jianqing and Liu, Yang and Hua, Yang and Cao, Jian},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  year={2024}
-}
-
-@inproceedings{yu2022simgcl,
-  title={Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation},
-  author={Yu, Junliang and Yin, Hongzhi and Xia, Xin and Chen, Tong and Cui, Lizhen and Nguyen, Quoc Viet Hung},
-  booktitle={Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},
-  pages={1294--1303},
-  year={2022}
-}
-
-@inproceedings{wu2021sgl,
-  title={Self-supervised Graph Learning for Recommendation},
-  author={Wu, Jiancan and Wang, Xiang and Feng, Fuli and He, Xiangnan and Chen, Liang and Zhang, Jianxun and Chua, Tat-Seng},
-  booktitle={Proceedings of the 44th International ACM SIGIR Conference on Research and Development in Information Retrieval},
-  pages={726--735},
-  year={2021}
-}
-
-@inproceedings{tan2022fedproto,
-  title={FedProto: Federated Prototype Learning across Heterogeneous Clients},
-  author={Tan, Yue and Long, Guodong and Liu, Lu and Zhou, Tianyi and Lu, Qinghua and Jiang, Jing and Zhang, Chengqi},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  volume={36},
-  number={8},
-  pages={8432--8440},
-  year={2022}
-}
-
-@inproceedings{zhang2024feddcsr,
-  title={FedDCSR: Federated Cross-domain Sequential Recommendation via Disentangled Representation Learning},
-  author={Zhang, Hongyu and Zheng, Dongyi and Yang, Xu and Feng, Jiyuan and Liao, Qing},
-  booktitle={Proceedings of the SIAM International Conference on Data Mining (SDM)},
-  pages={535--543},
-  year={2024}
-}
-
-@article{luo2024perfedrec,
-  title={PerFedRec++: Enhancing Personalized Federated Recommendation with Self-Supervised Pre-Training},
-  author={Luo, Sichun and Xiao, Yuanzhang and Zhang, Xinyi and Song, Linqi},
-  journal={ACM Transactions on Intelligent Systems and Technology (TIST)},
-  year={2024},
-  publisher={ACM}
-}
-
-% ==================================================================
-% Part 3: Model Compression & System Efficiency
-% 模型压缩、量化与系统效率
-% ==================================================================
-@article{khan2025hufe,
-  title={Deep Compression for Efficient and Accelerated Over-the-Air Federated Learning},
-  author={Khan, Fazal Muhammad Ali and Abou-zeid, Hatem},
-  journal={IEEE Transactions on Network and Service Management},
-  year={2025},
-  publisher={IEEE}
-}
-
-@article{zeng2025feddt,
-  title={FedDT: A Communication-Efficient Federated Learning via Knowledge Distillation and Ternary Compression},
-  author={He, Zixiao and Zhu, Gengming and Zhang, Shaobo and Luo, Entao and Zhao, Yijiang},
-  journal={Electronics},
-  volume={14},
-  number={11},
-  pages={2183},
-  year={2025},
-  publisher={MDPI}
-}
-
-@article{semfed2024,
-  title={SEMFED: Semantic-Aware Resource-Efficient Federated Learning for Heterogeneous NLP Tasks},
-  author={Hussain, Sajid and Sohail, Muhammad and Khan, Nauman Ali},
-  journal={arXiv preprint arXiv:2505.23801},
-  year={2025}
-}
-
-@article{yi2023fedlpq,
-  title={Model Compression and Privacy Preserving Framework for Federated Learning (FedLP-Q)},
-  author={Yi, Li and Sato, Hiroyuki},
-  journal={Future Generation Computer Systems},
-  volume={140},
-  pages={376--389},
-  year={2023}
-}
-
-@inproceedings{jiang2022fedmp,
-  title={FedMP: Federated Learning through Adaptive Model Pruning in Heterogeneous Edge Computing},
-  author={Jiang, Zhi and Xu, Yi and Xu, Hongli and Wang, Zhiyuan and Qiao, Chunming and Zhao, Yang},
-  booktitle={Proceedings of the IEEE 38th International Conference on Data Engineering (ICDE)},
-  pages={220--233},
-  year={2022}
-}
-
-@article{openreview2024fedcomloc,
-  title={FedComLoc: Communication-Efficient Distributed Training of Sparse and Quantized Models},
-  author={Yi, Kai and Meinhardt, Georg and Condat, Laurent and Richt{\'a}rik, Peter},
-  journal={Transactions on Machine Learning Research},
-  year={2025},
-  note={ICLR 2025 Withdrawn, accepted by TMLR},
-  url={https://openreview.net/forum?id=0jmFRA64Vw}
-}
-
-@inproceedings{alistarh2017qsgd,
-  title={QSGD: Communication-efficient SGD via gradient quantization and encoding},
-  author={Alistarh, Dan and Grubic, Demjan and Li, Jerry and Tomioka, Ryota and Vojnovic, Milan},
-  booktitle={Advances in Neural Information Processing Systems (NeurIPS)},
-  volume={30},
-  year={2017}
-}
-
-@inproceedings{reisizadeh2020fedpaq,
-  title={FedPAQ: A communication-efficient federated learning method with periodic averaging and quantization},
-  author={Reisizadeh, Amirhossein and Mokhtari, Aryan and Hassani, Hamed and Jadbabaie, Ali and Pedarsani, Ramtin},
-  booktitle={International Conference on Artificial Intelligence and Statistics (AISTATS)},
-  pages={2021--2031},
-  year={2020},
-  organization={PMLR}
-}
-
-@article{zhang2024federated,
-  title={Federated Split Learning with Model Pruning and Gradient Quantization in Wireless Networks},
-  author={Zhang, Junhe and Ni, Wanli and Wang, Dongyu},
-  journal={arXiv preprint arXiv:2412.06414},
-  year={2024}
-}
-
-@inproceedings{zhu2023fedlp,
-  title={FedLP: Layer-wise pruning mechanism for communication-computation efficient federated learning},
-  author={Zhu, Zheqi and Shi, Yuchen and Luo, Jun and Wang, Fang and Peng, Chenghui and Fan, Pingyi and Letaief, Khaled B},
-  booktitle={IEEE International Conference on Communications (ICC)},
-  pages={1250--1255},
-  year={2023}
-}
-
-@article{liu2024adaptive,
-  title={Adaptive Model Pruning and Personalization for Federated Learning over Wireless Networks},
-  author={Liu, Xiaonan and Ratnarajah, Tharmalingam and Sellathurai, Mathini and Eldar, Yonina C},
-  journal={IEEE Transactions on Signal Processing},
-  volume={72},
-  pages={4395--4411},
-  year={2024},
-  publisher={IEEE}
-}
-
-@inproceedings{ding2025lbifl,
-  title={LBI-FL: Low-Bit Integerized Federated Learning with Temporally Dynamic Bit-Width Allocation},
-  author={Ding, Li and Zhang, Hao and Dai, Wenrui and Li, Chenglin and Lu, Weijia and Yang, Zhifei and Zhang, Xiaodong and Ma, Xiaofeng and Zou, Junni and Xiong, Hongkai},
-  booktitle={Proceedings of the 42nd International Conference on Machine Learning},
-  pages={13885--13899},
-  year={2025},
-  volume={267},
-  publisher={PMLR}
-}
-
-% ==================================================================
-% Part 4: Foundational GNN Baselines
-% 基础图神经网络推荐基线 (SOTA Baselines)
-% ==================================================================
-@inproceedings{he2020lightgcn,
-  title={LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation},
-  author={He, Xiangnan and Deng, Kuan and Wang, Xiang and Li, Yan and Zhang, Yongdong and Wang, Meng},
-  booktitle={Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
-  pages={639--648},
-  year={2020}
-}
-
-@inproceedings{mao2021ultragcn,
-  title={UltraGCN: Ultra Simplification of Graph Convolutional Networks for Recommendation},
-  author={Mao, Kelong and Zhu, Jiacheng and Xiao, Xi and Lu, Biao and Wang, Zhibo and He, Xiansheng},
-  booktitle={Proceedings of the 30th ACM International Conference on Information \& Knowledge Management},
-  pages={1186--1196},
-  year={2021}
-}
-
-@inproceedings{wang2019kgat,
-  title={KGAT: Knowledge Graph Attention Network for Recommendation},
-  author={Wang, Xiang and He, Xiangnan and Cao, Yixin and Liu, Meng and Chua, Tat-Seng},
-  booktitle={Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining},
-  pages={950--959},
-  year={2019}
-}
-
-@inproceedings{wang2019han,
-  title={Heterogeneous Graph Attention Network},
-  author={Wang, Xiao and Ji, Houye and Shi, Chuan and Wang, Bai and Ye, Yanfang and Cui, Peng and Yu, Philip S},
-  booktitle={Proceedings of the World Wide Web Conference (WWW)},
-  pages={2022--2032},
-  year={2019}
-}
-
-@inproceedings{wang2019neural,
-  title={Neural graph collaborative filtering},
-  author={Wang, Xiang and He, Xiangnan and Wang, Meng and Feng, Fuli and Chua, Tat-Seng},
-  booktitle={Proceedings of the 42nd international ACM SIGIR conference on Research and development in Information Retrieval},
-  pages={165--174},
-  year={2019}
-}
-
-@inproceedings{wang2019ngcf,
-  title={Neural Graph Collaborative Filtering},
-  author={Wang, Xiang and He, Xiangnan and Wang, Meng and Feng, Fuli and Chua, Tat-Seng},
-  booktitle={Proceedings of the 42nd international ACM SIGIR conference on Research and development in Information Retrieval},
-  pages={165--174},
-  year={2019}
-}
-
-% ==================================================================
-% Part 5: Chinese Literature (Domestic Status)
-% 中文文献（国内研究现状与权威期刊）
-% ==================================================================
-@article{zhang2024social,
-  title={基于图神经网络的社会感知顺序推荐模型},
-  author={张安琴 and 李然 and 田秀霞},
-  journal={计算机应用与软件},
-  volume={41},
-  number={3},
-  pages={240--245},
-  year={2024},
-  lang={zh}
-}
-
-@article{guo2024fedgnn,
-  title={面向公共安全的联邦图神经网络研究},
-  author={郭松涛 and 其他},
-  journal={软件学报},
-  volume={35},
-  number={4},
-  pages={1774--1789},
-  year={2024},
-  lang={zh}
-}
-
-@article{crad2024multiview,
-  title={融合层注意力机制的多视角图对比学习推荐方法},
-  author={计算机研究与发展编辑部},
-  journal={计算机研究与发展},
-  year={2024},
-  note={网络出版},
-  lang={zh}
-}
-
-@article{deng2023survey,
-  title={基于差分隐私的联邦推荐系统研究综述},
-  author={邓蔚 and 陈秀婷 and 张清华 and 王国胤},
-  journal={华中科技大学学报(自然科学版)},
-  volume={51},
-  number={2},
-  pages={1--9},
-  year={2023},
-  lang={zh}
-}
-
-@article{xiong2025fed,
-  title={基于联邦学习的智能识别系统与推荐算法应用},
-  author={熊子言 and 蓝肖萍},
-  journal={电子技术与软件工程},
-  year={2025},
-  lang={zh}
-}
-
-@article{zhao2024multiinterest,
-  title={基于对比学习的多兴趣感知序列推荐系统},
-  author={赵容梅 and 孙思雨 and 鄢凡力 and 彭舰},
-  journal={计算机研究与发展},
-  year={2024},
-  lang={zh}
-}
-
-@article{li2023metapath,
-  title={多阶元路径引导的异质图神经网络新闻推荐模型},
-  author={王菲菲 and 林中潭 and 吴昆 and 韩树庭 and 孙立博 and 吕晓玲},
-  journal={系统工程理论与实践},
-  volume={44},
-  number={5},
-  pages={1561--1576},
-  year={2024},
-  doi={10.12011/SETP2023-0313},
-  lang={zh}
-}
-
-@article{qiao2018coldstart,
-  title={推荐系统冷启动问题解决策略研究},
-  author={乔雨 and 李玲娟},
-  journal={计算机技术与发展},
-  volume={28},
-  number={2},
-  pages={83--87},
-  year={2018},
-  lang={zh}
-}
-
-@patent{cn114117926b,
-  title={一种基于联邦学习的数据异构处理与推荐方法},
-  author={平安科技},
-  number={CN114117926B},
-  year={2022},
-  type={Patent},
-  lang={zh}
-}
-
-% ==================================================================
-% Part 6: Foundation Theory & Regulations
-% 基础理论与法规
-% ==================================================================
-@article{konecny2016federated,
-  title={Federated Optimization: Distributed Machine Learning for On-Device Intelligence},
-  author={Kone{\v{c}}n{\'y}, Jakub and McMahan, H. Brendan and Ramage, Daniel and Richt{\'a}rik, Peter},
-  journal={arXiv preprint arXiv:1610.02527},
-  year={2016},
-  note={NIPS 2016 Workshop}
-}
-
-@inproceedings{mcmahan2017fedavg,
-  title={Communication-Efficient Learning of Deep Networks from Decentralized Data},
-  author={McMahan, Brendan and Moore, Eider and Ramage, Daniel and Hampson, Seth and {Arcas, Blaise Aguera y}},
-  booktitle={Proceedings of the 20th International Conference on Artificial Intelligence and Statistics},
-  pages={1273--1282},
-  year={2017},
-  volume={54},
-  publisher={PMLR}
-}
-
-@article{liu2021fesog,
-  title={Federated Social Recommendation with Graph Neural Network},
-  author={Liu, Zhiwei and Yang, Liangwei and Fan, Ziwei and Peng, Hao and Yu, Philip S.},
-  journal={ACM Transactions on Intelligent Systems and Technology},
-  volume={13},
-  number={4},
-  pages={1--24},
-  year={2022},
-  publisher={ACM},
-  note={arXiv:2111.10778, 2021}
-}
-
-@article{kipf2016semi,
-  title={Semi-supervised classification with graph convolutional networks},
-  author={Kipf, Thomas N and Welling, Max},
-  journal={arXiv preprint arXiv:1609.02907},
-  year={2016},
-  note={ICLR 2017}
-}
-
-@inproceedings{velivckovic2017graph,
-  title={Graph Attention Networks},
-  author={Veli{\v{c}}kovi{\'c}, Petar and Cucurull, Guillem and Casanova, Arantxa and Romero, Adriana and Lio, Pietro and Bengio, Yoshua},
-  booktitle={International Conference on Learning Representations (ICLR)},
-  year={2018}
-}
-
-@inproceedings{feng2019hypergraph,
-  title={Hypergraph neural networks},
-  author={Feng, Yifan and You, Haoxuan and Zhang, Zizhao and Ji, Rongrong and Gao, Yue},
-  booktitle={Proceedings of the AAAI conference on artificial intelligence},
-  volume={33},
-  number={01},
-  pages={3558--3565},
-  year={2019}
-}
-
-@article{hanani2001information,
-  title={Information filtering: Overview of issues, research and systems},
-  author={Hanani, Uri and Shapira, Bracha and Shoval, Peretz},
-  journal={User modeling and user-adapted interaction},
-  volume={11},
-  pages={203--259},
-  year={2001},
-  publisher={Springer}
-}
-
-@misc{pipl2021,
-  title={Personal Information Protection Law of the People's Republic of China},
-  author={{National People's Congress of China}},
-  year={2021},
-  note={Adopted at the 30th Session of the Standing Committee of the 13th National People's Congress}
-}
-
-@article{gdpr2016,
-  title={Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, and repealing Directive 95/46/EC (General Data Protection Regulation)},
-  author={{European Union}},
-  journal={Official Journal of the European Union},
-  volume={L119},
-  pages={1--88},
-  year={2016}
-}
-
-@article{oord2018representation,
-  title={Representation learning with contrastive predictive coding},
-  author={Oord, Aaron van den and Li, Yazhe and Vinyals, Oriol},
-  journal={arXiv preprint arXiv:1807.03748},
-  year={2018}
-}
-
-% ==================================================================
-% Part 7: Heterogeneous Federated & Cross-Domain Recommendation
-% 异构联邦与跨域推荐
-% ==================================================================
-@article{ye2023heterogeneous,
-  title={Heterogeneous federated learning: State-of-the-art and research challenges},
-  author={Ye, Mang and Fang, Xiuwen and Du, Bo and Yuen, Pong C and Tao, Dacheng},
-  journal={ACM Computing Surveys},
-  volume={56},
-  number={3},
-  pages={1--44},
-  year={2023},
-  publisher={ACM New York, NY, USA}
-}
-
-@article{tan2023nah,
-  title={NAH: neighbor-aware attention-based heterogeneous relation network model in E-commerce recommendation},
-  author={Tan, Gao},
-  journal={World Wide Web},
-  volume={26},
-  number={1},
-  pages={1--22},
-  year={2023},
-  publisher={Springer}
-}
-
-@article{li2025hgcn,
-  title={HGCN-MB: A graph-based framework for multi-behavior and high-hop interaction recommendation},
-  author={Li, Changyu and others},
-  journal={PLoS One},
-  volume={20},
-  number={4},
-  year={2025}
-}
-
-@article{zhao2024cross,
-  title={Cross-View Heterogeneous Graph Contrastive Learning Method for Healthy Food Recommendation},
-  author={Zhao, Huacheng and Chen, Hao and Wang, Jianxin and Wang, Yeru},
-  journal={Computation},
-  volume={13},
-  number={8},
-  pages={197},
-  year={2024},
-  publisher={MDPI}
-}
-
-@article{yan2024fedrfq,
-  title={FedRFQ: Prototype-Based Federated Learning with Reduced Redundancy, Minimal Failure, and Enhanced Quality},
-  author={Yan, Biwei and Zhang, Hongliang and Xu, Minghui and Yu, Dongxiao and Cheng, Xiuzhen},
-  journal={IEEE Transactions on Computers},
-  year={2024},
-  publisher={IEEE}
-}
-
-@article{he2022analyzing,
-  title={Analyzing heterogeneous networks with missing attributes by unsupervised contrastive learning},
-  author={He, Dongxiao and Liang, Chundong and Huo, Cuiying and Feng, Zhiyong and Jin, Di and Yang, Liang and Zhang, Weixiong},
-  journal={IEEE Transactions on Neural Networks and Learning Systems},
-  volume={35},
-  number={4},
-  pages={4438--4450},
-  year={2022},
-  publisher={IEEE}
-}
-
-% ==================================================================
-% 补充：正文引用中缺失的 key（已按文献信息补全）
-% ==================================================================
-@article{transfr2024,
-  title={Federated Adaptation for Foundation Model-based Recommendations},
-  author={Zhang, Chunxu and Long, Guodong and Guo, Hongkuan and Fang, Xiao and Song, Yang and Liu, Zhaojie and Zhou, Guorui and Zhang, Zijian and Liu, Yang and Yang, Bo},
-  journal={arXiv preprint arXiv:2405.04840},
-  year={2024}
-}
-
-@article{feddmr2025,
-  title={A Federated Recommendation System with a Dual-Layer Multi-Head Attention Network and Regularization Strategy},
-  author={Yue, Qianxiao and Tong, Xiangrong},
-  journal={Entropy},
-  volume={27},
-  number={11},
-  pages={1112},
-  year={2025},
-  publisher={MDPI},
-  doi={10.3390/e27111112}
-}
-
-@inproceedings{fellrec2025,
-  title={A Federated Framework for LLM-based Recommendation},
-  author={Zhao, Jujia and Wang, Wenjie and Xu, Chen and Ng, See-Kiong and Chua, Tat-Seng},
-  booktitle={Findings of the Association for Computational Linguistics: NAACL 2025},
-  pages={2852--2865},
-  year={2025},
-  address={Albuquerque, New Mexico},
-  publisher={Association for Computational Linguistics},
-  doi={10.18653/v1/2025.findings-naacl.155}
-}
-
-@article{metafrs2018,
-  title={Federated Meta-Learning for Recommendation},
-  author={Chen, Fei and Dong, Zhenhua and Li, Zhenguo and He, Xiuqiang},
-  journal={arXiv preprint arXiv:1802.03976},
-  year={2018}
-}
-
-@article{saviorrec2025,
-  title={SaviorRec: Semantic-Behavior Alignment for Cold-Start Recommendation},
-  author={Yao, Yining and Li, Ziwei and Xiao, Shuwen and Du, Boya and Zhu, Jialin and Zheng, Junjun and Kong, Xiangheng and Jiang, Yuning},
-  journal={arXiv preprint arXiv:2508.01375},
-  year={2025}
-}
-
-@article{rdnmf2026,
-  title={Deep recommendation algorithm based on reviews and descriptions neural matrix factorization under cold-start},
-  author={Li, Kechao and Kamal, Nor Ashikin Mohamad},
-  journal={Complex \& Intelligent Systems},
-  volume={12},
-  number={88},
-  year={2026},
-  publisher={Springer},
-  doi={10.1007/s40747-025-02222-y}
-}
-
-@article{molorec2025,
-  title={RecCocktail: A Generalizable and Efficient Framework for LLM-Based Recommendation},
-  author={Hou, Min and Bai, Chenxi and Wu, Le and Liu, Hao and Zhang, Kai and Liu, Weiwen and Hong, Richang and Tang, Ruiming and Wang, Meng},
-  journal={arXiv preprint arXiv:2502.08271},
-  year={2025}
-}
-
-@inproceedings{fu2020magnn,
-  title={MAGNN: Metapath Aggregated Graph Neural Network for Heterogeneous Graph Embedding},
-  author={Fu, Xinyu and Zhang, Jiawei and Meng, Ziqiang and King, Irwin},
-  booktitle={Proceedings of The Web Conference (WWW)},
-  pages={2331--2341},
-  year={2020},
-  publisher={ACM},
-  doi={10.1145/3366423.3380297}
-}
-
-@inproceedings{hu2020hgt,
-  title={Heterogeneous Graph Transformer},
-  author={Hu, Ziniu and Dong, Yuxiao and Wang, Kuansan and Sun, Yizhou},
-  booktitle={Proceedings of The Web Conference (WWW)},
-  pages={2704--2710},
-  year={2020},
-  publisher={ACM},
-  doi={10.1145/3366423.3380027}
-}
-
-@inproceedings{zhang2021hgsl,
-  title={Heterogeneous Graph Structure Learning for Graph Neural Networks},
-  author={Zhao, Jianan and Wang, Xiao and Shi, Chuan and Hu, Binbin and Song, Guojie and Ye, Yanfang},
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  volume={35},
-  number={5},
-  pages={4697--4705},
-  year={2021}
+@INPROCEEDINGS{yan2024fedhgnn,
+  AUTHOR = {Yan, Bo and Cao, Yang and Wang, Haoyu and Yang, Wenchuan and Du, Junping and Shi, Chuan},
+  PUBLISHER = {ACM},
+  BOOKTITLE = {Proceedings of the ACM Web Conference (WWW)},
+  DATE = {2024},
+  PAGES = {3919--3929},
+  TITLE = {Federated Heterogeneous Graph Neural Network for Privacy-preserving Recommendation},
+}
+
+@ARTICLE{wu2022fedpergnn,
+  AUTHOR = {Wu, Chuhan and Wu, Fangzhao and Lyu, Lingjuan and Qi, Tao and Huang, Yongfeng and Xie, Xing},
+  PUBLISHER = {Nature Publishing Group},
+  DATE = {2022},
+  JOURNALTITLE = {Nature Communications},
+  NUMBER = {1},
+  PAGES = {3091},
+  TITLE = {A Federated Graph Neural Network Framework for Privacy-preserving Personalization},
+  VOLUME = {13},
+}
+
+@ARTICLE{li2025openfgl,
+  AUTHOR = {Li, Xunkai and Wu, Zhengyu and Zhang, Wentao and Zhu, Yinlin and Li, Rong-Hua and Wang, Guoren},
+  PUBLISHER = {VLDB Endowment},
+  DATE = {2025},
+  JOURNALTITLE = {Proceedings of the VLDB Endowment},
+  TITLE = {OpenFGL: A Comprehensive Benchmark for Federated Graph Learning},
+  VOLUME = {18},
+}
+
+@INPROCEEDINGS{zhang2024ifedrec,
+  AUTHOR = {Zhang, Chunxu and Long, Guodong and Zhou, Tianyi and Zhang, Zijian and Yan, Peng and Yang, Bo},
+  BOOKTITLE = {Proceedings of the ACM Web Conference (WWW)},
+  DATE = {2024},
+  PAGES = {3632--3642},
+  TITLE = {When Federated Recommendation Meets Cold-Start Problem: Separating Item Attributes and User Interactions},
+}
+
+@INPROCEEDINGS{wang2025p4gcn,
+  AUTHOR = {Wang, Zheng and Wang, Wanwan and Huang, Yimin and Peng, Zhaopeng and Yang, Ziqi and Yao, Ming},
+  BOOKTITLE = {Proceedings of the ACM Web Conference (WWW)},
+  DATE = {2025},
+  TITLE = {P4GCN: Vertical Federated Social Recommendation with Privacy-Preserving Two-Party Graph Convolution Network},
+}
+
+@ARTICLE{zheng2024fedego,
+  AUTHOR = {Zheng, Ruiqi and Qu, Liang and Nguyen, Quoc Viet Hung and Huang, Zi and Yin, Hongzhi},
+  PUBLISHER = {ACM},
+  DATE = {2024},
+  JOURNALTITLE = {ACM Transactions on Knowledge Discovery from Data (TKDD)},
+  NUMBER = {2},
+  PAGES = {1--27},
+  TITLE = {FedEgo: Privacy-preserving Personalized Federated Graph Learning with Ego-graphs},
+  VOLUME = {18},
+}
+
+@INPROCEEDINGS{tan2023fedstar,
+  AUTHOR = {Tan, Yue and Liu, Yixin and Long, Guodong and Jiang, Jing and Lu, Qinghua and Zhang, Chengqi},
+  BOOKTITLE = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  DATE = {2023},
+  NUMBER = {8},
+  PAGES = {9953--9961},
+  TITLE = {Federated Learning on Non-IID Graphs via Structural Knowledge Sharing},
+  VOLUME = {37},
+}
+
+@INPROCEEDINGS{chen2024fedgcdr,
+  AUTHOR = {Chen, Chaochao and Yang, Yao},
+  BOOKTITLE = {Advances in Neural Information Processing Systems (NeurIPS)},
+  DATE = {2024},
+  TITLE = {Federated Graph Learning for Cross-Domain Recommendation},
+}
+
+@ARTICLE{wu2021fedgnn,
+  AUTHOR = {Wu, Chuhan and Wu, Fangzhao and Yang, Yang and Huang, Yongfeng and Xie, Xing},
+  DATE = {2021},
+  JOURNALTITLE = {arXiv preprint arXiv:2102.04925},
+  TITLE = {FedGNN: Federated Graph Neural Network for Privacy-Preserving Recommendation},
+}
+
+@INPROCEEDINGS{jiang2022fedncf,
+  AUTHOR = {Jiang, Xueyong and Liu, Baisong and Qin, Jiangcheng and Zhang, Yunchong and Qian, Jiangbo},
+  ORGANIZATION = {IEEE},
+  BOOKTITLE = {Proceedings of the International Joint Conference on Neural Networks (IJCNN)},
+  DATE = {2022},
+  TITLE = {FedNCF: Federated Neural Collaborative Filtering for Privacy-preserving Recommender System},
+}
+
+@INPROCEEDINGS{wang2024macrec,
+  AUTHOR = {Wang, Zhefan and Yu, Yuanqing and Zhang, Wentao},
+  BOOKTITLE = {Proceedings of the 47th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+  DATE = {2024},
+  TITLE = {MACRec: A Multi-Agent Collaboration Framework for Recommendation},
+}
+
+@INPROCEEDINGS{li2025fedcsr,
+  AUTHOR = {Zhai, Jianyang and Zhong, Lin and Wang, Li and Feng, Jiyuan and Liao, Xu and Tian, Yonghong},
+  BOOKTITLE = {Proceedings of the 30th International Conference on Computational Linguistics (COLING)},
+  DATE = {2025},
+  TITLE = {FedCSR: A Federated Framework for Multi-Platform Cross-Domain Sequential Recommendation with Dual Contrastive Learning},
+}
+
+@ARTICLE{wang2025fedpcl,
+  AUTHOR = {Wang, Shanfeng and Zhou, Yuxi and Fan, Xiaolong},
+  PUBLISHER = {IEEE},
+  DATE = {2025},
+  JOURNALTITLE = {IEEE Transactions on Computational Social Systems},
+  TITLE = {Personalized Federated Contrastive Learning for Recommendation},
+}
+
+@ARTICLE{he2024hgca,
+  AUTHOR = {He, Dongxiao and Liang, Chundong and Huo, Cuiying and Feng, Zhiyong and Jin, Di and Yang, Liang and Zhang, Weixiong},
+  PUBLISHER = {IEEE},
+  DATE = {2024},
+  JOURNALTITLE = {IEEE Transactions on Neural Networks and Learning Systems},
+  NOTE = {Method referred to as HGCA},
+  NUMBER = {4},
+  PAGES = {4438--4450},
+  TITLE = {Analyzing Heterogeneous Networks With Missing Attributes by Unsupervised Contrastive Learning},
+  VOLUME = {35},
+}
+
+@INPROCEEDINGS{wu2023fccf,
+  AUTHOR = {Ji, Jiahao and Wang, Jingyuan and Huang, Chao and Wu, Junjie and Xu, Boren and Wu, Zhenhe},
+  BOOKTITLE = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  DATE = {2023},
+  NUMBER = {4},
+  PAGES = {4149--4156},
+  TITLE = {Win-Win: A Privacy-Preserving Federated Framework for Dual-Target Cross-Domain Recommendation (FCCF)},
+  VOLUME = {37},
+}
+
+@INPROCEEDINGS{zhang2024fedtgp,
+  AUTHOR = {Zhang, Jianqing and Liu, Yang and Hua, Yang and Cao, Jian},
+  BOOKTITLE = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  DATE = {2024},
+  TITLE = {FedTGP: Trainable Global Prototypes with Adaptive-Margin-Enhanced Contrastive Learning for Data and Model Heterogeneity},
+}
+
+@INPROCEEDINGS{yu2022simgcl,
+  AUTHOR = {Yu, Junliang and Yin, Hongzhi and Xia, Xin and Chen, Tong and Cui, Lizhen and Nguyen, Quoc Viet Hung},
+  BOOKTITLE = {Proceedings of the 45th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+  DATE = {2022},
+  PAGES = {1294--1303},
+  TITLE = {Are Graph Augmentations Necessary? Simple Graph Contrastive Learning for Recommendation},
+}
+
+@INPROCEEDINGS{wu2021sgl,
+  AUTHOR = {Wu, Jiancan and Wang, Xiang and Feng, Fuli and He, Xiangnan and Chen, Liang and Zhang, Jianxun and Chua, Tat-Seng},
+  BOOKTITLE = {Proceedings of the 44th International ACM SIGIR Conference on Research and Development in Information Retrieval},
+  DATE = {2021},
+  PAGES = {726--735},
+  TITLE = {Self-supervised Graph Learning for Recommendation},
+}
+
+@INPROCEEDINGS{tan2022fedproto,
+  AUTHOR = {Tan, Yue and Long, Guodong and Liu, Lu and Zhou, Tianyi and Lu, Qinghua and Jiang, Jing and Zhang, Chengqi},
+  BOOKTITLE = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  DATE = {2022},
+  NUMBER = {8},
+  PAGES = {8432--8440},
+  TITLE = {FedProto: Federated Prototype Learning across Heterogeneous Clients},
+  VOLUME = {36},
+}
+
+@INPROCEEDINGS{zhang2024feddcsr,
+  AUTHOR = {Zhang, Hongyu and Zheng, Dongyi and Yang, Xu and Feng, Jiyuan and Liao, Qing},
+  BOOKTITLE = {Proceedings of the SIAM International Conference on Data Mining (SDM)},
+  DATE = {2024},
+  PAGES = {535--543},
+  TITLE = {FedDCSR: Federated Cross-domain Sequential Recommendation via Disentangled Representation Learning},
+}
+
+@ARTICLE{luo2024perfedrec,
+  AUTHOR = {Luo, Sichun and Xiao, Yuanzhang and Zhang, Xinyi and Song, Linqi},
+  PUBLISHER = {ACM},
+  DATE = {2024},
+  JOURNALTITLE = {ACM Transactions on Intelligent Systems and Technology (TIST)},
+  TITLE = {PerFedRec++: Enhancing Personalized Federated Recommendation with Self-Supervised Pre-Training},
+}
+
+@ARTICLE{khan2025hufe,
+  AUTHOR = {Khan, Fazal Muhammad Ali and Abou-zeid, Hatem},
+  PUBLISHER = {IEEE},
+  DATE = {2025},
+  JOURNALTITLE = {IEEE Transactions on Network and Service Management},
+  TITLE = {Deep Compression for Efficient and Accelerated Over-the-Air Federated Learning},
+}
+
+@ARTICLE{zeng2025feddt,
+  AUTHOR = {He, Zixiao and Zhu, Gengming and Zhang, Shaobo and Luo, Entao and Zhao, Yijiang},
+  PUBLISHER = {MDPI},
+  DATE = {2025},
+  JOURNALTITLE = {Electronics},
+  NUMBER = {11},
+  PAGES = {2183},
+  TITLE = {FedDT: A Communication-Efficient Federated Learning via Knowledge Distillation and Ternary Compression},
+  VOLUME = {14},
+}
+
+@ARTICLE{semfed2024,
+  AUTHOR = {Hussain, Sajid and Sohail, Muhammad and Khan, Nauman Ali},
+  DATE = {2025},
+  JOURNALTITLE = {arXiv preprint arXiv:2505.23801},
+  TITLE = {SEMFED: Semantic-Aware Resource-Efficient Federated Learning for Heterogeneous NLP Tasks},
+}
+
+@ARTICLE{yi2023fedlpq,
+  AUTHOR = {Yi, Li and Sato, Hiroyuki},
+  DATE = {2023},
+  JOURNALTITLE = {Future Generation Computer Systems},
+  PAGES = {376--389},
+  TITLE = {Model Compression and Privacy Preserving Framework for Federated Learning (FedLP-Q)},
+  VOLUME = {140},
+}
+
+@INPROCEEDINGS{jiang2022fedmp,
+  AUTHOR = {Jiang, Zhi and Xu, Yi and Xu, Hongli and Wang, Zhiyuan and Qiao, Chunming and Zhao, Yang},
+  BOOKTITLE = {Proceedings of the IEEE 38th International Conference on Data Engineering (ICDE)},
+  DATE = {2022},
+  PAGES = {220--233},
+  TITLE = {FedMP: Federated Learning through Adaptive Model Pruning in Heterogeneous Edge Computing},
+}
+
+@ARTICLE{openreview2024fedcomloc,
+  AUTHOR = {Yi, Kai and Meinhardt, Georg and Condat, Laurent and Richtárik, Peter},
+  URL = {https://openreview.net/forum?id=0jmFRA64Vw},
+  DATE = {2025},
+  JOURNALTITLE = {Transactions on Machine Learning Research},
+  NOTE = {ICLR 2025 Withdrawn, accepted by TMLR},
+  TITLE = {FedComLoc: Communication-Efficient Distributed Training of Sparse and Quantized Models},
+}
+
+@INPROCEEDINGS{alistarh2017qsgd,
+  AUTHOR = {Alistarh, Dan and Grubic, Demjan and Li, Jerry and Tomioka, Ryota and Vojnovic, Milan},
+  BOOKTITLE = {Advances in Neural Information Processing Systems (NeurIPS)},
+  DATE = {2017},
+  TITLE = {QSGD: Communication-efficient SGD via gradient quantization and encoding},
+  VOLUME = {30},
+}
+
+@INPROCEEDINGS{reisizadeh2020fedpaq,
+  AUTHOR = {Reisizadeh, Amirhossein and Mokhtari, Aryan and Hassani, Hamed and Jadbabaie, Ali and Pedarsani, Ramtin},
+  ORGANIZATION = {PMLR},
+  BOOKTITLE = {International Conference on Artificial Intelligence and Statistics (AISTATS)},
+  DATE = {2020},
+  PAGES = {2021--2031},
+  TITLE = {FedPAQ: A communication-efficient federated learning method with periodic averaging and quantization},
+}
+
+@ARTICLE{zhang2024federated,
+  AUTHOR = {Zhang, Junhe and Ni, Wanli and Wang, Dongyu},
+  DATE = {2024},
+  JOURNALTITLE = {arXiv preprint arXiv:2412.06414},
+  TITLE = {Federated Split Learning with Model Pruning and Gradient Quantization in Wireless Networks},
+}
+
+@INPROCEEDINGS{zhu2023fedlp,
+  AUTHOR = {Zhu, Zheqi and Shi, Yuchen and Luo, Jun and Wang, Fang and Peng, Chenghui and Fan, Pingyi and Letaief, Khaled B},
+  BOOKTITLE = {IEEE International Conference on Communications (ICC)},
+  DATE = {2023},
+  PAGES = {1250--1255},
+  TITLE = {FedLP: Layer-wise pruning mechanism for communication-computation efficient federated learning},
+}
+
+@ARTICLE{liu2024adaptive,
+  AUTHOR = {Liu, Xiaonan and Ratnarajah, Tharmalingam and Sellathurai, Mathini and Eldar, Yonina C},
+  PUBLISHER = {IEEE},
+  DATE = {2024},
+  JOURNALTITLE = {IEEE Transactions on Signal Processing},
+  PAGES = {4395--4411},
+  TITLE = {Adaptive Model Pruning and Personalization for Federated Learning over Wireless Networks},
+  VOLUME = {72},
+}
+
+@INPROCEEDINGS{ding2025lbifl,
+  AUTHOR = {Ding, Li and Zhang, Hao and Dai, Wenrui and Li, Chenglin and Lu, Weijia and Yang, Zhifei and Zhang, Xiaodong and Ma, Xiaofeng and Zou, Junni and Xiong, Hongkai},
+  PUBLISHER = {PMLR},
+  BOOKTITLE = {Proceedings of the 42nd International Conference on Machine Learning},
+  DATE = {2025},
+  PAGES = {13885--13899},
+  TITLE = {LBI-FL: Low-Bit Integerized Federated Learning with Temporally Dynamic Bit-Width Allocation},
+  VOLUME = {267},
+}
+
+@INPROCEEDINGS{he2020lightgcn,
+  AUTHOR = {He, Xiangnan and Deng, Kuan and Wang, Xiang and Li, Yan and Zhang, Yongdong and Wang, Meng},
+  BOOKTITLE = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
+  DATE = {2020},
+  PAGES = {639--648},
+  TITLE = {LightGCN: Simplifying and Powering Graph Convolution Network for Recommendation},
+}
+
+@INPROCEEDINGS{mao2021ultragcn,
+  AUTHOR = {Mao, Kelong and Zhu, Jiacheng and Xiao, Xi and Lu, Biao and Wang, Zhibo and He, Xiansheng},
+  BOOKTITLE = {Proceedings of the 30th ACM International Conference on Information \& Knowledge Management},
+  DATE = {2021},
+  PAGES = {1186--1196},
+  TITLE = {UltraGCN: Ultra Simplification of Graph Convolutional Networks for Recommendation},
+}
+
+@INPROCEEDINGS{wang2019kgat,
+  AUTHOR = {Wang, Xiang and He, Xiangnan and Cao, Yixin and Liu, Meng and Chua, Tat-Seng},
+  BOOKTITLE = {Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining},
+  DATE = {2019},
+  PAGES = {950--959},
+  TITLE = {KGAT: Knowledge Graph Attention Network for Recommendation},
+}
+
+@INPROCEEDINGS{wang2019han,
+  AUTHOR = {Wang, Xiao and Ji, Houye and Shi, Chuan and Wang, Bai and Ye, Yanfang and Cui, Peng and Yu, Philip S},
+  BOOKTITLE = {Proceedings of the World Wide Web Conference (WWW)},
+  DATE = {2019},
+  PAGES = {2022--2032},
+  TITLE = {Heterogeneous Graph Attention Network},
+}
+
+@INPROCEEDINGS{wang2019neural,
+  AUTHOR = {Wang, Xiang and He, Xiangnan and Wang, Meng and Feng, Fuli and Chua, Tat-Seng},
+  BOOKTITLE = {Proceedings of the 42nd international ACM SIGIR conference on Research and development in Information Retrieval},
+  DATE = {2019},
+  PAGES = {165--174},
+  TITLE = {Neural graph collaborative filtering},
+}
+
+@INPROCEEDINGS{wang2019ngcf,
+  AUTHOR = {Wang, Xiang and He, Xiangnan and Wang, Meng and Feng, Fuli and Chua, Tat-Seng},
+  BOOKTITLE = {Proceedings of the 42nd international ACM SIGIR conference on Research and development in Information Retrieval},
+  DATE = {2019},
+  PAGES = {165--174},
+  TITLE = {Neural Graph Collaborative Filtering},
+}
+
+@ARTICLE{zhang2024social,
+  AUTHOR = {张安琴 and 李然 and 田秀霞},
+  DATE = {2024},
+  JOURNALTITLE = {计算机应用与软件},
+  NUMBER = {3},
+  PAGES = {240--245},
+  TITLE = {基于图神经网络的社会感知顺序推荐模型},
+  VOLUME = {41},
+}
+
+@ARTICLE{guo2024fedgnn,
+  AUTHOR = {郭松涛 and 其他},
+  DATE = {2024},
+  JOURNALTITLE = {软件学报},
+  NUMBER = {4},
+  PAGES = {1774--1789},
+  TITLE = {面向公共安全的联邦图神经网络研究},
+  VOLUME = {35},
+}
+
+@ARTICLE{crad2024multiview,
+  AUTHOR = {计算机研究与发展编辑部},
+  DATE = {2024},
+  JOURNALTITLE = {计算机研究与发展},
+  NOTE = {网络出版},
+  TITLE = {融合层注意力机制的多视角图对比学习推荐方法},
+}
+
+@ARTICLE{deng2023survey,
+  AUTHOR = {邓蔚 and 陈秀婷 and 张清华 and 王国胤},
+  DATE = {2023},
+  JOURNALTITLE = {华中科技大学学报(自然科学版)},
+  NUMBER = {2},
+  PAGES = {1--9},
+  TITLE = {基于差分隐私的联邦推荐系统研究综述},
+  VOLUME = {51},
+}
+
+@ARTICLE{xiong2025fed,
+  AUTHOR = {熊子言 and 蓝肖萍},
+  DATE = {2025},
+  JOURNALTITLE = {电子技术与软件工程},
+  TITLE = {基于联邦学习的智能识别系统与推荐算法应用},
+}
+
+@ARTICLE{zhao2024multiinterest,
+  AUTHOR = {赵容梅 and 孙思雨 and 鄢凡力 and 彭舰},
+  DATE = {2024},
+  JOURNALTITLE = {计算机研究与发展},
+  TITLE = {基于对比学习的多兴趣感知序列推荐系统},
+}
+
+@ARTICLE{li2023metapath,
+  AUTHOR = {王菲菲 and 林中潭 and 吴昆 and 韩树庭 and 孙立博 and 吕晓玲},
+  DATE = {2024},
+  DOI = {10.12011/SETP2023-0313},
+  JOURNALTITLE = {系统工程理论与实践},
+  NUMBER = {5},
+  PAGES = {1561--1576},
+  TITLE = {多阶元路径引导的异质图神经网络新闻推荐模型},
+  VOLUME = {44},
+}
+
+@ARTICLE{qiao2018coldstart,
+  AUTHOR = {乔雨 and 李玲娟},
+  DATE = {2018},
+  JOURNALTITLE = {计算机技术与发展},
+  NUMBER = {2},
+  PAGES = {83--87},
+  TITLE = {推荐系统冷启动问题解决策略研究},
+  VOLUME = {28},
+}
+
+@PATENT{cn114117926b,
+  AUTHOR = {平安科技},
+  DATE = {2022},
+  NUMBER = {CN114117926B},
+  TITLE = {一种基于联邦学习的数据异构处理与推荐方法},
+  TYPE = {Patent},
+}
+
+@ARTICLE{konecny2016federated,
+  AUTHOR = {Konečný, Jakub and McMahan, H. Brendan and Ramage, Daniel and Richtárik, Peter},
+  DATE = {2016},
+  JOURNALTITLE = {arXiv preprint arXiv:1610.02527},
+  NOTE = {NIPS 2016 Workshop},
+  TITLE = {Federated Optimization: Distributed Machine Learning for On-Device Intelligence},
+}
+
+@INPROCEEDINGS{mcmahan2017fedavg,
+  AUTHOR = {McMahan, Brendan and Moore, Eider and Ramage, Daniel and Hampson, Seth and {Arcas, Blaise Aguera y}},
+  PUBLISHER = {PMLR},
+  BOOKTITLE = {Proceedings of the 20th International Conference on Artificial Intelligence and Statistics},
+  DATE = {2017},
+  PAGES = {1273--1282},
+  TITLE = {Communication-Efficient Learning of Deep Networks from Decentralized Data},
+  VOLUME = {54},
+}
+
+@ARTICLE{liu2021fesog,
+  AUTHOR = {Liu, Zhiwei and Yang, Liangwei and Fan, Ziwei and Peng, Hao and Yu, Philip S.},
+  PUBLISHER = {ACM},
+  DATE = {2022},
+  JOURNALTITLE = {ACM Transactions on Intelligent Systems and Technology},
+  NOTE = {arXiv:2111.10778, 2021},
+  NUMBER = {4},
+  PAGES = {1--24},
+  TITLE = {Federated Social Recommendation with Graph Neural Network},
+  VOLUME = {13},
+}
+
+@ARTICLE{kipf2016semi,
+  AUTHOR = {Kipf, Thomas N and Welling, Max},
+  DATE = {2016},
+  JOURNALTITLE = {arXiv preprint arXiv:1609.02907},
+  NOTE = {ICLR 2017},
+  TITLE = {Semi-supervised classification with graph convolutional networks},
+}
+
+@INPROCEEDINGS{velivckovic2017graph,
+  AUTHOR = {Veličković, Petar and Cucurull, Guillem and Casanova, Arantxa and Romero, Adriana and Lio, Pietro and Bengio, Yoshua},
+  BOOKTITLE = {International Conference on Learning Representations (ICLR)},
+  DATE = {2018},
+  TITLE = {Graph Attention Networks},
+}
+
+@INPROCEEDINGS{feng2019hypergraph,
+  AUTHOR = {Feng, Yifan and You, Haoxuan and Zhang, Zizhao and Ji, Rongrong and Gao, Yue},
+  BOOKTITLE = {Proceedings of the AAAI conference on artificial intelligence},
+  DATE = {2019},
+  NUMBER = {01},
+  PAGES = {3558--3565},
+  TITLE = {Hypergraph neural networks},
+  VOLUME = {33},
+}
+
+@ARTICLE{hanani2001information,
+  AUTHOR = {Hanani, Uri and Shapira, Bracha and Shoval, Peretz},
+  PUBLISHER = {Springer},
+  DATE = {2001},
+  JOURNALTITLE = {User modeling and user-adapted interaction},
+  PAGES = {203--259},
+  TITLE = {Information filtering: Overview of issues, research and systems},
+  VOLUME = {11},
+}
+
+@MISC{pipl2021,
+  AUTHOR = {{National People's Congress of China}},
+  DATE = {2021},
+  NOTE = {Adopted at the 30th Session of the Standing Committee of the 13th National People's Congress},
+  TITLE = {Personal Information Protection Law of the People's Republic of China},
+}
+
+@ARTICLE{gdpr2016,
+  AUTHOR = {{European Union}},
+  DATE = {2016},
+  JOURNALTITLE = {Official Journal of the European Union},
+  PAGES = {1--88},
+  TITLE = {Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, and repealing Directive 95/46/EC (General Data Protection Regulation)},
+  VOLUME = {L119},
+}
+
+@ARTICLE{oord2018representation,
+  AUTHOR = {Oord, Aaron van den and Li, Yazhe and Vinyals, Oriol},
+  DATE = {2018},
+  JOURNALTITLE = {arXiv preprint arXiv:1807.03748},
+  TITLE = {Representation learning with contrastive predictive coding},
+}
+
+@ARTICLE{ye2023heterogeneous,
+  AUTHOR = {Ye, Mang and Fang, Xiuwen and Du, Bo and Yuen, Pong C and Tao, Dacheng},
+  PUBLISHER = {ACM New York, NY, USA},
+  DATE = {2023},
+  JOURNALTITLE = {ACM Computing Surveys},
+  NUMBER = {3},
+  PAGES = {1--44},
+  TITLE = {Heterogeneous federated learning: State-of-the-art and research challenges},
+  VOLUME = {56},
+}
+
+@ARTICLE{tan2023nah,
+  AUTHOR = {Tan, Gao},
+  PUBLISHER = {Springer},
+  DATE = {2023},
+  JOURNALTITLE = {World Wide Web},
+  NUMBER = {1},
+  PAGES = {1--22},
+  TITLE = {NAH: neighbor-aware attention-based heterogeneous relation network model in E-commerce recommendation},
+  VOLUME = {26},
+}
+
+@ARTICLE{li2025hgcn,
+  AUTHOR = {Li, Changyu and others},
+  DATE = {2025},
+  JOURNALTITLE = {PLoS One},
+  NUMBER = {4},
+  TITLE = {HGCN-MB: A graph-based framework for multi-behavior and high-hop interaction recommendation},
+  VOLUME = {20},
+}
+
+@ARTICLE{zhao2024cross,
+  AUTHOR = {Zhao, Huacheng and Chen, Hao and Wang, Jianxin and Wang, Yeru},
+  PUBLISHER = {MDPI},
+  DATE = {2024},
+  JOURNALTITLE = {Computation},
+  NUMBER = {8},
+  PAGES = {197},
+  TITLE = {Cross-View Heterogeneous Graph Contrastive Learning Method for Healthy Food Recommendation},
+  VOLUME = {13},
+}
+
+@ARTICLE{yan2024fedrfq,
+  AUTHOR = {Yan, Biwei and Zhang, Hongliang and Xu, Minghui and Yu, Dongxiao and Cheng, Xiuzhen},
+  PUBLISHER = {IEEE},
+  DATE = {2024},
+  JOURNALTITLE = {IEEE Transactions on Computers},
+  TITLE = {FedRFQ: Prototype-Based Federated Learning with Reduced Redundancy, Minimal Failure, and Enhanced Quality},
+}
+
+@ARTICLE{he2022analyzing,
+  AUTHOR = {He, Dongxiao and Liang, Chundong and Huo, Cuiying and Feng, Zhiyong and Jin, Di and Yang, Liang and Zhang, Weixiong},
+  PUBLISHER = {IEEE},
+  DATE = {2022},
+  JOURNALTITLE = {IEEE Transactions on Neural Networks and Learning Systems},
+  NUMBER = {4},
+  PAGES = {4438--4450},
+  TITLE = {Analyzing heterogeneous networks with missing attributes by unsupervised contrastive learning},
+  VOLUME = {35},
+}
+
+@ARTICLE{transfr2024,
+  AUTHOR = {Zhang, Chunxu and Long, Guodong and Guo, Hongkuan and Fang, Xiao and Song, Yang and Liu, Zhaojie and Zhou, Guorui and Zhang, Zijian and Liu, Yang and Yang, Bo},
+  DATE = {2024},
+  JOURNALTITLE = {arXiv preprint arXiv:2405.04840},
+  TITLE = {Federated Adaptation for Foundation Model-based Recommendations},
+}
+
+@ARTICLE{feddmr2025,
+  AUTHOR = {Yue, Qianxiao and Tong, Xiangrong},
+  PUBLISHER = {MDPI},
+  DATE = {2025},
+  DOI = {10.3390/e27111112},
+  JOURNALTITLE = {Entropy},
+  NUMBER = {11},
+  PAGES = {1112},
+  TITLE = {A Federated Recommendation System with a Dual-Layer Multi-Head Attention Network and Regularization Strategy},
+  VOLUME = {27},
+}
+
+@INPROCEEDINGS{fellrec2025,
+  AUTHOR = {Zhao, Jujia and Wang, Wenjie and Xu, Chen and Ng, See-Kiong and Chua, Tat-Seng},
+  LOCATION = {Albuquerque, New Mexico},
+  PUBLISHER = {Association for Computational Linguistics},
+  BOOKTITLE = {Findings of the Association for Computational Linguistics: NAACL 2025},
+  DATE = {2025},
+  DOI = {10.18653/v1/2025.findings-naacl.155},
+  PAGES = {2852--2865},
+  TITLE = {A Federated Framework for LLM-based Recommendation},
+}
+
+@ARTICLE{metafrs2018,
+  AUTHOR = {Chen, Fei and Dong, Zhenhua and Li, Zhenguo and He, Xiuqiang},
+  DATE = {2018},
+  JOURNALTITLE = {arXiv preprint arXiv:1802.03976},
+  TITLE = {Federated Meta-Learning for Recommendation},
+}
+
+@ARTICLE{saviorrec2025,
+  AUTHOR = {Yao, Yining and Li, Ziwei and Xiao, Shuwen and Du, Boya and Zhu, Jialin and Zheng, Junjun and Kong, Xiangheng and Jiang, Yuning},
+  DATE = {2025},
+  JOURNALTITLE = {arXiv preprint arXiv:2508.01375},
+  TITLE = {SaviorRec: Semantic-Behavior Alignment for Cold-Start Recommendation},
+}
+
+@ARTICLE{rdnmf2026,
+  AUTHOR = {Li, Kechao and Kamal, Nor Ashikin Mohamad},
+  PUBLISHER = {Springer},
+  DATE = {2026},
+  DOI = {10.1007/s40747-025-02222-y},
+  JOURNALTITLE = {Complex \& Intelligent Systems},
+  NUMBER = {88},
+  TITLE = {Deep recommendation algorithm based on reviews and descriptions neural matrix factorization under cold-start},
+  VOLUME = {12},
+}
+
+@ARTICLE{molorec2025,
+  AUTHOR = {Hou, Min and Bai, Chenxi and Wu, Le and Liu, Hao and Zhang, Kai and Liu, Weiwen and Hong, Richang and Tang, Ruiming and Wang, Meng},
+  DATE = {2025},
+  JOURNALTITLE = {arXiv preprint arXiv:2502.08271},
+  TITLE = {RecCocktail: A Generalizable and Efficient Framework for LLM-Based Recommendation},
+}
+
+@INPROCEEDINGS{fu2020magnn,
+  AUTHOR = {Fu, Xinyu and Zhang, Jiawei and Meng, Ziqiang and King, Irwin},
+  PUBLISHER = {ACM},
+  BOOKTITLE = {Proceedings of The Web Conference (WWW)},
+  DATE = {2020},
+  DOI = {10.1145/3366423.3380297},
+  PAGES = {2331--2341},
+  TITLE = {MAGNN: Metapath Aggregated Graph Neural Network for Heterogeneous Graph Embedding},
+}
+
+@INPROCEEDINGS{hu2020hgt,
+  AUTHOR = {Hu, Ziniu and Dong, Yuxiao and Wang, Kuansan and Sun, Yizhou},
+  PUBLISHER = {ACM},
+  BOOKTITLE = {Proceedings of The Web Conference (WWW)},
+  DATE = {2020},
+  DOI = {10.1145/3366423.3380027},
+  PAGES = {2704--2710},
+  TITLE = {Heterogeneous Graph Transformer},
+}
+
+@INPROCEEDINGS{zhang2021hgsl,
+  AUTHOR = {Zhao, Jianan and Wang, Xiao and Shi, Chuan and Hu, Binbin and Song, Guojie and Ye, Yanfang},
+  BOOKTITLE = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  DATE = {2021},
+  NUMBER = {5},
+  PAGES = {4697--4705},
+  TITLE = {Heterogeneous Graph Structure Learning for Graph Neural Networks},
+  VOLUME = {35},
 }
+

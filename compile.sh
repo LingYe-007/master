@@ -24,6 +24,15 @@ else
     OK=1
 fi
 
+# latexmk 在某些环境下会以带路径的 jobname 调用 biber（如 output/main），
+# 可能导致 biber 误判缺失引用。这里强制在 output 目录以 basename(main) 再跑一遍 biber，
+# 并补两次 XeLaTeX，确保引用与参考文献稳定解析。
+if [ -f "$OUT/main.bcf" ]; then
+    (cd "$OUT" && biber --input-directory=.. main) >/dev/null 2>&1 || true
+    xelatex -output-directory="$OUT" -interaction=nonstopmode "$MAIN" >/dev/null 2>&1 || true
+    xelatex -output-directory="$OUT" -interaction=nonstopmode "$MAIN" >/dev/null 2>&1 || true
+fi
+
 # 若 latexmk 未安装或失败，则回退到分步编译
 if [ $OK -ne 0 ] || [ ! -f "$OUT/main.pdf" ]; then
     echo "使用分步编译..."

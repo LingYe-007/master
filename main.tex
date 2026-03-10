@@ -2,7 +2,7 @@
 \documentclass[oneside,12pt,reqno]{ctexart}
 % geometry 必须早于 fancyhdr 加载，否则页眉/页脚居中会相对于版心而非纸张
 \usepackage{geometry}
-\geometry{left=3cm, right=2cm, top=30mm, bottom=2.5cm, headheight=6mm, headsep=15mm}
+\geometry{left=2.5cm, right=2.5cm, top=30mm, bottom=2.5cm, headheight=6mm, headsep=15mm}
 \input{images/option}
 \renewcommand{\textfraction}{0.15}    % 正文至少占页面的15%（避免图片占满整页）
 % \renewcommand{\floatpagefraction}{0.8}% 图片占页面80%以上才会单独占页
@@ -16,6 +16,7 @@
 \usepackage{indentfirst}
 \usepackage{graphicx}   % 图片
 \usepackage{booktabs}   % 三线表
+\usepackage{multirow}   % 表格跨行
 \usepackage{fancyhdr}   % 页眉页脚（geometry 已在文件开头加载）
 \usepackage{eso-pic}    % 用于在纸张坐标系中绝对居中绘制页眉
 \usepackage{hyperref}   % 超链接
@@ -46,14 +47,14 @@
   \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[C]{\wuhao\rmfamily\thepage}
 }
-% eso-pic：仅在主体部分（绪论起）绘制相对纸张物理居中的页眉
-% 策略：\AtPageUpperLeft 原点在页顶左；\makebox[\paperwidth][c] 撑满整页使文字居中；
-%       页眉线也用 eso-pic 绘制，保证奇偶页都相对纸张居中
+% eso-pic：仅在主体部分（绪论起）绘制页眉，与版心同宽、同左边界，使页眉与正文标题水平对齐
+% 策略：版心左边界为 1in+\oddsidemargin（与 geometry left=3cm 一致），宽度 \textwidth；
+%       页眉文字与页眉线均置于该区域内并居中，与各章标题、致谢等保持同一中轴
 \AddToShipoutPictureFG{%
   \ifnum\value{usefancyheader}=1
     \AtPageUpperLeft{%
-      \put(\dimexpr0.5\paperwidth\relax,-\dimexpr12mm\relax){\makebox(0,0)[c]{\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士学位论文\fi}}%
-      \put(0,-\dimexpr18mm\relax){\rule{\paperwidth}{0.4pt}}%
+      \put(\dimexpr1in+\oddsidemargin\relax,-\dimexpr12mm\relax){\makebox[\textwidth][c]{\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士学位论文\fi}}%
+      \put(\dimexpr1in+\oddsidemargin\relax,-\dimexpr18mm\relax){\rule{\textwidth}{0.4pt}}%
     }%
   \fi
 }
@@ -62,13 +63,14 @@
   \fancyhf{}
   \fancyhead[CE,CO,LE,RE,LO,RO]{}
   \renewcommand{\headrulewidth}{0pt}
-  \fancyfoot[CE,CO]{\wuhao\thepage}
+  % oneside 下不区分奇偶页，用 C 保持居中即可
+  \fancyfoot[C]{\wuhao\thepage}
 }
 \fancypagestyle{plain}{%
   \fancyhf{}
   \fancyhead[CE,CO,LE,RE,LO,RO]{}
   \renewcommand{\headrulewidth}{0pt}
-  \fancyfoot[CE,CO]{\wuhao\thepage}
+  \fancyfoot[C]{\wuhao\thepage}
 }
 % 每章另起一页（方案A：不再插整页空白，仅换页）
 \newcommand{\chapterblank}{\clearpage}

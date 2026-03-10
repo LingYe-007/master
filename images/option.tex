@@ -4,18 +4,12 @@
 % ctex + xeCJK 环境下不再需要 CJK 宏包（避免与 xeCJK 冲突）
 % \usepackage{CJK,CJKnumb}
 \usepackage{url}
-% 正文引用只显示文献编号，右上角上标；参考文献表仍按 GB/T 7714-2015 格式
+% 正文引用只显示文献编号，右上角上标；参考文献表按顺序编码制 [1][2][3]
 \usepackage[backend=biber,sorting=none,gbpub=false,bibstyle=gb7714-2015,citestyle=gb7714-2015,
 gbpunctin=false,gbnamefmt=lowercase,gbcitelabel=bracket,
+gbalign=right,
 ]{biblatex}
-% 引用为右上角上标格式，带方括号 [1] [2]
-\DeclareCiteCommand{\cite}[\mkbibbracketsuper]
-  {\usebibmacro{citeindex}}
-  {\usebibmacro{citeindex}%
-   \printfield{labelnumber}}
-  {\multicitedelim}
-  {}
-\newcommand*{\mkbibbracketsuper}[1]{\textsuperscript{[#1]}}
+% 引用样式由 biblatex-gb7714-2015 的 cbx 文件统一控制（默认即为右上角上标+方括号）。
 
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{booktabs}
@@ -90,7 +84,16 @@ gbpunctin=false,gbnamefmt=lowercase,gbcitelabel=bracket,
 %---------------------------------------------------------------------------%
 %-                                  Fonts                                  -%
 %---------------------------------------------------------------------------%
-\newcommand{\song}{\CJKfamily{song}}    % 宋体   (simsun.ttf)
+% 统一设置 CJK 字体族，避免 xeCJK/ctex 找不到 family 导致回退或粗体缺失警告
+% macOS 上优先使用系统自带的 ST* 字体；若在其他系统编译，可按需替换为 SimSun/SimHei 等。
+\xeCJKsetup{AutoFakeBold=2, AutoFakeSlant=.2}
+\setCJKmainfont[BoldFont=STHeiti,ItalicFont=STKaiti]{STSong}
+\setCJKfamilyfont{song}{STSong}
+\setCJKfamilyfont{hei}{STHeiti}
+\setCJKfamilyfont{fs}{STFangsong}
+\setCJKfamilyfont{kai}{STKaiti}
+
+\newcommand{\song}{\CJKfamily{song}}    % 宋体
 \makeatletter
 \@ifundefined{songti}{\newcommand{\songti}{\CJKfamily{song}}}{}
 \@ifundefined{heiti}{\newcommand{\heiti}{\CJKfamily{hei}}}{}
