@@ -73,7 +73,8 @@ gbalign=right,
   {0pt}
   {}
 \titlespacing*{\subsubsection}{0pt}{6pt}{6pt}
-\usepackage{epstopdf}
+% 若未使用 EPS 图片，可不加载 epstopdf，避免无意义警告
+% \usepackage{epstopdf}
 \usepackage{caption}
 \usepackage{graphicx, subfig}
 \usepackage{float}
@@ -86,7 +87,9 @@ gbalign=right,
 %---------------------------------------------------------------------------%
 % 统一设置 CJK 字体族，避免 xeCJK/ctex 找不到 family 导致回退或粗体缺失警告
 % macOS 上优先使用系统自带的 ST* 字体；若在其他系统编译，可按需替换为 SimSun/SimHei 等。
-\xeCJKsetup{AutoFakeBold=2, AutoFakeSlant=.2}
+% 说明：xeCJK 默认会在中文与非中文（如引用标号 [n]、GNN 等）之间自动插入 CJKecglue，
+% 可能导致“引用标号后文字突出来”的视觉空隙；这里将其设为 0 以避免多余空白。
+\xeCJKsetup{AutoFakeBold=2, AutoFakeSlant=.2, CJKecglue=\hskip 0pt}
 \setCJKmainfont[BoldFont=STHeiti,ItalicFont=STKaiti]{STSong}
 \setCJKfamilyfont{song}{STSong}
 \setCJKfamilyfont{hei}{STHeiti}
@@ -122,11 +125,12 @@ gbalign=right,
 %---------------------------------------------------------------------------%
 %-                               Chinesization                             -%
 %---------------------------------------------------------------------------%
-\newtheorem{theorem}{\hskip 2em定理}[section]
-\newtheorem{definition}{\hskip 2em定义}[section]
-\newtheorem{exam}{\hskip 2em例}[section]
-\newtheorem{proof}{{\it \hskip 2em\textbf{证明}}}
-\newtheorem{solution}{{\it \hskip 2em\textbf{解}}}
+% 避免在写入 PDF 书签/字符串时出现 \hskip（hyperref 警告）
+\newtheorem{theorem}{定理}[section]
+\newtheorem{definition}{定义}[section]
+\newtheorem{exam}{例}[section]
+\newtheorem{proof}{{\it \textbf{证明}}}
+\newtheorem{solution}{{\it \textbf{解}}}
 \renewcommand{\tablename}{\songti 表}
 \renewcommand{\figurename}{\song 图}
 \renewcommand{\refname}{\centerline {参考文献}}

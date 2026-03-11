@@ -61,14 +61,16 @@
 % fancy/plain：页眉文字和线由 eso-pic 绘制，此处仅保留页脚
 \fancypagestyle{fancy}{%
   \fancyhf{}
-  \fancyhead[CE,CO,LE,RE,LO,RO]{}
+  % oneside 下不区分奇偶页，避免使用 E/O 选项触发 fancyhdr 警告
+  \fancyhead{}
   \renewcommand{\headrulewidth}{0pt}
   % oneside 下不区分奇偶页，用 C 保持居中即可
   \fancyfoot[C]{\wuhao\thepage}
 }
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \fancyhead[CE,CO,LE,RE,LO,RO]{}
+  % oneside 下不区分奇偶页，避免使用 E/O 选项触发 fancyhdr 警告
+  \fancyhead{}
   \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[C]{\wuhao\thepage}
 }
@@ -88,6 +90,9 @@
 %   前置部分 (Front Matter)
 %   特点：页码为罗马数字 (i, ii, iii...)
 % =========================================================
+
+% 从摘要开始启用页眉（eso-pic 绘制）
+\setcounter{usefancyheader}{1}
 
 % 1. 摘要页 (中英文摘要)
 \input{chapters/abstract}
@@ -119,7 +124,7 @@
 % =========================================================
 \mainmatter
 \clearpage
-\setcounter{usefancyheader}{1}  % 启用 eso-pic 绘制相对纸张居中的页眉
+% 主体部分保持启用页眉
 \input{chapters/chap1_intro}
 \chapterblank
 \input{chapters/chap2_related}
