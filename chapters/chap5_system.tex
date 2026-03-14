@@ -132,18 +132,7 @@
 
 \begin{figure}[H]
     \centering
-    \fbox{\begin{minipage}{0.9\textwidth}
-    \centering
-    \small
-    输入：用户请求 + 本地交互历史\\[0.3em]
-    \textbf{是否有足够交互？}\quad $\Rightarrow$\quad
-    \fbox{是：结构优先}\\[-0.1em]
-    \quad 结构视图聚合（用户-论文-会议等）$\rightarrow$ 用户嵌入 $\rightarrow$ Top-$N$ 检索\\[0.4em]
-    \textbf{否则}\quad $\Rightarrow$\quad
-    \fbox{否：属性优先}\\[-0.1em]
-    \quad 属性映射分支（兴趣/机构等）$\rightarrow$ 投影到全局原型空间 $\rightarrow$ 语义相似检索\\[0.4em]
-    输出：个性化论文列表 + 元路径注意力解释（可选）
-    \end{minipage}}
+    \includegraphics[width=0.9\textwidth]{images/冷启动推荐策略流程图.png}
     \caption{基于属性-结构双通路的冷启动推荐策略流程图}
     \label{fig:rec_logic}
 \end{figure}

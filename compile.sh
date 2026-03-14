@@ -51,6 +51,8 @@ fi
 
 if [ -f "$OUT/main.pdf" ]; then
     mv "$OUT/main.pdf" "$OUT/$FINAL_NAME"
+    # 只在 output/ 保留最终论文 PDF，避免残留其他调试/报告 PDF
+    find "$OUT" -maxdepth 1 -type f -name "*.pdf" ! -name "$FINAL_NAME" -delete 2>/dev/null || true
     echo ""
     echo "=========================================="
     echo "✓ 编译成功"
