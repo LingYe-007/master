@@ -3,6 +3,10 @@
 \setcounter{page}{1} % 重置页码为 I
 \pagestyle{front}    % 摘要、目录页脚：小五号 Times New Roman 罗马数字
 \markboth{摘要}{摘要}
+% 先在目录中登记“摘要”，确保目录中的页码为 I（中文摘要首页），
+% 且作为与“第一章 绪论”同级的目录项（使用 section 级别以统一缩进和间距）
+\phantomsection
+\addcontentsline{toc}{section}{摘要}
 % 抑制首页可能出现的脚注标记等多余输出
 \makeatletter
 \let\@makefnmark\relax
@@ -17,18 +21,18 @@
 \end{center}
 \vspace{0.8em}
 
-\phantomsection
+% 正文首行缩进
 \setlength{\parindent}{2em}
 {\fontsize{12pt}{18pt}\selectfont\songti
 推荐系统已从单纯的流量分发转向对用户深度兴趣的挖掘。异构信息网络（Heterogeneous Information Network），因为能够整合多种异构数据源，挖掘隐藏的语义信息，成为提升推荐精度的可行技术。同时，在《个人信息保护法》与GDPR的合规要求下，以及各大平台之间的“数据围墙”日益增高，传统的集中式大图训练模式满足不了跨域数据融合与隐私合规的要求。联邦学习（Federated Learning, FL）通过"数据不动模型动"的分布式训练方式，允许参与方在本地保留原始数据的同时，仅上传经加密的模型参数参与协作，满足了隐私合规的要求。然而，由于联邦学习场景的特性，现有联邦异构图推荐研究仍面临冷启动、推荐效果变差、通信瓶颈与落地困难等问题。
 
 围绕上述问题，本文从跨视图语义融合与模型压缩两方面入手，提出属性-结构双视图对比学习机制应对用户冷启动，并将语义感知压缩策略用于异构图模型，在冷启动、Non-IID 适配及端侧轻量化上构建了可落地的联邦异构图推荐框架，并给出从算法到系统的完整实现。在 MovieLens-1M、Yelp 和 ACM 上与 FedNCF、FedGNN、FedPerGNN、FedHGNN、FedProto 等五种基线对比，以 HR@K 与 NDCG@K（命中率 Hit Rate at K、归一化折损累积增益 Normalized Discounted Cumulative Gain at K）为评估指标，所提模型在 HR@10、NDCG@10 上均优于基线。主要工作包括：
 
-1) 针对冷启动与数据异质性，提出基于属性-结构双视图对比学习的联邦异构图推荐框架 FedASCL（Federated Attribute-Structure Contrastive Learning），即通过跨视图对比学习在潜在空间对齐用户属性与图结构语义，用属性特征重构缺失的拓扑信息以应对零交互用户，并引入全局语义原型对齐（Global Semantic Prototype Alignment）约束本地表征、缓解客户端模型漂移（Client Drift）。冷启动与高异构（Non-IID）设定下，FedASCL 均优于对比基线。
+（1）针对冷启动与数据异质性，提出基于属性-结构双视图对比学习的联邦异构图推荐框架 FedASCL（Federated Attribute-Structure Contrastive Learning），即通过跨视图对比学习在潜在空间对齐用户属性与图结构语义，用属性特征重构缺失的拓扑信息以应对零交互用户，并引入全局语义原型对齐（Global Semantic Prototype Alignment）约束本地表征、缓解客户端模型漂移（Client Drift）。冷启动与高异构（Non-IID）设定下，FedASCL 均优于对比基线。
 
-2) 为降低通信开销，提出语义感知的模型参数压缩策略，设计轻量级元路径选择器在本地训练中动态剔除低贡献冗余通道，并采用残差梯度量化压缩传输。约 20 倍压缩比下保持推荐精度的同时将通信开销降低约一个数量级（表~\ref{tab:communication_cost}）。
+（2）为降低通信开销，提出语义感知的模型参数压缩策略，设计轻量级元路径选择器在本地训练中动态剔除低贡献冗余通道，并采用残差梯度量化压缩传输。约 20 倍压缩比下保持推荐精度的同时将通信开销降低约一个数量级（表~\ref{tab:communication_cost}）。
 
-3) 为支撑工程落地，构建了支持异构设备协同的联邦论文推荐系统，采用端云协同的异步聚合架构适配不同性能终端，并集成本地差分隐私模块，完成从算法到系统的闭环验证。
+（3）为支撑工程落地，构建了支持异构设备协同的联邦论文推荐系统，采用端云协同的异步聚合架构适配不同性能终端，并集成本地差分隐私模块，完成从算法到系统的闭环验证。
 \par
 }
 
@@ -37,9 +41,6 @@
 \begin{flushleft}
 \xiaosihao\heiti\bfseries 关键词：\xiaosihao\songti 联邦学习，异构图推荐，对比学习，冷启动，模型轻量化
 \end{flushleft}
-
-\addcontentsline{toc}{chapter}{摘要}
-
 % --- 英文摘要：标题与章标题一致（三号加粗居中），正文与正文部分一致 ---
 \newpage
 \markboth{ABSTRACT}{ABSTRACT}
@@ -51,7 +52,7 @@
 \vspace{0.8em}
 
 \phantomsection
-\addcontentsline{toc}{chapter}{ABSTRACT}
+\addcontentsline{toc}{section}{ABSTRACT}
 
 % 英文摘要正文（句首及专有名词大写，符合常见学位论文规范）
 {\fontsize{12pt}{18pt}\selectfont

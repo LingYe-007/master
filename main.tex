@@ -113,16 +113,20 @@
 \setcounter{tocdepth}{3}
 \input{TableofContents}  % 目录页（包含 \tableofcontents）
 \newpage
-% 图目录
+% 图目录（在总目录中以“图索引”形式出现，层级与章节标题一致）
 \markboth{图\quad 目\quad 录}{图\quad 目\quad 录}
+\phantomsection
+\addcontentsline{toc}{section}{图索引}
 \begin{center}
 \sanhao\heiti 图~~~~目~~~~录
 \end{center}
 \addvspace{1em}
 \StartToc{lof}
 \newpage
-% 表目录
+% 表目录（在总目录中以“表索引”形式出现，层级与章节标题一致）
 \markboth{表\quad 目\quad 录}{表\quad 目\quad 录}
+\phantomsection
+\addcontentsline{toc}{section}{表索引}
 \begin{center}
 \sanhao\heiti 表~~~~目~~~~录
 \end{center}
@@ -166,7 +170,8 @@
 % \input{backmatter/ack} % 已注释：避免重复致谢
 
 % 3. 攻读硕士学位期间取得的科研成果
-\input{backmatter/resume}
+% 按要求删除该部分
+% \input{backmatter/resume}
 
 % \input{} % 已删除：空的 input 会导致编译错误
 
