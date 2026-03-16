@@ -36,13 +36,7 @@
 
 \begin{figure}[H]
     \centering
-    \fbox{\begin{minipage}{0.9\textwidth}
-    \centering
-    \textbf{评估}\,$\rightarrow$\,\textbf{剪枝}\,$\rightarrow$\,\textbf{量化}\,$\rightarrow$\,\textbf{补偿}\,$\rightarrow$\,\textbf{上传}\\[0.6em]
-    \small
-    从结构视图提取元路径注意力权重 $\boldsymbol{\alpha}^{(t)}$，以 Top-$K$ 方式屏蔽低贡献元路径；\\
-    对保留通道的梯度执行低比特随机量化，并将量化误差在本地累积用于下一轮补偿。
-    \end{minipage}}
+    \includegraphics[width=0.9\textwidth]{images/压缩流程示意图.png}
     \caption{基于语义感知的 FedASCL 模型参数压缩流程示意图}
     \label{fig:compression_framework}
 \end{figure}
@@ -81,7 +75,7 @@
 \begin{equation}
     Q(x, b) = \|\mathbf{v}\|_{\infty} \cdot \text{sign}(x) \cdot \frac{\lfloor |x|/\|\mathbf{v}\|_{\infty} \cdot (2^{b-1}-1) + \xi \rfloor}{2^{b-1}-1}
 \end{equation}
-其中，$x$ 为待量化的数值，$\mathbf{v}$ 表示当前待量化的梯度向量（如 $\tilde{\mathbf{g}}^{(t)}$），$\|\mathbf{v}\|_{\infty}$ 为其最大绝对值（缩放因子），$\xi$ 是在 $[0, 1]$ 均匀分布的随机变量，用于实现随机舍入。该机制保证了量化操作的期望无偏性，即 $\mathbb{E}[Q(x)] = x$。
+其中，$\mathbf{v}$ 表示当前待量化的梯度向量（如 $\tilde{\mathbf{g}}^{(t)}$），$x$ 为 $\mathbf{v}$ 的某一分量；量化时对 $\mathbf{v}$ 的每个分量按上式逐元素操作。$\|\mathbf{v}\|_{\infty}$ 为 $\mathbf{v}$ 各分量绝对值的最大值（缩放因子），$\xi$ 是在 $[0, 1]$ 均匀分布的随机变量，用于实现随机舍入。该机制保证了量化操作的期望无偏性，即 $\mathbb{E}[Q(x)] = x$。
 
 在实际传输时，客户端不仅需要上传量化后的整数向量，还需上传缩放因子 $\|\mathbf{v}\|_{\infty}$（仅占 32 bits）用于服务端反量化。通过此步骤，通信负载主体部分可降低至原浮点传输的 $\frac{b}{32}$。
 
@@ -138,6 +132,28 @@
 
 \subsubsection{参数设置}
 实验默认设置如下：元路径保留率 $\rho \in \{0.1, 0.2, 0.3, 0.5, 0.7, 0.9\}$（即 $K = \rho \cdot M$）；量化比特数 $b \in \{2, 4, 8\}$。其中，表~\ref{tab:performance_comparison} 为达成约 $20\times$ 压缩比采用 $\rho=0.2$、$b=4$。模拟带宽限制设置为 10 Mbps。
+
+\subsubsection{实验环境与配置汇总}
+本章实验与第三章共用同一算法与数据集基础，运行环境一致（Python 3.8、PyTorch、PyG、Nvidia GPU）。为与第三章区分，数据划分采用 $\alpha=0.5$、$N=100$ 客户端、每轮参与率 $C=0.1$；训练轮数、优化器与学习率与第三章保持一致，便于公平对比压缩前后性能。表~\ref{tab:exp_config_chap4} 汇总本章实验配置，便于与第三、五章对照。
+
+\begin{table}[H]
+    \centering
+    \caption{第四章实验配置汇总}
+    \label{tab:exp_config_chap4}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{项目} & \textbf{配置} \\
+        \midrule
+        运行环境 & Python 3.8, PyTorch, PyG, Nvidia GPU（与第三章一致） \\
+        数据集 & MovieLens-1M, Yelp \\
+        联邦划分 & $N=100$ 客户端，$\alpha=0.5$，每轮参与 $C=0.1$ \\
+        压缩参数 & $\rho=0.2$（约 $20\times$ 时），$b=4$；$\rho,b$ 见正文消融 \\
+        模拟带宽 & 10 Mbps \\
+        评估指标 & Recall@20, NDCG@20 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \subsection{总体推荐性能对比 (RQ1)}
 

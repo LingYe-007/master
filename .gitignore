@@ -53,3 +53,7 @@ images/backup/
 
 # 编译脚本错误产生的字面目录
 $OutDir/
+
+# 前端依赖与构建产物
+fedrec-frontend/node_modules/
+fedrec-frontend/dist/

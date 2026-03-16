@@ -13,6 +13,7 @@ gbalign=right,
 
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{booktabs}
+\usepackage{etoolbox}
 \usepackage{fontspec}
 \usepackage{threeparttable}
 \usepackage{multicol}
@@ -172,6 +173,8 @@ gbalign=right,
 %---------------------------------------------------------------------------%
 %-                              Tabular Option                             -%
 %---------------------------------------------------------------------------%
+% 表内文字：五号宋体，数字和字母五号 Times New Roman（西北大学规范）
+\AtBeginEnvironment{tabular}{\wuhao\songti\fontspec{Times New Roman}}
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 %---------------------------------------------------------------------------%
 %-                              Caption Option                             -%
