@@ -1,5 +1,6 @@
 % 设置正文字体为小四号宋体（12pt对应小四号）；oneside 单面打印
-\documentclass[oneside,12pt,reqno]{ctexart}
+% 为兼容精简 TeX Live 环境，这里不使用 ctex 预设字体集，由 CJK 默认字体接管
+\documentclass[oneside,12pt,reqno,fontset=none]{ctexart}
 % geometry 必须早于 fancyhdr 加载，否则页眉/页脚居中会相对于版心而非纸张
 \usepackage{geometry}
 \geometry{left=2.5cm, right=2.5cm, top=30mm, bottom=2.5cm, headheight=6mm, headsep=15mm}
@@ -74,8 +75,19 @@
   \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[C]{\wuhao\thepage}
 }
-% 每章另起一页（方案A：不再插整页空白，仅换页）
-\newcommand{\chapterblank}{\clearpage}
+% 每章从奇数页开始：
+% 若当前页为偶数，则插入一页空白页（无页眉页脚），再换到下一页
+\newcommand{\chapterblank}{%
+  \clearpage
+  \ifodd\value{page}%
+    % 已经是奇数页，直接开始下一章
+  \else
+    % 偶数页时插入一页空白页
+    \thispagestyle{empty}%
+    \null
+    \clearpage
+  \fi
+}
 % ctexart 无 \mainmatter，定义为空操作以免报错
 \providecommand{\mainmatter}{}
 

@@ -183,12 +183,13 @@ gbalign=right,
 \DeclareCaptionFont{nwulabel}{\wuhao\songti}
 \DeclareCaptionFont{nwucaption}{\wuhao\bfseries\songti}
 % labelsep=quad 约 1em，相当于编号与题之间空半角 2 格
-\captionsetup[figure]{labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=2pt,belowskip=2pt}
-\captionsetup[table]{labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=2pt,aboveskip=2pt}
-% 图片/表格与正文间距（收紧，避免上下留白过大）
-\setlength{\floatsep}{4pt plus 1pt minus 1pt}       % 两个浮动体之间
-\setlength{\textfloatsep}{5pt plus 1pt minus 1pt}  % 浮动体与页面顶部/底部正文
-\setlength{\intextsep}{4pt plus 1pt minus 1pt}     % 浮动体在正文中时的上下间距
+% 将图表题与图/表本体及上下正文的距离适当收紧
+\captionsetup[figure]{labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=1pt,belowskip=1pt}
+\captionsetup[table]{labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=1pt,aboveskip=1pt}
+% 图片/表格与正文间距（进一步收紧，避免上下留白过大）
+\setlength{\floatsep}{2pt plus 1pt minus 1pt}       % 两个浮动体之间
+\setlength{\textfloatsep}{3pt plus 1pt minus 1pt}   % 浮动体与页面顶部/底部正文
+\setlength{\intextsep}{2pt plus 1pt minus 1pt}      % 浮动体在正文中时的上下间距
 %---------------------------------------------------------------------------%
 %-                             Reference Resource                          -%
 %---------------------------------------------------------------------------%
@@ -202,12 +203,12 @@ gbalign=right,
 \titlecontents{section}[0em]{\tocentrysize\heiti\bfseries\renewcommand{\numberline}[1]{}}{}{}%
 {\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}\let\numberline\saved@numberline]
 
-% 第二级（节）：小四号宋体，与章同字号，缩进 2.5em
-\titlecontents{subsection}[2.5em]{\tocentrysize\songti}{\contentslabel{2.5em}\ }%
+% 第二级（节）：小四号宋体，与章同字号，缩进 2.5em，编号与标题之间增加间距
+\titlecontents{subsection}[2.5em]{\tocentrysize\songti}{\contentslabel{3em}\ }%
 {}{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}]
 
-% 第三级（条）：小四号宋体，与章同字号，缩进 3.8em
-\titlecontents{subsubsection}[3.8em]{\tocentrysize\songti}{\contentslabel{3em}\ }%
+% 第三级（条）：小四号宋体，与章同字号，缩进 3.8em，适当拉开编号与标题距离
+\titlecontents{subsubsection}[3.8em]{\tocentrysize\songti}{\contentslabel{3.5em}\ }%
 {}{\titlerule*[0.7pc]{$\cdot$}\contentspage}[\vspace{0.5pt}]
 
 % 第四级（段）：小四号宋体，缩进 4em
