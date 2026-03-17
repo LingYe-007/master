@@ -140,7 +140,6 @@
     \centering
     \caption{第四章实验配置汇总}
     \label{tab:exp_config_chap4}
-    \renewcommand{\arraystretch}{1.15}
     \begin{tabular}{ll}
         \toprule
         \textbf{项目} & \textbf{配置} \\
@@ -215,20 +214,20 @@
 
 \subsection{通信开销与收敛效率 (RQ3)}
 
-表~\ref{tab:communication_cost} 记录了各模型达到收敛精度所需的累计通信流量和训练挂钟时间（Wall-clock Time）。
+表~\ref{tab:communication_cost} 记录了各模型达到收敛精度所需的累计通信流量和训练挂钟时间（Wall-clock Time）。实验配置与第五章系统实测一致：100 轮训练、每轮 10 个客户端参与（$N=100$，$C=0.1$）。
 
 \begin{table}[H]
     \centering
-    \caption{通信开销与训练时间对比}
+    \caption{通信开销与训练时间对比（100 轮、每轮 10 客户端参与）}
     \label{tab:communication_cost}
     \begin{tabular}{l|c|c|c}
         \toprule
         \textbf{Method} & \textbf{Total Traffic (MB)} & \textbf{Compression Factor} & \textbf{Speedup} \\
         \midrule
-        FedAvg (Full) & 12,450 & $1\times$ & $1.0\times$ \\
-        QSGD & 1,556 & $8\times$ & $3.2\times$ \\
-        Top-k & 1,245 & $10\times$ & $4.5\times$ \\
-        \textbf{FedASCL-Compress} & \textbf{622} & \textbf{$\approx 20\times$} & \textbf{$7.8\times$} \\
+        FedAvg (Full) & 12.2 & $1\times$ & $1.0\times$ \\
+        QSGD & 1.56 & $8\times$ & $3.2\times$ \\
+        Top-k & 1.24 & $10\times$ & $4.5\times$ \\
+        \textbf{FedASCL-Compress} & \textbf{0.62} & \textbf{$\approx 20\times$} & \textbf{$7.8\times$} \\
         \bottomrule
     \end{tabular}
 \end{table}

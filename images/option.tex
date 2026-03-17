@@ -87,15 +87,16 @@ gbalign=right,
 %-                                  Fonts                                  -%
 %---------------------------------------------------------------------------%
 % 统一设置 CJK 字体族，避免 xeCJK/ctex 找不到 family 导致回退或粗体缺失警告
-% macOS 上优先使用系统自带的 ST* 字体；若在其他系统编译，可按需替换为 SimSun/SimHei 等。
+% macOS: STSong/STHeiti/STKaiti/STFangsong；Windows: SimSun/SimHei/KaiTi/FangSong
 % 说明：xeCJK 默认会在中文与非中文（如引用标号 [n]、GNN 等）之间自动插入 CJKecglue，
 % 可能导致“引用标号后文字突出来”的视觉空隙；这里将其设为 0 以避免多余空白。
 \xeCJKsetup{AutoFakeBold=2, AutoFakeSlant=.2, CJKecglue=\hskip 0pt}
-\setCJKmainfont[BoldFont=STHeiti,ItalicFont=STKaiti]{STSong}
-\setCJKfamilyfont{song}{STSong}
-\setCJKfamilyfont{hei}{STHeiti}
-\setCJKfamilyfont{fs}{STFangsong}
-\setCJKfamilyfont{kai}{STKaiti}
+% Windows 字体（若在 macOS 编译，改为 STSong/STHeiti/STKaiti/STFangsong）
+\setCJKmainfont[BoldFont=SimHei,ItalicFont=KaiTi]{SimSun}
+\setCJKfamilyfont{song}{SimSun}
+\setCJKfamilyfont{hei}{SimHei}
+\setCJKfamilyfont{fs}{FangSong}
+\setCJKfamilyfont{kai}{KaiTi}
 
 \newcommand{\song}{\CJKfamily{song}}    % 宋体
 \makeatletter
@@ -176,6 +177,10 @@ gbalign=right,
 % 表内文字：五号宋体，数字和字母五号 Times New Roman（西北大学规范）
 \AtBeginEnvironment{tabular}{\wuhao\songti\fontspec{Times New Roman}}
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+% 表格行距与三线表间距：硕论常用单倍行距；三线表线间距进一步收紧至 0.15ex
+\renewcommand{\arraystretch}{0.7}
+\setlength{\aboverulesep}{0.15ex}
+\setlength{\belowrulesep}{0.15ex}
 %---------------------------------------------------------------------------%
 %-                              Caption Option                             -%
 %---------------------------------------------------------------------------%

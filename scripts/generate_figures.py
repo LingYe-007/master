@@ -127,7 +127,7 @@ def fig_pareto():
     """不同压缩方法的通信开销-精度权衡（帕累托）；FedASCL-Compress 左上角优势。"""
     # 数据与表 tab:communication_cost、tab:performance_comparison 一致
     methods = ['FedAvg (Full)', 'QSGD', 'Top-k', 'Random-k', 'FedASCL-Compress']
-    traffic = [12450, 1556, 1245, 1400, 622]   # MB
+    traffic = [12.2, 1.56, 1.24, 1.4, 0.62]   # MB (100轮,10客户端)
     recall = [0.1245, 0.1189, 0.1103, 0.0982, 0.1258]
     colors = ['#9e9e9e', '#78909c', '#78909c', '#78909c', '#2e7d32']
     fig, ax = plt.subplots(figsize=(5.5, 3.8))
@@ -137,7 +137,7 @@ def fig_pareto():
     ax.set_xlabel('Total traffic (MB)')
     ax.set_ylabel('Recall@20')
     ax.set_xscale('log')
-    ax.set_xlim(400, 15000)
+    ax.set_xlim(0.4, 20)
     ax.set_ylim(0.09, 0.135)
     ax.grid(True, linestyle='--')
     ax.set_title('Communication vs. accuracy (Pareto: FedASCL-Compress top-left)')
@@ -241,6 +241,21 @@ def fig_selector_logic():
     print('Saved: images/selector_logic.png')
 
 
+def fig_fedascl_framework():
+    """FedASCL 算法总体架构示意图（风格与图12一致）。"""
+    import sys
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    draw_script = os.path.join(script_dir, 'draw_fedascl_framework.py')
+    if os.path.exists(draw_script):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('draw_fedascl', draw_script)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        mod.draw_fedascl_framework()
+    else:
+        print('draw_fedascl_framework.py not found, skip FedASCL figure.')
+
+
 if __name__ == '__main__':
     fig_ablation()
     fig_denoising()
@@ -249,4 +264,5 @@ if __name__ == '__main__':
     fig_system_architecture()
     fig_system_architecture_cn()
     fig_selector_logic()
+    fig_fedascl_framework()
     print('All figures written to', OUT_DIR)
