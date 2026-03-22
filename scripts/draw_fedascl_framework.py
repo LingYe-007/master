@@ -107,15 +107,17 @@ def draw_fedascl_framework(params=None):
     ax.set_aspect('equal')
     ax.axis('off')
 
-    # 配色（与论文属性语义图构建、跨视图对比机制图完全一致：#e3f2fd/#fff3e0）
+    # 配色（按参考图：服务端灰、语义蓝、结构橙、原型绿）
     panel_bg = '#eeeeee'      # 分区背景（浅灰面板）
     gray_bg = '#f5f5f5'
-    blue_fill = '#e3f2fd'     # 图12风格浅蓝
+    blue_fill = '#e3f2fd'     # 属性语义图（蓝）
     blue_edge = '#1976d2'
-    orange_fill = '#fff3e0'   # 图12风格浅橙
+    orange_fill = '#fff3e0'   # 交互结构图（橙）
     orange_edge = '#e65100'
+    green_fill = '#e8f5e9'    # 原型对齐、语义编码器（绿）
+    green_edge = '#2e7d32'
     white_fill = '#ffffff'
-    gray_box = '#e8e8e8'      # 流程框（属性语义图风格）
+    gray_box = '#e8e8e8'      # 流程框
     text_dark = '#333333'
 
     def box(x, y, w, h, text, fc=white_fill, ec=text_dark, fs=9):
@@ -134,13 +136,13 @@ def draw_fedascl_framework(params=None):
     ax.text(0.6, 9.1, 'A.', fontsize=11, fontweight='bold')
     ax.text(7, 9.1, '服务端 (Global / Server)', ha='center', fontsize=11, fontweight='bold')
 
-    # 蓝云
+    # 蓝云：全局语义原型聚合
     draw_cloud_shape(ax, 3.5, 8.95, 2.2, 0.7, blue_fill, blue_edge)
     ax.text(3.5, 8.95, '全局语义原型聚合\nPrototypes Aggregation', ha='center', va='center', fontsize=8)
-    # 橙云+齿轮
+    # 橙云+齿轮：模型聚合(加权平均)
     draw_cloud_shape(ax, 10.5, 8.95, 2.2, 0.7, orange_fill, orange_edge)
     draw_gear_shape(ax, 10.5, 8.95, 0.2, orange_edge)
-    ax.text(10.5, 8.95, '模型聚合\nModel Aggregation', ha='center', va='center', fontsize=8)
+    ax.text(10.5, 8.95, '模型聚合 (加权平均)\nModel Aggregation (Weighted Average)', ha='center', va='center', fontsize=8)
     arrow(5.7, 8.95, 8.3, 8.95)  # 蓝云->橙云
 
     # ========== B. 客户端 (风格对齐论文：冷启动推荐策略、跨视图对比等) ==========
@@ -177,9 +179,9 @@ def draw_fedascl_framework(params=None):
     arrow(2.8, 6.35, 3.35, 6.3)
     arrow(2.8, 5.25, 3.35, 5.3)
 
-    # --- 2. 双视图编码 ---
-    box(6.8, 6.5, 1.6, 0.5, '异构GNN编码器\nGNN Encoder', gray_box)
-    box(6.8, 5.5, 1.6, 0.5, '异构GNN编码器\nGNN Encoder', gray_box)
+    # --- 2. 双视图编码（语义编码器浅绿、结构编码器浅橙）---
+    box(6.8, 6.5, 1.6, 0.5, '异构GNN编码器\nGNN Encoder', green_fill, green_edge)
+    box(6.8, 5.5, 1.6, 0.5, '异构GNN编码器\nGNN Encoder', orange_fill, orange_edge)
     arrow(4.35, 6.3, 6.8, 6.75)
     arrow(4.35, 5.3, 6.8, 5.75)
 
@@ -199,32 +201,32 @@ def draw_fedascl_framework(params=None):
     arrow(8.8, 5.92, 8.5, 4.9)
     arrow(8.8, 6.57, 8.2, 4.9)
 
-    # --- 4. 原型对齐 ---
-    box(11.2, 3.8, 1.9, 0.6, '4. 原型对齐 (修正偏差)\n4. Prototype Alignment (Correct Non-IID Bias)', white_fill)
+    # --- 4. 原型对齐（绿色框）---
+    box(11.2, 3.8, 1.9, 0.6, '4. 原型对齐 (修正偏差)\n4. Prototype Alignment (Correct Non-IID Bias)', green_fill, green_edge)
     arrow(9.5, 5.75, 10.5, 4.1)
     arrow(10.0, 4.9, 11.0, 4.1)
 
-    # --- 元路径 & 推荐 ---
-    box(11.2, 6.2, 1.9, 0.55, '元路径挖掘 Mining &\n注意力融合 Attention Weights', gray_box)
-    box(13.0, 6.2, 1.0, 0.5, 'Recommendation\nPrediction', gray_box)
+    # --- 元路径 & 推荐（元路径挖掘蓝、推荐预测浅蓝）---
+    box(11.2, 6.2, 1.9, 0.55, '元路径挖掘 Mining &\n注意力融合 Attention Weights', blue_fill, blue_edge)
+    box(13.0, 6.2, 1.0, 0.5, 'Recommendation\nPrediction', blue_fill, blue_edge)
     arrow(9.5, 6.75, 11.0, 6.45)
     arrow(9.5, 4.9, 10.8, 5.5)
     arrow(12.2, 6.45, 13.0, 6.45)
     ax.text(11.8, 6.55, 'Meta-paths\nAttention', fontsize=6, alpha=0.9)
 
-    # --- 5. 损失计算（论文3.6.4: L_total = L_rec + λ1·L_cl + λ2·L_proto）---
+    # --- 5. 损失计算（Rec Loss Main + CL Loss Aux，参考图两组件）---
     loss_y = 2.5
-    box(11.2, loss_y + 0.5, 0.55, 0.38, 'Rec Loss\n(Main)', gray_box, fs=6)
-    box(11.8, loss_y + 0.5, 0.55, 0.38, 'CL Loss\n(Aux)', gray_box, fs=6)
-    box(12.4, loss_y + 0.5, 0.55, 0.38, 'Proto\n(Aux)', gray_box, fs=6)
+    box(11.2, loss_y + 0.5, 0.6, 0.4, 'Rec Loss\n(Main Task)', gray_box, fs=6)
+    box(11.85, loss_y + 0.5, 0.6, 0.4, 'CL Loss\n(Auxiliary Task)', gray_box, fs=6)
+    box(12.5, loss_y + 0.5, 0.55, 0.4, 'Proto\n(Aux)', gray_box, fs=6)
     ax.add_patch(FancyBboxPatch((11.2, loss_y - 0.15), 1.9, 1.05, boxstyle="round,pad=0.02",
                                facecolor=white_fill, edgecolor=text_dark, lw=1.2))
-    ax.text(12.15, loss_y + 0.2, '5. 损失计算 L_total=L_rec+λ1·L_cl+λ2·L_proto', ha='center', fontsize=7)
+    ax.text(12.15, loss_y + 0.2, '5. 损失计算 Loss Calculation (L_total=L_rec+λ1·L_cl+λ2·L_proto)', ha='center', fontsize=7)
     arrow(12.5, 5.95, 12.0, loss_y + 0.9)
     arrow(10.5, 4.1, 11.5, loss_y + 0.9)
 
-    # --- 6. 联合优化 ---
-    box(11.2, 1.5, 1.9, 0.55, '6. 联合反向传播与参数更新\n6. Joint Optimization', white_fill)
+    # --- 6. 联合优化（蓝框，输出 Updated Model Parameters）---
+    box(11.2, 1.5, 1.9, 0.55, '6. 联合反向传播与参数更新\n6. Joint Optimization', blue_fill, blue_edge)
     arrow(12.15, 2.5, 12.15, 2.08)
     arrow(11.2, 2.6, 11.2, 2.08)
 

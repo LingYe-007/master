@@ -42,6 +42,8 @@ output/
 # 其他临时文件
 *.tmp
 *.bak
+*.bkp
+*.dtmp
 
 
 # 排除大文件
@@ -53,6 +55,11 @@ images/backup/
 
 # 编译脚本错误产生的字面目录
 $OutDir/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*.pyo
 
 # 前端依赖与构建产物
 fedrec-frontend/node_modules/

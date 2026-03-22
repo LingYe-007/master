@@ -30,7 +30,7 @@
 
 （1）针对冷启动与数据异质性，提出基于属性-结构双视图对比学习的联邦异构图推荐框架 FedASCL（Federated Attribute-Structure Contrastive Learning），即通过跨视图对比学习在潜在空间对齐用户属性与图结构语义，用属性特征重构缺失的拓扑信息以应对零交互用户，并引入全局语义原型对齐（Global Semantic Prototype Alignment）约束本地表征、缓解客户端模型漂移（Client Drift）。冷启动与高异构（Non-IID）设定下，FedASCL 均优于对比基线。
 
-（2）为降低通信开销，提出语义感知的模型参数压缩策略，设计轻量级元路径选择器在本地训练中动态剔除低贡献冗余通道，并采用残差梯度量化压缩传输。约 20 倍压缩比下保持推荐精度的同时将通信开销降低约一个数量级（表~\ref{tab:communication_cost}）。
+（2）为降低通信开销，提出语义感知的模型参数压缩策略，设计轻量级元路径选择器在本地训练中动态剔除低贡献冗余通道，并采用残差梯度量化压缩传输。约 20 倍压缩比下保持推荐精度的同时将通信开销降低约一个数量级（详见第四章）。
 
 （3）为支撑工程落地，构建了支持异构设备协同的联邦论文推荐系统，采用端云协同的异步聚合架构适配不同性能终端，并集成本地差分隐私模块，完成从算法到系统的闭环验证。
 \par
@@ -64,7 +64,7 @@ Specifically, the research work of this paper is as follows:
 
 （1） To tackle the poor recommendation performance caused by cold start and Non-IID data, this paper proposes a federated heterogeneous graph recommendation framework based on federated attribute-structure contrastive learning (FedASCL). The framework employs a cross-view contrastive learning mechanism to align user attribute and graph structure semantics in the latent space and reconstructs missing topological information using attribute features; it also introduces a global semantic prototype alignment mechanism to correct client drift. Experiments show that FedASCL achieves significant performance improvement in cold start scenarios and considerable improvement in highly heterogeneous environments.
 
-（2） To address the problems of large parameter size and low communication efficiency in federated heterogeneous graph models, this paper proposes a semantics-aware model parameter compression strategy. This strategy designs a lightweight meta-path selector to dynamically eliminate redundant channels with low contribution to users during local training, and combines residual gradient quantization technology to compress transmitted data. Experimental results show that at approximately 20$\times$ compression ratio, the strategy maintains recommendation accuracy while reducing communication overhead by approximately one order of magnitude (see Chapter~4 Table~\ref{tab:communication_cost}), alleviating the communication bottleneck in federated recommendation systems.
+（2） To address the problems of large parameter size and low communication efficiency in federated heterogeneous graph models, this paper proposes a semantics-aware model parameter compression strategy. This strategy designs a lightweight meta-path selector to dynamically eliminate redundant channels with low contribution to users during local training, and combines residual gradient quantization technology to compress transmitted data. Experimental results show that at approximately 20$\times$ compression ratio, the strategy maintains recommendation accuracy while reducing communication overhead by approximately one order of magnitude (see Chapter~4), alleviating the communication bottleneck in federated recommendation systems.
 
 （3） To solve the difficulty in deploying current federated recommendation systems, this paper constructs a federated recommendation system supporting heterogeneous device collaboration. The system adopts an edge-cloud collaborative asynchronous aggregation architecture to adapt to terminal devices with different performances, and integrates a local differential privacy module to complete the deployment of the federated recommendation system.
 \par

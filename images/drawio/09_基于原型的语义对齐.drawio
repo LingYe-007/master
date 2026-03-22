@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-01" agent="5.0" version="22.1.0" etag="x" type="device">
+  <diagram name="Page-1" id="page1">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="基于原型的语义对齐策略" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="250" y="20" width="350" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="本地嵌入 zᵢ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="80" y="100" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="全局原型 cₖ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="350" y="100" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="L_proto 约束" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8e8e8;strokeColor=#333333;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="280" y="220" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;strokeColor=#333333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="3" target="4" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;strokeColor=#333333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4" target="5" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

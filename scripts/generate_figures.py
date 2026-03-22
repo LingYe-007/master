@@ -34,10 +34,11 @@ plt.rcParams.update({
     'axes.linewidth': 1.2,
     'grid.alpha': 0.4,
     'font.size': 10,
-    'axes.titlesize': 11,
+    'axes.titlesize': 12,
     'axes.labelsize': 10,
     'xtick.labelsize': 9,
     'ytick.labelsize': 9,
+    'legend.fontsize': 9,
 })
 # 尝试中文字体（若缺失则用英文标签）
 try:
@@ -256,7 +257,25 @@ def fig_fedascl_framework():
         print('draw_fedascl_framework.py not found, skip FedASCL figure.')
 
 
+def fig_conceptual_all():
+    """论文概念图（除实验截图外的所有图表）：论文结构、二部图、GNN、同构异构、元路径、超图、联邦学习等。"""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    draw_script = os.path.join(script_dir, 'draw_conceptual_figures.py')
+    if os.path.exists(draw_script):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('draw_conceptual', draw_script)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        mod.run_all()
+    else:
+        print('draw_conceptual_figures.py not found, skip conceptual figures.')
+
+
 if __name__ == '__main__':
+    # 概念图（bipartite、GNN、同构异构、元路径、联邦学习等）保留原专业设计图，不覆盖
+    # 若需重新生成概念图，可取消下行注释： fig_conceptual_all()
+    # fig_conceptual_all()
+    # 实验曲线与架构图（代码生成）
     fig_ablation()
     fig_denoising()
     fig_convergence_curve()

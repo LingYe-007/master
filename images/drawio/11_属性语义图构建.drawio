@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-01" agent="5.0" version="22.1.0" etag="x" type="device">
+  <diagram name="Page-1" id="page1">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="属性语义图构建流程" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="300" y="15" width="400" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="A. 原始属性
+One-Hot / Min-Max" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="80" y="80" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="B. 相似度计算
+cos(xi, xj)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="350" y="80" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="C. k-NN 超图构建
+关联矩阵 H" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="620" y="80" width="200" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;strokeColor=#333333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="3" target="4" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;strokeColor=#333333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4" target="5" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="8" value="→ 图神经网络输入" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=10" parent="1" vertex="1">
+          <mxGeometry x="450" y="180" width="150" height="25" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

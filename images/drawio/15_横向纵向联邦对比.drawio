@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-01" agent="5.0" version="22.1.0" etag="x" type="device">
+  <diagram name="Page-1" id="page1">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="横向联邦与纵向联邦数据分布对比" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="300" y="15" width="400" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="横向联邦
+同构特征、不同用户
+(样本划分)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="80" y="80" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="纵向联邦
+同用户、异特征
+(特征划分)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="400" y="80" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="Client A" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=9" parent="1" vertex="1">
+          <mxGeometry x="200" y="230" width="100" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" value="Client B" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=9" parent="1" vertex="1">
+          <mxGeometry x="200" y="260" width="100" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" value="Client A" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=9" parent="1" vertex="1">
+          <mxGeometry x="500" y="230" width="100" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="8" value="Client B" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=9" parent="1" vertex="1">
+          <mxGeometry x="500" y="260" width="100" height="20" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

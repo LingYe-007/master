@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2025-01-01" agent="5.0" version="22.1.0" etag="x" type="device">
+  <diagram name="Page-1" id="page1">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="动态元路径选择器（基于注意力权重 α 的 Top-K 筛选）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontFamily=Arial;fontColor=#333333;fontSize=11;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="250" y="20" width="450" height="25" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="输入：元路径集合 P={p₁,...,pₘ} 与权重 α^(t)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="100" y="80" width="600" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="Top-K 筛选：保留权重最大的 K 条元路径，生成掩码 m^(t)∈{0,1}^M" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="100" y="180" width="600" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="输出：仅上传 mᵢ^(t)=1 对应子网络的梯度更新；服务端按位聚合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;strokeWidth=1;fontFamily=Arial;fontColor=#333333;fontSize=10;align=center;verticalAlign=middle;" parent="1" vertex="1">
+          <mxGeometry x="100" y="280" width="600" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;strokeColor=#333333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="3" target="4" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" style="endArrow=classic;html=1;rounded=0;strokeWidth=1;strokeColor=#333333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="4" target="5" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
