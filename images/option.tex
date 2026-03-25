@@ -97,6 +97,7 @@ gbalign=right,
 \setCJKfamilyfont{hei}{SimHei}
 \setCJKfamilyfont{fs}{FangSong}
 \setCJKfamilyfont{kai}{KaiTi}
+\setCJKmonofont[BoldFont=SimHei]{FangSong}
 
 \newcommand{\song}{\CJKfamily{song}}    % 宋体
 \makeatletter
@@ -215,9 +216,15 @@ gbalign=right,
 \titlecontents{subsection}[3.5em]{\tocentrysize\songti}{\contentslabel{1.5em}\ }%
 {}{\titlerule*[0.4pc]{\tocdot}{\songti\contentspage}}[\vspace{0.5pt}]
 
-% 第三级（条）：小四号宋体，相对节（3.5em）再右移一档（约 2.5em），使 1.2.1 相对 1.2 的位移接近示例；
-% 数字与标题之间略放宽（约 2em），保证“3.8.1 时间复杂度分析”等不会贴在一起；页码使用常规宋体不过粗
-\titlecontents{subsubsection}[6em]{\tocentrysize\songti}{\contentslabel{2em}\ }%
+% 第三级（条）：编号区固定 \contentslabel{2em}，与 3.9.x 等一致；仅当编号字符较长（如 3.10.1）时在编号与标题之间多加 \hspace，把标题往后让出位置，不加宽编号盒、避免数字整体左移
+\newcommand{\tocsubsubsecwithlabel}{%
+  \contentslabel{2em}\ %
+  \StrLen{\thecontentslabel}[\tocsubsubseclen]%
+  \ifnum\tocsubsubseclen>5
+    \hspace{0.7em}%
+  \fi
+}
+\titlecontents{subsubsection}[6em]{\tocentrysize\songti}{\tocsubsubsecwithlabel}%
 {}{\titlerule*[0.4pc]{\tocdot}{\songti\contentspage}}[\vspace{0.5pt}]
 
 % 第四级（段）：小四号宋体，缩进 4em，页码常规宋体
