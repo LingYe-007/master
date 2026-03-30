@@ -38,8 +38,8 @@
 }
 \setlist[enumerate,2]{
   label=\arabic*.,
-  leftmargin=3.45em,
-  labelsep=0.4em,
+  leftmargin=2.85em,
+  labelsep=0.22em,
   align=left,
   itemsep=0.06\baselineskip,
   parsep=0pt,
@@ -77,8 +77,8 @@
 \newenvironment{subenumerate}{%
   \begin{enumerate}[
     label=\arabic*.,
-    leftmargin=3.45em,
-    labelsep=0.4em,
+    leftmargin=2.85em,
+    labelsep=0.22em,
     align=left,
     itemsep=0.06\baselineskip,
     parsep=0pt,
@@ -175,7 +175,10 @@
 \sanhao\heiti 图~~~~目~~~~录
 \end{center}
 \addvspace{1em}
-\StartToc{lof}
+\begingroup
+  \renewcommand{\baselinestretch}{1}\selectfont
+  \StartToc{lof}
+\endgroup
 \newpage
 % 表目录（在总目录中以“表索引”形式出现，层级与章节标题一致）
 \markboth{表\quad 目\quad 录}{表\quad 目\quad 录}
@@ -185,7 +188,10 @@
 \sanhao\heiti 表~~~~目~~~~录
 \end{center}
 \addvspace{1em}
-\StartToc{lot}
+\begingroup
+  \renewcommand{\baselinestretch}{1}\selectfont
+  \StartToc{lot}
+\endgroup
 \newpage
 
 % =========================================================

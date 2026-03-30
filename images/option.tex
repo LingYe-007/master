@@ -138,8 +138,8 @@ gbalign=right,
 \newcommand{\xiaowuhao}{\fontsize{9pt}{\baselineskip}\selectfont}
 \newcommand{\liuhao}{\fontsize{7.875pt}{\baselineskip}\selectfont}
 \newcommand{\qihao}{\fontsize{5.25pt}{\baselineskip}\selectfont}
-% 目录条目统一字号（章、节、条同大）：小四号 1.5 倍行距
-\newcommand{\tocentrysize}{\fontsize{12pt}{18pt}\selectfont}
+% 目录条目：小四号 + 略紧行距（勿用正文 1.5 倍，否则行间显空）
+\newcommand{\tocentrysize}{\fontsize{12pt}{15.6pt}\selectfont}
 %---------------------------------------------------------------------------%
 %-                               Chinesization                             -%
 %---------------------------------------------------------------------------%
@@ -171,7 +171,7 @@ gbalign=right,
 \renewcommand*\l@chapter[2]{%
  \ifnum \c@tocdepth >\m@ne
    \addpenalty{-\@highpenalty}%
-   \vskip 0.4em \@plus\p@
+   \vskip 0.2em \@plus.1\p@
    \setlength\@tempdima{0em}%
    \begingroup
      \parindent \z@ \rightskip \@pnumwidth
@@ -227,12 +227,12 @@ gbalign=right,
 \newcommand{\tocdot}{\raisebox{-0.25ex}{.}}
 % 第一级（章）：小四号黑体（加粗），顶格；页码显式切换为常规宋体（取消黑体和加粗）
 \titlecontents{section}[0em]{\tocentrysize\heiti\bfseries\renewcommand{\numberline}[1]{}}{}{}%
-{\titlerule*[0.4pc]{\tocdot}{\normalfont\mdseries\songti\contentspage}}[\vspace{0.5pt}\let\numberline\saved@numberline]
+{\titlerule*[0.4pc]{\tocdot}{\normalfont\mdseries\songti\contentspage}}[\vspace{0pt}\let\numberline\saved@numberline]
 
 % 第二级（节）：小四号宋体（数字与标题都不加粗），
 % 整体缩进约 3.5em，数字与标题之间距离约 1.5em
 \titlecontents{subsection}[3.5em]{\tocentrysize\songti}{\contentslabel{1.5em}\ }%
-{}{\titlerule*[0.4pc]{\tocdot}{\songti\contentspage}}[\vspace{0.5pt}]
+{}{\titlerule*[0.4pc]{\tocdot}{\songti\contentspage}}[\vspace{0pt}]
 
 % 第三级（条）：编号区固定 \contentslabel{2em}，与 3.9.x 等一致；仅当编号字符较长（如 3.10.1）时在编号与标题之间多加 \hspace，把标题往后让出位置，不加宽编号盒、避免数字整体左移
 \newcommand{\tocsubsubsecwithlabel}{%
@@ -243,11 +243,11 @@ gbalign=right,
   \fi
 }
 \titlecontents{subsubsection}[6em]{\tocentrysize\songti}{\tocsubsubsecwithlabel}%
-{}{\titlerule*[0.4pc]{\tocdot}{\songti\contentspage}}[\vspace{0.5pt}]
+{}{\titlerule*[0.4pc]{\tocdot}{\songti\contentspage}}[\vspace{0pt}]
 
 % 第四级（段）：小四号宋体，缩进 4em，页码常规宋体
 \titlecontents{paragraph}[4em]{\tocentrysize\songti}{\contentslabel{3.5em}\ }%
-{}{\titlerule*[0.4pc]{\tocdot}{\songti\contentspage}}[\vspace{0.5pt}]
+{}{\titlerule*[0.4pc]{\tocdot}{\songti\contentspage}}[\vspace{0pt}]
 % 图目录和表目录格式：五号宋体，紧凑间距，与目录格式一致
 \makeatletter
 \renewcommand*\l@figure{\@dottedtocline{1}{0em}{2.3em}}

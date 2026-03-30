@@ -90,7 +90,7 @@
 \subsection{通信复杂度分析}
 \label{subsec:complexity_analysis}
 假设异构图模型包含 $M$ 条元路径，每条元路径对应的子网络参数维度为 $d$，采用 32 位浮点数表示。考虑以下因素：
-\begin{enumerate}[label=\arabic*.]
+\begin{enumerate}[label=\arabic*., labelsep=0.28em, leftmargin=2.45em]
     \item 动态选择器保留 $K$ 条元路径 ($K < M$)，即保留率 $\rho = K/M$；
     \item 量化机制将位宽降低至 $b$ bits ($b \ll 32$)；
     \item 额外开销包括元路径索引（$K \cdot \lceil \log_2 M \rceil$ bits）和缩放因子（$K \cdot 32$ bits）。
@@ -106,7 +106,7 @@
 \label{sec:exp_analysis_chap4}
 
 为评估该策略，本节在 MovieLens-1M 和 Yelp 数据集上做实验，并讨论以下三个问题：
-\begin{enumerate}[label=\arabic*., labelsep=0.55em, leftmargin=2.75em]
+\begin{enumerate}[label=\arabic*., labelsep=0.28em, leftmargin=2.45em]
     \item \textbf{RQ1（性能保持）}在高压缩比下，FedASCL-Compress 能否保持甚至超越全精度模型的推荐准确率？
     \item \textbf{RQ2（机制效果）}动态元路径选择器（剪枝）和残差梯度量化（量化）各自对模型性能有何贡献？是否确实存在"语义去噪"效应？
     \item \textbf{RQ3（通信效率）}相比现有压缩方法，该策略在通信开销和训练时间上能带来多大的缩减？

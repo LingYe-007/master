@@ -5,5 +5,9 @@
 \xiaoerhao\heiti 目~~~~录
 \end{center}
 \par\addvspace{1em}
-\StartToc{toc}
+\begingroup
+  % 目录不用正文 1.5 倍行距，否则条目标题行间显稀
+  \renewcommand{\baselinestretch}{1}\selectfont
+  \StartToc{toc}
+\endgroup
 \newpage
