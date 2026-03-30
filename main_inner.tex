@@ -1,0 +1,232 @@
+% 正文主体（由 main.tex / main_blind.tex 在设置 \ifblindthesis 后 \input）
+% geometry 必须早于 fancyhdr 加载，否则页眉页脚居中会相对于版心而非纸张
+\usepackage{geometry}
+% a4paper：与国内 Word 默认及硕论常见要求一致，避免 Letter(612x792) 与封面 PDF 拼版时版心不一致
+% 上边距：减小 top + headsep，避免“页眉实际用 eso-pic 画、版心仍留一大块 head 区域”导致正文起点过低
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=22mm, bottom=2.5cm, headheight=10pt, headsep=8mm}
+\input{images/option}
+\renewcommand{\textfraction}{0.15}    % 正文至少占页面的15%（避免图片占满整页）
+% \renewcommand{\floatpagefraction}{0.8}% 图片占页面80%以上才会单独占页
+\renewcommand{\topfraction}{0.85}     % 顶部浮动体最多占页面85%
+\renewcommand{\bottomfraction}{0.85}
+
+\addbibresource{chapters/reference.bib}
+
+% --- 1. 基础宏包 ---
+\usepackage{amsmath, amssymb, amsfonts} % 数学公式 (去重)
+\usepackage{indentfirst}
+\usepackage{graphicx}   % 图片
+\usepackage{booktabs}   % 三线表
+\usepackage{array}      % 表格列格式（如 >{...}p{...}）
+\usepackage{multirow}   % 表格跨行
+\usepackage{fancyhdr}   % 页眉页脚（geometry 已在文件开头加载）
+\usepackage{eso-pic}    % 用于在纸张坐标系中绝对居中绘制页眉
+\usepackage{hyperref}   % 超链接
+\usepackage{titletoc}   % 目录格式
+\usepackage{enumitem}
+% 中文正文列表：一级为全角「（1）（2）…」+ 悬挂缩进；二级为「1. 2. …」（用于条目下再分点）
+\setlist[enumerate,1]{
+  label=（\arabic*）,
+  leftmargin=2.85em,
+  labelwidth=2.25em,
+  labelsep=0.35em,
+  align=left,
+  itemsep=0.12\baselineskip,
+  parsep=0pt,
+  topsep=0.22\baselineskip,
+  partopsep=0pt,
+}
+\setlist[enumerate,2]{
+  label=\arabic*.,
+  leftmargin=3.45em,
+  labelsep=0.4em,
+  align=left,
+  itemsep=0.06\baselineskip,
+  parsep=0pt,
+  topsep=0.1\baselineskip,
+}
+\setlist[itemize,1]{
+  leftmargin=2.4em,
+  itemsep=0.1\baselineskip,
+  parsep=0pt,
+  topsep=0.2\baselineskip,
+}
+% 中文「（1）（2）…」：首行（含编号）整体 2em 缩进，续行顶格；编号「）」后 1 空格（非 enumerate 悬挂）
+\newcounter{cnparenum}
+\newenvironment{cnenumerate}{%
+  \begingroup
+  \setlength{\parindent}{0pt}%
+  \setcounter{cnparenum}{0}%
+  \vspace{0.22\baselineskip}%
+}{%
+  \par\vspace{0.22\baselineskip}%
+  \endgroup
+}
+\newcommand{\cnitem}{%
+  \ifnum\value{cnparenum}>0
+    \par\addvspace{0.12\baselineskip}%
+  \else
+    \par
+  \fi
+  \refstepcounter{cnparenum}%
+  \parshape 2 2em \dimexpr\linewidth-2em\relax 0pt \linewidth
+  （\arabic{cnparenum}）\space
+  \ignorespaces
+}
+% 套在 cnenumerate 内的二级列表（因外层非 list，需显式指定 1. 2. …）
+\newenvironment{subenumerate}{%
+  \begin{enumerate}[
+    label=\arabic*.,
+    leftmargin=3.45em,
+    labelsep=0.4em,
+    align=left,
+    itemsep=0.06\baselineskip,
+    parsep=0pt,
+    topsep=0.1\baselineskip,
+    partopsep=0pt,
+  ]}%
+  {\end{enumerate}}
+\usepackage{algorithm}    % 算法浮动环境
+\usepackage{algorithmicx} % 算法结构扩展
+\usepackage{algpseudocode}% 算法关键词（For/If/State等）
+% 算法题注：与图/表一致（图/表/算法 与编号之间无空格）；名称中文
+\floatname{algorithm}{算法}
+\captionsetup[algorithm]{labelformat=nwunosep,labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=5pt,belowskip=3pt}
+\usepackage{amsmath}      % 数学公式支持
+\usepackage{amssymb}
+% 注意：参考文献使用 biblatex（在 option.tex 中已配置），不需要 natbib
+
+% --- 2. 算法宏包 (修复冲突) ---
+% \usepackage{algorithmic} % 已注释：与 algpseudocode 冲突，建议不用
+
+
+% --- 3. 页眉页脚（西北大学：从绪论开始）---
+% 分析：fancyhdr 的 [C] 以 typeblock 为基准，\headwidth=\paperwidth 无法改变起始位置，故无法相对纸张居中。
+% 方案：用 eso-pic 在页顶附近绘制页眉；竖向位置与 \geometry{top, headheight, headsep} 大致匹配，避免版心顶端空白过高
+\newcommand{\headerfont}{\xiaowuhao\songti}
+\newcounter{usefancyheader}
+\pagestyle{empty}
+% 前置部分（摘要、目录）页码：小五号 Times New Roman 罗马数字
+\fancypagestyle{front}{%
+  \fancyhf{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyfoot[C]{\wuhao\rmfamily\thepage}
+}
+% eso-pic：仅在主体部分（绪论起）绘制页眉，与版心同宽、同左边界，使页眉与正文标题水平对齐
+% 策略：版心左边界为 1in+\oddsidemargin（与 geometry left=3cm 一致），宽度 \textwidth；
+%       页眉文字与页眉线均置于该区域内并居中，与各章标题、致谢等保持同一中轴
+\AddToShipoutPictureFG{%
+  \ifnum\value{usefancyheader}=1
+    \AtPageUpperLeft{%
+      \put(\dimexpr1in+\oddsidemargin\relax,-\dimexpr9mm\relax){\makebox[\textwidth][c]{\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士学位论文\fi}}%
+      \put(\dimexpr1in+\oddsidemargin\relax,-\dimexpr14mm\relax){\rule{\textwidth}{0.4pt}}%
+    }%
+  \fi
+}
+% fancy/plain：页眉文字和线由 eso-pic 绘制，此处仅保留页脚
+\fancypagestyle{fancy}{%
+  \fancyhf{}
+  % oneside 下不区分奇偶页，避免使用 E/O 选项触发 fancyhdr 警告
+  \fancyhead{}
+  \renewcommand{\headrulewidth}{0pt}
+  % oneside 下不区分奇偶页，用 C 保持居中即可
+  \fancyfoot[C]{\wuhao\rmfamily\thepage}
+}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  % oneside 下不区分奇偶页，避免使用 E/O 选项触发 fancyhdr 警告
+  \fancyhead{}
+  \renewcommand{\headrulewidth}{0pt}
+  \fancyfoot[C]{\wuhao\rmfamily\thepage}
+}
+% 章间仅换页，不插入空白页（单面印刷可减少大段留白；若学院要求章从奇数页起，可恢复奇数页逻辑）
+\newcommand{\chapterblank}{\clearpage}
+% ctexart 无 \mainmatter，定义为空操作以免报错
+\providecommand{\mainmatter}{}
+
+% --- 信息录入 ---
+\title{基于对比学习的联邦异构图推荐算法与系统研究}
+\author{伍勋高}
+\date{2026年3月}
+
+\begin{document}
+\raggedbottom
+
+% =========================================================
+%   前置部分 (Front Matter)
+%   特点：页码为罗马数字 (i, ii, iii...)
+% =========================================================
+
+% 从摘要开始启用页眉（eso-pic 绘制）
+\setcounter{usefancyheader}{1}
+
+% 1. 摘要页 (中英文摘要)
+\input{chapters/abstract}
+
+% 4. 目录（西北大学规范：一般为二级或三级）
+\setcounter{tocdepth}{3}
+\input{TableofContents}  % 目录页（包含 \tableofcontents）
+\newpage
+% 图目录（在总目录中以“图索引”形式出现，层级与章节标题一致）
+\markboth{图\quad 目\quad 录}{图\quad 目\quad 录}
+\phantomsection
+\addcontentsline{toc}{section}{图索引}
+\begin{center}
+\sanhao\heiti 图~~~~目~~~~录
+\end{center}
+\addvspace{1em}
+\StartToc{lof}
+\newpage
+% 表目录（在总目录中以“表索引”形式出现，层级与章节标题一致）
+\markboth{表\quad 目\quad 录}{表\quad 目\quad 录}
+\phantomsection
+\addcontentsline{toc}{section}{表索引}
+\begin{center}
+\sanhao\heiti 表~~~~目~~~~录
+\end{center}
+\addvspace{1em}
+\StartToc{lot}
+\newpage
+
+% =========================================================
+%   主体部分 (Main Matter)
+%   特点：页码重置为阿拉伯数字 (1, 2, 3...)；绪论从奇数页起，页眉从绪论开始
+% =========================================================
+\mainmatter
+\clearpage
+% 主体部分保持启用页眉
+\input{chapters/chap1_intro}
+\chapterblank
+\input{chapters/chap2_related}
+\chapterblank
+\input{chapters/chap3_method}
+\chapterblank
+\input{chapters/chap4_compression}
+\chapterblank
+\input{chapters/chap5_system}
+\chapterblank
+\input{chapters/chap6_summary}
+\chapterblank
+
+% =========================================================
+%   后置部分 (Back Matter)
+%   特点：参考文献、致谢、成果等
+% =========================================================
+% \backmatter  % ctexart 不支持 \backmatter，已注释
+
+% 1. 参考文献
+% 使用 biblatex（已在 option.tex 中配置）
+% Reference.tex 中已包含 \printbibliography
+\input{chapters/Reference}
+
+% 2. 致谢 (保留一个即可)
+\input{chapters/thank}
+% \input{backmatter/ack} % 已注释：避免重复致谢
+
+% 3. 攻读硕士学位期间取得的科研成果
+% 按要求删除该部分
+% \input{backmatter/resume}
+
+% \input{} % 已删除：空的 input 会导致编译错误
+
+\end{document}

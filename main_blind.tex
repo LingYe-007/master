@@ -1,0 +1,8 @@
+% 盲审版入口：结构与非盲审版相同；致谢仅保留标题与目录项，正文与署名隐去。
+% 编译：xelatex main_blind；biber main_blind；xelatex main_blind；xelatex main_blind
+% 拼封面（封面页会缩放对齐正文 PDF 页面尺寸，默认 A4）：见 scripts/prepend_docx_pages_to_pdf.py
+% 示例：python scripts/prepend_docx_pages_to_pdf.py 封面_前六页.docx main_blind.pdf -o main_blind_with_cover.pdf -n 6
+\documentclass[oneside,12pt,reqno,fontset=none]{ctexart}
+\newif\ifblindthesis
+\blindthesistrue
+\input{main_inner}

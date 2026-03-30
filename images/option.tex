@@ -46,7 +46,7 @@ gbalign=right,
   {}
   {0pt}
   {}
-\titlespacing*{\section}{0pt}{24pt}{18pt}
+\titlespacing*{\section}{0pt}{16pt}{18pt}
 
 % 二级标题（节）：黑体四号，居左，段前段后正常
 \titleformat{\subsection}
@@ -60,7 +60,7 @@ gbalign=right,
   {0pt}
   {}
 % 标题前后间距（按需更紧凑）
-\titlespacing*{\subsection}{0pt}{18pt}{12pt}
+\titlespacing*{\subsection}{0pt}{12pt}{8pt}
 
 % 三级标题（条）：小四黑体，居左，无额外段落间距
 \titleformat{\subsubsection}
@@ -73,10 +73,11 @@ gbalign=right,
   {}
   {0pt}
   {}
-\titlespacing*{\subsubsection}{0pt}{6pt}{6pt}
+\titlespacing*{\subsubsection}{0pt}{4pt}{4pt}
 % 若未使用 EPS 图片，可不加载 epstopdf，避免无意义警告
 % \usepackage{epstopdf}
 \usepackage{caption}
+\captionsetup{skip=4pt}
 \usepackage{graphicx, subfig}
 \usepackage{float}
 \floatplacement{figure}{H}
@@ -98,6 +99,20 @@ gbalign=right,
 \setCJKfamilyfont{fs}{FangSong}
 \setCJKfamilyfont{kai}{KaiTi}
 \setCJKmonofont[BoldFont=SimHei]{FangSong}
+
+% 西文、阿拉伯数字默认 Times New Roman；Bold 用同一实例 + FakeBold，避免单独 Bold 字库在个别控制字符映射上缺字形
+\setmainfont{Times New Roman}[
+  BoldFont = {Times New Roman},
+  BoldFeatures = {FakeBold=1.25},
+  ItalicFont = {Times New Roman},
+  ItalicFeatures = {FakeSlant=0.2},
+  BoldItalicFont = {Times New Roman},
+  BoldItalicFeatures = {FakeBold=1.25, FakeSlant=0.2},
+]
+\setsansfont{Times New Roman}[
+  BoldFont = {Times New Roman},
+  BoldFeatures = {FakeBold=1.25},
+]
 
 \newcommand{\song}{\CJKfamily{song}}    % 宋体
 \makeatletter
@@ -134,8 +149,8 @@ gbalign=right,
 \newtheorem{exam}{例}[section]
 \newtheorem{proof}{{\it \textbf{证明}}}
 \newtheorem{solution}{{\it \textbf{解}}}
-\renewcommand{\tablename}{\songti 表}
-\renewcommand{\figurename}{\song 图}
+\renewcommand{\tablename}{{\songti 表}}
+\renewcommand{\figurename}{{\songti 图}}
 \renewcommand{\refname}{\centerline {参考文献}}
 % 目录、图目录、表目录标题：黑体三号，居中
 \renewcommand{\contentsname}{\centerline{\sanhao\heiti 目~~~~录}}
@@ -176,7 +191,8 @@ gbalign=right,
 %-                              Tabular Option                             -%
 %---------------------------------------------------------------------------%
 % 表内文字：五号宋体，数字和字母五号 Times New Roman（西北大学规范）
-\AtBeginEnvironment{tabular}{\wuhao\songti\fontspec{Times New Roman}}
+% 表内：小五号；西文/数字随 \setmainfont（TNR），汉字随正文 CJK 默认（宋体）
+\AtBeginEnvironment{tabular}{\wuhao}
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 % 表格行距与三线表间距：硕论常用单倍行距；三线表线间距进一步收紧至 0.15ex
 \renewcommand{\arraystretch}{0.7}
@@ -185,17 +201,19 @@ gbalign=right,
 %---------------------------------------------------------------------------%
 %-                              Caption Option                             -%
 %---------------------------------------------------------------------------%
-% 图表题：编号五号宋体不加粗，题目五号宋体加粗；编号与题之间空半角2格（1em≈2半角）
-\DeclareCaptionFont{nwulabel}{\wuhao\songti}
-\DeclareCaptionFont{nwucaption}{\wuhao\bfseries\songti}
-% labelsep=quad 约 1em，相当于编号与题之间空半角 2 格
-% 将图表题与图/表本体及上下正文的距离进一步收紧到接近“无额外空白”的状态
-\captionsetup[figure]{labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=0pt,belowskip=0pt}
-\captionsetup[table]{labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=0pt,aboveskip=0pt}
-% 图片/表格与正文间距（再次收紧，接近毕业论文模板中常见的紧凑间距）
-\setlength{\floatsep}{1pt plus 1pt minus 1pt}       % 两个浮动体之间
-\setlength{\textfloatsep}{2pt plus 1pt minus 1pt}   % 浮动体与页面顶部/底部正文
-\setlength{\intextsep}{1pt plus 1pt minus 1pt}      % 浮动体在正文中时的上下间距
+% 图表题：“图”“表”与编号紧贴（无空格）；编号中的数字为 TNR（labelfont 用 \rmfamily）；题注汉字仍为宋体
+\DeclareCaptionLabelFormat{nwunosep}{#1#2}
+\DeclareCaptionFont{nwulabel}{\wuhao\rmfamily}
+% 先进入宋体再加重，避免 \bfseries 先切到 TNR Bold 时混入无效字符（如 xeCJK/短路径粗体解析问题）
+\DeclareCaptionFont{nwucaption}{\wuhao\songti\bfseries}
+% labelsep=quad：编号整体与题注标题文字之间留空（仅此处，不为“图”与数字之间）
+\captionsetup[figure]{labelformat=nwunosep,labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=5pt,belowskip=3pt}
+\captionsetup[table]{labelformat=nwunosep,labelsep=quad,labelfont={nwulabel},font={nwucaption},skip=5pt,aboveskip=4pt,belowskip=3pt}
+% algorithm 浮动体在 main.tex 于 \usepackage{algorithm} 之后再设 \captionsetup[algorithm]
+% 浮动体与正文：较上一版略收紧，尤减轻题注下方空隙
+\setlength{\floatsep}{10pt plus 3pt minus 2pt}       % 两个浮动体之间
+\setlength{\textfloatsep}{12pt plus 4pt minus 3pt}   % 页顶/页底浮动体与正文
+\setlength{\intextsep}{9pt plus 3pt minus 2pt}       % 文中 [H] 等插图上下与正文间距
 %---------------------------------------------------------------------------%
 %-                             Reference Resource                          -%
 %---------------------------------------------------------------------------%
