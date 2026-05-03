@@ -1,10 +1,10 @@
-% 设置正文字体为小四号宋体（12pt对应小四号）；oneside 单面打印
+% 设置正文字体为小四号宋体（12pt对应小四号）；twoside 双面打印（章起奇数页、版心左右对称）
 % 为兼容精简 TeX Live 环境，这里不使用 ctex 预设字体集，由 CJK 默认字体接管
 %
 % ========== 版本 ==========
 % 本文件：非盲审版（致谢完整）。盲审版请编译 main_blind.tex（致谢正文与落款为空）。
 % ===========================
-\documentclass[oneside,12pt,reqno,fontset=none]{ctexart}
+\documentclass[twoside,12pt,reqno,fontset=none]{ctexart}
 \newif\ifblindthesis
 \blindthesisfalse
 \input{main_inner}

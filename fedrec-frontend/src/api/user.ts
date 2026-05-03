@@ -9,6 +9,8 @@ export function updateProfile(data: {
   interests?: string[]
   institution?: string
   researchDirections?: string[]
+  personalNo?: string
+  displayName?: string
 }) {
   return request.put<User>('/user/profile', data)
 }

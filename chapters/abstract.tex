@@ -1,4 +1,8 @@
 % --- 摘要页设置开始（不另起页，避免首页空白） ---
+% 垂直间距微调（缩小则中英文摘要块更紧凑；单位可用 cm / em）
+\newcommand{\AbstractTopVSpace}{0.55cm}      % 页内「摘要/ABSTRACT」标题上方留白（原约 1cm）
+\newcommand{\AbstractTitleBodyVSpace}{0.45em}% 标题与正文之间（原 0.8em）
+\newcommand{\AbstractBodyKeywordVSpace}{0.45em}% 正文末与「关键词」之间（原 0.8em）
 \pagenumbering{Roman} % 设置页码为罗马数字 I, II, III
 \setcounter{page}{1} % 重置页码为 I
 \pagestyle{front}    % 摘要、目录页脚：小五号 Times New Roman 罗马数字
@@ -14,12 +18,12 @@
 \makeatother
 
 % --- 中文摘要：标题“摘要”与章标题一致（三号黑体居中），正文与正文部分一致（小四宋体、首行缩进2字符、1.5倍行距）---
-\vspace{1cm}
+\vspace{\AbstractTopVSpace}
 \begin{center}
     \centering
-    {\sanhao\heiti\bfseries 摘\quad 要}
+    {\sanhao\heiti 摘\quad 要}
 \end{center}
-\vspace{0.8em}
+\vspace{\AbstractTitleBodyVSpace}
 
 % 正文首行缩进
 \setlength{\parindent}{2em}
@@ -30,7 +34,7 @@
 \begin{cnenumerate}
     \cnitem 针对冷启动与数据异质性，提出基于属性-结构双视图对比学习的联邦异构图推荐框架 FedASCL（Federated Attribute-Structure Contrastive Learning）：在潜在空间中通过跨视图对比学习对齐用户属性与图结构语义，以属性特征补偿交互缺失；并引入全局语义原型对齐（Global Semantic Prototype Alignment）约束本地表征、缓解客户端模型漂移（Client Drift）。在冷启动与高异构（Non-IID）设定下，FedASCL 均优于所对比基线。
     \cnitem 为降低通信开销，提出语义感知的模型参数压缩策略，设计轻量级元路径选择器在本地训练中动态剔除低贡献冗余通道，并采用残差梯度量化压缩传输。约 20 倍压缩比下保持推荐精度的同时将通信开销降低约一个数量级（详见第四章）。
-    \cnitem 为支撑工程落地，构建了支持异构设备协同的联邦论文推荐系统，采用端云协同的异步聚合架构适配不同性能终端，并集成本地差分隐私模块，完成从算法到系统的闭环验证。
+    \cnitem 为支撑工程落地，构建了联邦论文推荐系统，采用端云协同分层架构完成模型分发、本地训练、压缩上传与安全聚合；工程实现上业务层可采用异步任务调度（如训练任务队列），联邦轮次本身为同步聚合，与第三、四章实验设定一致。系统集成本地差分隐私模块，完成从算法到系统的闭环验证。
 \end{cnenumerate}
 \par
 }
@@ -38,17 +42,17 @@
 \vspace{0.8em}
 % 关键词：与条标题字号字体相同（小四号黑体），左对齐；3－5个，中文逗号分隔，最后一个后不打标点
 \begin{flushleft}
-\xiaosihao\heiti\bfseries 关键词：\xiaosihao\songti 联邦学习，异构图推荐，对比学习，冷启动，模型压缩
+\xiaosihao\heiti 关键词：\xiaosihao\songti 联邦学习，异构图推荐，对比学习，冷启动，模型压缩
 \end{flushleft}
 % --- 英文摘要：标题与章标题一致（三号加粗居中），正文与正文部分一致 ---
 \newpage
 \markboth{ABSTRACT}{ABSTRACT}
-\vspace{1cm}
+\vspace{\AbstractTopVSpace}
 \begin{center}
     \centering
-    {\sanhao\heiti\bfseries ABSTRACT}
+    {\sanhao\heiti ABSTRACT}
 \end{center}
-\vspace{0.8em}
+\vspace{\AbstractTitleBodyVSpace}
 
 \phantomsection
 \addcontentsline{toc}{section}{ABSTRACT}
@@ -69,13 +73,13 @@
 
 \noindent (2)To address the problems of large parameter size and low communication efficiency in federated heterogeneous graph models, this paper proposes a semantics-aware model parameter compression strategy. This strategy designs a lightweight meta-path selector to dynamically eliminate redundant channels with low contribution to users during local training, and combines residual gradient quantization technology to compress transmitted data. Experimental results show that at approximately 20$\times$ compression ratio, the strategy maintains recommendation accuracy while reducing communication overhead by approximately one order of magnitude (see Chapter~4), alleviating the communication bottleneck in federated recommendation systems.
 
-\noindent (3)To solve the difficulty in deploying current federated recommendation systems, this paper constructs a federated recommendation system supporting heterogeneous device collaboration. The system adopts an edge-cloud collaborative asynchronous aggregation architecture to adapt to terminal devices with different performances, and integrates a local differential privacy module to complete the deployment of the federated recommendation system.
+\noindent (3)To solve the difficulty in deploying current federated recommendation systems, this paper constructs a federated paper recommendation prototype with an edge-cloud layered architecture (data, algorithm engine, services, and presentation). Federated training follows synchronous rounds with secure aggregation as in Chapters~3--4; asynchronous job scheduling may be used at the service layer (e.g., task queues). A local differential privacy module is integrated to complete the algorithm-to-system loop.
 \par
 }
 \endgroup
 
-\vspace{0.8em}
-% Keywords：仅 "Keywords:" 加粗，后面关键词小四 Times New Roman 不加粗，左对齐
+\vspace{\AbstractBodyKeywordVSpace}
+% Keywords：``Keywords:'' 与关键词均为小四 Times New Roman，不加粗，左对齐
 \begin{flushleft}
-{\xiaosihao\bfseries Keywords: }\xiaosihao\rmfamily Federated Learning, Heterogeneous Graph Recommendation, Contrastive Learning, Cold Start, Model Compression
+{\xiaosihao\rmfamily Keywords: }\xiaosihao\rmfamily Federated Learning, Heterogeneous Graph Recommendation, Contrastive Learning, Cold Start, Model Compression
 \end{flushleft}

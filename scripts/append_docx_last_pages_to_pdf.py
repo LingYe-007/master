@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-"""将 Word 前 N 页转为 PDF 后，拼接到现有 PDF 前面。
+"""将 Word 文档最后 N 页转为 PDF 后，拼接到现有 PDF 末尾。
 
-封面页按正文 PDF 首页的 MediaBox 做等比缩放并居中，避免 Word 导出为 Letter/A4
-或与 LaTeX 版心不一致时拼版错位。
-可选：在 Windows 上用 Word 将工作副本设为 A4 + 与 thesis 相同的页边距后再导出 PDF。
+页面按正文 PDF 首页的 MediaBox 做等比缩放并居中（与 prepend_docx_pages_to_pdf 一致）。
 """
 from __future__ import annotations
 
@@ -24,7 +22,6 @@ def _mediabox_size(page) -> tuple[float, float]:
 
 
 def _apply_word_margins_a4(docx_path: Path) -> None:
-    """将文档设为 A4，页边距与 main_inner.tex 中 geometry 一致（左/右/下 2.5cm，上 22mm≈2.2cm）。"""
     try:
         import win32com.client  # type: ignore
     except ImportError:
@@ -41,10 +38,10 @@ def _apply_word_margins_a4(docx_path: Path) -> None:
         ps = doc.PageSetup
         app = doc.Application
         try:
-            ps.PaperSize = 9  # wdPaperA4
+            ps.PaperSize = 9
         except Exception:
-            pass  # 部分模板锁定用纸型，仅改边距即可
-        ps.TopMargin = app.CentimetersToPoints(2.2)  # 与 geometry top=22mm 一致
+            pass
+        ps.TopMargin = app.CentimetersToPoints(2.2)
         ps.BottomMargin = app.CentimetersToPoints(2.5)
         ps.LeftMargin = app.CentimetersToPoints(2.5)
         ps.RightMargin = app.CentimetersToPoints(2.5)
@@ -58,11 +55,10 @@ def _apply_word_margins_a4(docx_path: Path) -> None:
             word.Quit()
 
 
-def add_cover_page_fitted(writer: PdfWriter, cover_page, target_w: float, target_h: float) -> None:
-    """将封面页等比缩放后置于 target_w x target_h 空白页上居中（不拉伸变形）。"""
-    cw, ch = _mediabox_size(cover_page)
+def add_page_fitted(writer: PdfWriter, src_page, target_w: float, target_h: float) -> None:
+    cw, ch = _mediabox_size(src_page)
     if cw <= 0 or ch <= 0:
-        writer.add_page(cover_page)
+        writer.add_page(src_page)
         return
     scale = min(target_w / cw, target_h / ch)
     sw, sh = cw * scale, ch * scale
@@ -70,43 +66,43 @@ def add_cover_page_fitted(writer: PdfWriter, cover_page, target_w: float, target
     ty = (target_h - sh) / 2
     blank = writer.add_blank_page(width=target_w, height=target_h)
     tr = Transformation().scale(scale, scale).translate(tx, ty)
-    blank.merge_transformed_page(cover_page, tr)
+    blank.merge_transformed_page(src_page, tr)
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="DOCX 前 N 页 + PDF 合并（封面页对齐正文页面尺寸）")
-    parser.add_argument("docx", type=Path, help="封面等 Word 文件")
-    parser.add_argument("main_pdf", type=Path, help="正文 PDF，如 main.pdf")
+    parser = argparse.ArgumentParser(description="DOCX 最后 N 页接到 PDF 末尾（按正文首页尺寸对齐）")
+    parser.add_argument("docx", type=Path, help="封面等 Word 文件（如 封面.docx）")
+    converter = parser.add_argument_group("合并目标")
+    converter.add_argument(
+        "main_pdf",
+        type=Path,
+        help="原有 PDF（如已含前封面的 main_with_cover.pdf）",
+    )
     parser.add_argument(
         "-o",
         "--output",
         type=Path,
         default=None,
-        help="输出 PDF（默认：与 main 同目录的 main_with_cover.pdf）",
+        help="输出 PDF（默认：覆盖与 main_pdf 相同路径）",
     )
     parser.add_argument(
         "-n",
         "--pages",
         type=int,
-        default=6,
-        help="从 Word 转换结果中取前几页（默认 6；若 Word 实际导出多于 n 页，其余页不会拼入，见 --use-all-cover-pages）",
-    )
-    parser.add_argument(
-        "--use-all-cover-pages",
-        action="store_true",
-        help="使用 Word 导出 PDF 的全部页数（避免「文件名写前六页但实际多 1 页空白/声明」时丢页）",
+        default=2,
+        help="从 Word 转换结果中取最后几页（默认 2）",
     )
     parser.add_argument(
         "--no-fit-pages",
         action="store_true",
-        help="禁用按正文页面框缩放封面（不推荐，仅调试）",
+        help="禁用按正文页面框缩放（不推荐，仅调试）",
     )
     parser.add_argument(
         "--fix-word-margins",
         dest="fix_word_margins",
         action="store_true",
         default=False,
-        help="转换前用 Word 将临时副本页边距对齐 thesis（需 Word + pywin32；模板锁定用纸型时可能失败）",
+        help="转换前用 Word 将临时副本页边距对齐 thesis（需 Word + pywin32）",
     )
     args = parser.parse_args()
 
@@ -116,8 +112,11 @@ def main() -> int:
     if not args.main_pdf.is_file():
         print(f"找不到 PDF: {args.main_pdf}", file=sys.stderr)
         return 1
+    if args.pages < 1:
+        print("--pages 至少为 1", file=sys.stderr)
+        return 1
 
-    out = args.output or (args.main_pdf.parent / "main_with_cover.pdf")
+    out = args.output or args.main_pdf
     body = PdfReader(str(args.main_pdf))
     target_w, target_h = _mediabox_size(body.pages[0])
 
@@ -134,41 +133,27 @@ def main() -> int:
             return 1
 
         cover = PdfReader(str(tmp_pdf))
-        total_cover = len(cover.pages)
-        if getattr(args, "use_all_cover_pages", False):
-            n = total_cover
-        else:
-            n = max(0, args.pages)
-            n = min(n, total_cover)
-        if total_cover > n:
-            print(
-                f"警告: Word 导出共 {total_cover} 页，本次仅拼接前 {n} 页（未写入后 {total_cover - n} 页）。"
-                f"如需全部拼接请使用 --use-all-cover-pages 或 -n {total_cover}。",
-                file=sys.stderr,
-            )
-        elif not getattr(args, "use_all_cover_pages", False) and args.pages > total_cover:
-            print(
-                f"提示: Word 导出仅 {total_cover} 页（少于 -n {args.pages}），已全部拼接。",
-                file=sys.stderr,
-            )
+        total = len(cover.pages)
+        n = min(args.pages, total)
+        start = total - n
 
         writer = PdfWriter()
-        for i in range(n):
+        for p in body.pages:
+            writer.add_page(p)
+        for i in range(start, total):
             if args.no_fit_pages:
                 writer.add_page(cover.pages[i])
             else:
-                add_cover_page_fitted(writer, cover.pages[i], target_w, target_h)
-        for p in body.pages:
-            writer.add_page(p)
+                add_page_fitted(writer, cover.pages[i], target_w, target_h)
 
         out.parent.mkdir(parents=True, exist_ok=True)
-        tmp_out = out.parent / f".{out.stem}_tmp_{os.getpid()}.pdf"
+        tmp_out = out.parent / f".{out.stem}_append_tmp_{os.getpid()}.pdf"
         with open(tmp_out, "wb") as f:
             writer.write(f)
         try:
             os.replace(tmp_out, out)
         except OSError as exc:
-            alt = out.with_name(f"{out.stem}_new{out.suffix}")
+            alt = out.with_name(f"{out.stem}_appended{out.suffix}")
             try:
                 os.replace(tmp_out, alt)
             except OSError:
@@ -181,7 +166,7 @@ def main() -> int:
             out = alt
 
     print(
-        f"已写入: {out.resolve()}（封面 {n} 页已对齐至 {target_w:.0f}x{target_h:.0f} pt + 正文 {len(body.pages)} 页，共 {len(writer.pages)} 页）"
+        f"已写入: {out.resolve()}（正文 {len(body.pages)} 页 + 文末 Word 最后 {n} 页，共 {len(writer.pages)} 页）"
     )
     return 0
 

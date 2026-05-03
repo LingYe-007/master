@@ -1,19 +1,45 @@
-% 攻读硕士学位期间取得的科研成果（西北大学规范必备项）
-% 注意：这是一个子文件，需要从 main.tex 中 \input 使用
-
+% 攻读硕士学位期间取得的科研成果（与参考文献、致谢同级目录）
 \newpage
-\thispagestyle{empty}
 \markboth{攻读硕士学位期间取得的科研成果}{攻读硕士学位期间取得的科研成果}
 \phantomsection
-\addcontentsline{toc}{chapter}{攻读硕士学位期间取得的科研成果}
+\addcontentsline{toc}{section}{攻读硕士学位期间取得的科研成果}
 
 \begin{center}
-\sanhao\heiti\bfseries 攻读硕士学位期间取得的科研成果
+{\fontsize{15.75pt}{\baselineskip}\selectfont\heiti 攻读硕士学位期间取得的科研成果}
 \end{center}
-\addvspace{1.5em}
+\vspace{0.35\baselineskip}
 
-% 在此列出攻读硕士学位期间发表（含录用）的与学位论文相关的学术论文、专利、著作、获奖等，书写格式与参考文献相同。
-% 示例：[1] 作者. 论文题目[J]. 期刊名, 年份, 卷(期): 起止页码.
+% 与中文摘要、正文一致：小四号宋体，行距 12pt/18pt（约 1.5 倍），西文与数字随正文主字体（Times New Roman）
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\begingroup
+\fontsize{12pt}{18pt}\selectfont
 
+% 不用 \subsubsection*，避免 titlesec 块级标题带来大块竖向留白
+\noindent\heiti 参与科研项目及科研获奖\par
+\vspace{0.35\baselineskip}
+\setlength{\parindent}{0pt}
+\songti
+\begin{enumerate}[
+  label={[\arabic*]},
+  align=left,
+  leftmargin=*,
+  itemindent=0pt,
+  labelindent=0pt,
+  labelwidth=1.35em,
+  labelsep=0.15em,
+  itemsep=0.15\baselineskip,
+  parsep=0pt,
+  topsep=0pt,
+  partopsep=0pt,
+]
+  \item 校级项目，西北大学 IOC 智慧运营中心建设项目，2024.09--2025.06，项目组主要成员。
+  \item 校级项目，西北大学导师上岗系统，2024.10--2024.12，项目组主要成员。
+\end{enumerate}
+\endgroup
 
-
+% 文末独立空白页（双面印刷时常用；单面下亦保留版式空白）
+\newpage
+\thispagestyle{empty}
+\null
+\newpage

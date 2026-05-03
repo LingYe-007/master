@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Form, Input, Button, Card, message } from 'antd'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/store/auth'
@@ -18,13 +18,39 @@ export default function Login() {
       // 无后端时使用演示账号：demo / demo（管理员）；user / user（普通用户）
       if (v.username === 'demo' && v.password === 'demo') {
         localStorage.setItem('token', 'mock-token-admin')
-        localStorage.setItem('user', JSON.stringify({ id: '1', username: 'demo', isAdmin: true }))
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            id: 'srv-admin-fedascl-01',
+            username: 'demo',
+            email: 'fedascl.ops@nwu-lab.cn',
+            isAdmin: true,
+            personalNo: 'OP-2026-FL',
+            displayName: '系统管理员（演示）',
+            institution: '西北大学 · 联邦学习仿真平台',
+            interests: ['联邦运维', '训练监控', '语义压缩'],
+            researchDirections: ['分布式训练', '分层聚合'],
+          }),
+        )
         window.location.href = '/'
         return
       }
       if (v.username === 'user' && v.password === 'user') {
         localStorage.setItem('token', 'mock-token-user')
-        localStorage.setItem('user', JSON.stringify({ id: '2', username: 'user', isAdmin: false }))
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            id: 'client-user-9f3c21',
+            username: 'user',
+            email: 'grad.m.example@stumail.nwu.edu.cn',
+            isAdmin: false,
+            personalNo: 'M2023-3248',
+            displayName: '李研',
+            institution: '信息科学与技术学院',
+            interests: ['图神经网络', '论文推荐', '非IID联邦'],
+            researchDirections: ['异质信息网络', '对比学习'],
+          }),
+        )
         window.location.href = '/'
         return
       }

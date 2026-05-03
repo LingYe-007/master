@@ -3,11 +3,13 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Layout as AntLayout, Menu, Dropdown } from 'antd'
 import { FileTextOutlined, SettingOutlined, DashboardOutlined, LogoutOutlined } from '@ant-design/icons'
 import { useAuth } from '@/store/auth'
+import { mergeUserWithLocal } from '@/utils/localProfile'
 
 const { Header, Content } = AntLayout
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth()
+  const du = user ? mergeUserWithLocal(user) : null
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -39,7 +41,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
             ],
           }}
         >
-          <span style={{ color: '#fff', cursor: 'pointer' }}>{user?.username || '用户'}</span>
+          <span style={{ color: '#fff', cursor: 'pointer' }}>
+            {du?.username || '用户'}
+            {du?.personalNo ? <span style={{ opacity: 0.85, marginLeft: 8 }}>（编号 {du.personalNo}）</span> : null}
+          </span>
         </Dropdown>
       </Header>
       <Content style={{ padding: 24 }}>{children}</Content>

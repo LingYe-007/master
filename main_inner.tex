@@ -2,8 +2,10 @@
 % geometry 必须早于 fancyhdr 加载，否则页眉页脚居中会相对于版心而非纸张
 \usepackage{geometry}
 % a4paper：与国内 Word 默认及硕论常见要求一致，避免 Letter(612x792) 与封面 PDF 拼版时版心不一致
+% twoside：与 \documentclass[twoside] 一致；left/right 在双面下对应内侧/外侧（对称 2.5cm）
 % 上边距：减小 top + headsep，避免“页眉实际用 eso-pic 画、版心仍留一大块 head 区域”导致正文起点过低
-\geometry{a4paper, left=2.5cm, right=2.5cm, top=22mm, bottom=2.5cm, headheight=10pt, headsep=8mm}
+% 装订：若学院对订口有毫米级要求，可追加 bindingoffset=5mm 等并微调 left/right
+\geometry{a4paper, twoside, left=2.5cm, right=2.5cm, top=22mm, bottom=2.5cm, headheight=10pt, headsep=8mm}
 \input{images/option}
 \renewcommand{\textfraction}{0.15}    % 正文至少占页面的15%（避免图片占满整页）
 % \renewcommand{\floatpagefraction}{0.8}% 图片占页面80%以上才会单独占页
@@ -22,6 +24,7 @@
 \usepackage{fancyhdr}   % 页眉页脚（geometry 已在文件开头加载）
 \usepackage{eso-pic}    % 用于在纸张坐标系中绝对居中绘制页眉
 \usepackage{hyperref}   % 超链接
+\hypersetup{pdfpagelayout=TwoPageLeft}% 阅读器双页预览时左右装订边一致（首页为奇数右页）
 \usepackage{titletoc}   % 目录格式
 \usepackage{enumitem}
 % 中文正文列表：一级为全角「（1）（2）…」+ 悬挂缩进；二级为「1. 2. …」（用于条目下再分点）
@@ -29,17 +32,19 @@
   label=（\arabic*）,
   leftmargin=2.85em,
   labelwidth=2.25em,
-  labelsep=0.35em,
+  labelsep=0.18em,
   align=left,
   itemsep=0.12\baselineskip,
   parsep=0pt,
   topsep=0.22\baselineskip,
   partopsep=0pt,
 }
+% 二级「1. 2. …」：收窄编号盒子与左边距，使数字与正文更贴近（避免编号与文字间大空挡）
 \setlist[enumerate,2]{
   label=\arabic*.,
-  leftmargin=2.85em,
-  labelsep=0.22em,
+  leftmargin=2.1em,
+  labelwidth=1.65em,
+  labelsep=0.08em,
   align=left,
   itemsep=0.06\baselineskip,
   parsep=0pt,
@@ -70,15 +75,16 @@
   \fi
   \refstepcounter{cnparenum}%
   \parshape 2 2em \dimexpr\linewidth-2em\relax 0pt \linewidth
-  （\arabic{cnparenum}）\space
+  （\arabic{cnparenum}）\hspace{0.12em}%
   \ignorespaces
 }
 % 套在 cnenumerate 内的二级列表（因外层非 list，需显式指定 1. 2. …）
 \newenvironment{subenumerate}{%
   \begin{enumerate}[
     label=\arabic*.,
-    leftmargin=2.85em,
-    labelsep=0.22em,
+    leftmargin=2.1em,
+    labelwidth=1.65em,
+    labelsep=0.08em,
     align=left,
     itemsep=0.06\baselineskip,
     parsep=0pt,
@@ -113,34 +119,37 @@
   \fancyfoot[C]{\wuhao\rmfamily\thepage}
 }
 % eso-pic：仅在主体部分（绪论起）绘制页眉，与版心同宽、同左边界，使页眉与正文标题水平对齐
-% 策略：版心左边界为 1in+\oddsidemargin（与 geometry left=3cm 一致），宽度 \textwidth；
-%       页眉文字与页眉线均置于该区域内并居中，与各章标题、致谢等保持同一中轴
+% 策略：双面下奇偶页的版心左起点分别为 1in+\oddsidemargin / 1in+\evensidemargin，须与之一致
+%       宽度 \textwidth；页眉文字与页眉线置于该区域内并居中
 \AddToShipoutPictureFG{%
   \ifnum\value{usefancyheader}=1
     \AtPageUpperLeft{%
-      \put(\dimexpr1in+\oddsidemargin\relax,-\dimexpr9mm\relax){\makebox[\textwidth][c]{\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士学位论文\fi}}%
-      \put(\dimexpr1in+\oddsidemargin\relax,-\dimexpr14mm\relax){\rule{\textwidth}{0.4pt}}%
+      \put(\ifodd\value{page}\dimexpr1in+\oddsidemargin\relax\else\dimexpr1in+\evensidemargin\relax\fi,-\dimexpr9mm\relax){\makebox[\textwidth][c]{\headerfont\ifodd\value{page}\leftmark\else 西北大学硕士专业学位论文\fi}}%
+      \put(\ifodd\value{page}\dimexpr1in+\oddsidemargin\relax\else\dimexpr1in+\evensidemargin\relax\fi,-\dimexpr14mm\relax){\rule{\textwidth}{0.4pt}}%
     }%
   \fi
 }
 % fancy/plain：页眉文字和线由 eso-pic 绘制，此处仅保留页脚
 \fancypagestyle{fancy}{%
   \fancyhf{}
-  % oneside 下不区分奇偶页，避免使用 E/O 选项触发 fancyhdr 警告
   \fancyhead{}
   \renewcommand{\headrulewidth}{0pt}
-  % oneside 下不区分奇偶页，用 C 保持居中即可
+  % 页脚居中（与学院 Word 版式常见要求一致）；若需「奇右偶左」可改为 [RO,LE]
   \fancyfoot[C]{\wuhao\rmfamily\thepage}
 }
 \fancypagestyle{plain}{%
   \fancyhf{}
-  % oneside 下不区分奇偶页，避免使用 E/O 选项触发 fancyhdr 警告
   \fancyhead{}
   \renewcommand{\headrulewidth}{0pt}
   \fancyfoot[C]{\wuhao\rmfamily\thepage}
 }
-% 章间仅换页，不插入空白页（单面印刷可减少大段留白；若学院要求章从奇数页起，可恢复奇数页逻辑）
-\newcommand{\chapterblank}{\clearpage}
+% 章首节落在奇数页：偶数页起章前插入一页空白（\thispagestyle{empty}，双面与单面逻辑相同）
+\newcommand{\chapterblank}{%
+  \clearpage
+  \ifodd\value{page}\else
+    \null\thispagestyle{empty}\newpage
+  \fi
+}
 % ctexart 无 \mainmatter，定义为空操作以免报错
 \providecommand{\mainmatter}{}
 
@@ -165,16 +174,20 @@
 
 % 4. 目录（西北大学规范：一般为二级或三级）
 \setcounter{tocdepth}{3}
+% 若仍超 3 页可改为 2：目录中不显示「条」级（subsubsection），通常可再省约半页
+% \setcounter{tocdepth}{2}
 \input{TableofContents}  % 目录页（包含 \tableofcontents）
 \newpage
 % 图目录（在总目录中以“图索引”形式出现，层级与章节标题一致）
 \markboth{图\quad 目\quad 录}{图\quad 目\quad 录}
 \phantomsection
 \addcontentsline{toc}{section}{图索引}
+% 标题区竖向间距与「主目录」最初规范一致（1.5em + 1em），不受正文目录 compact 预设影响
+\par\addvspace{1.5em}
 \begin{center}
 \sanhao\heiti 图~~~~目~~~~录
 \end{center}
-\addvspace{1em}
+\par\addvspace{1em}
 \begingroup
   \renewcommand{\baselinestretch}{1}\selectfont
   \StartToc{lof}
@@ -184,10 +197,11 @@
 \markboth{表\quad 目\quad 录}{表\quad 目\quad 录}
 \phantomsection
 \addcontentsline{toc}{section}{表索引}
+\par\addvspace{1.5em}
 \begin{center}
 \sanhao\heiti 表~~~~目~~~~录
 \end{center}
-\addvspace{1em}
+\par\addvspace{1em}
 \begingroup
   \renewcommand{\baselinestretch}{1}\selectfont
   \StartToc{lot}
@@ -199,8 +213,8 @@
 %   特点：页码重置为阿拉伯数字 (1, 2, 3...)；绪论从奇数页起，页眉从绪论开始
 % =========================================================
 \mainmatter
-\clearpage
-% 主体部分保持启用页眉
+\chapterblank
+% 主体部分保持启用页眉（与章间相同：绪论起于奇数页）
 \input{chapters/chap1_intro}
 \chapterblank
 \input{chapters/chap2_related}
@@ -212,7 +226,7 @@
 \input{chapters/chap5_system}
 \chapterblank
 \input{chapters/chap6_summary}
-\chapterblank
+\clearpage
 
 % =========================================================
 %   后置部分 (Back Matter)
@@ -229,9 +243,8 @@
 \input{chapters/thank}
 % \input{backmatter/ack} % 已注释：避免重复致谢
 
-% 3. 攻读硕士学位期间取得的科研成果
-% 按要求删除该部分
-% \input{backmatter/resume}
+% 3. 攻读硕士学位期间取得的科研成果（含文末空白页，盲审/非盲审版均排版；封底不再依赖 Word 截取）
+\input{backmatter/resume}
 
 % \input{} % 已删除：空的 input 会导致编译错误
 
