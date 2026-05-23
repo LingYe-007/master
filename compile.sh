@@ -50,14 +50,34 @@ if [ $OK -ne 0 ] || [ ! -f "$OUT/main.pdf" ]; then
 fi
 
 if [ -f "$OUT/main.pdf" ]; then
-    mv "$OUT/main.pdf" "$OUT/$FINAL_NAME"
+    COVER_DOCX="封面_前六页.docx"
+    MERGED=0
+    if [ -f "$COVER_DOCX" ]; then
+        echo ""
+        echo "拼接封面（$COVER_DOCX 前 6 页）..."
+        if python3 scripts/prepend_docx_pages_to_pdf.py "$COVER_DOCX" "$OUT/main.pdf" \
+            -o "$OUT/$FINAL_NAME" -n 6; then
+            MERGED=1
+        else
+            echo "⚠ 封面拼接失败，仅输出正文 PDF（需 Word 或 LibreOffice，见 scripts/prepend_docx_pages_to_pdf.py）"
+        fi
+    fi
+    if [ "$MERGED" -eq 0 ]; then
+        mv "$OUT/main.pdf" "$OUT/$FINAL_NAME"
+    else
+        rm -f "$OUT/main.pdf"
+    fi
     # 只在 output/ 保留最终论文 PDF，避免残留其他调试/报告 PDF
     find "$OUT" -maxdepth 1 -type f -name "*.pdf" ! -name "$FINAL_NAME" -delete 2>/dev/null || true
     echo ""
     echo "=========================================="
     echo "✓ 编译成功"
     echo "=========================================="
-    echo "PDF: $OUT/$FINAL_NAME（仅保留此一份）"
+    if [ "$MERGED" -eq 1 ]; then
+        echo "PDF: $OUT/$FINAL_NAME（含封面 6 页 + 正文）"
+    else
+        echo "PDF: $OUT/$FINAL_NAME（正文，未拼封面）"
+    fi
     ls -lh "$OUT/$FINAL_NAME" | awk '{print "大小:", $5}'
 else
     echo "=========================================="

@@ -92,13 +92,22 @@ gbalign=right,
 % 说明：xeCJK 默认会在中文与非中文（如引用标号 [n]、GNN 等）之间自动插入 CJKecglue，
 % 可能导致“引用标号后文字突出来”的视觉空隙；这里将其设为 0 以避免多余空白。
 \xeCJKsetup{AutoFakeBold=2, AutoFakeSlant=.2, CJKecglue=\hskip 0pt}
-% Windows 字体（若在 macOS 编译，改为 STSong/STHeiti/STKaiti/STFangsong）
-\setCJKmainfont[BoldFont=SimHei,ItalicFont=KaiTi]{SimSun}
-\setCJKfamilyfont{song}{SimSun}
-\setCJKfamilyfont{hei}{SimHei}
-\setCJKfamilyfont{fs}{FangSong}
-\setCJKfamilyfont{kai}{KaiTi}
-\setCJKmonofont[BoldFont=SimHei]{FangSong}
+% Windows：SimSun 等；macOS：STSong 等。缺字会导致 PDF 中文乱码/方框，故按本机字体自动选择。
+\IfFontExistsTF{SimSun}{%
+  \setCJKmainfont[BoldFont=SimHei,ItalicFont=KaiTi]{SimSun}%
+  \setCJKfamilyfont{song}{SimSun}%
+  \setCJKfamilyfont{hei}{SimHei}%
+  \setCJKfamilyfont{fs}{FangSong}%
+  \setCJKfamilyfont{kai}{KaiTi}%
+  \setCJKmonofont[BoldFont=SimHei]{FangSong}%
+}{%
+  \setCJKmainfont[BoldFont=STHeiti,ItalicFont=STKaiti]{STSong}%
+  \setCJKfamilyfont{song}{STSong}%
+  \setCJKfamilyfont{hei}{STHeiti}%
+  \setCJKfamilyfont{fs}{STFangsong}%
+  \setCJKfamilyfont{kai}{STKaiti}%
+  \setCJKmonofont[BoldFont=STHeiti]{STFangsong}%
+}%
 
 % 西文、阿拉伯数字默认 Times New Roman；Bold 用同一实例 + FakeBold，避免单独 Bold 字库在个别控制字符映射上缺字形
 \setmainfont{Times New Roman}[
