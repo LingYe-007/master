@@ -1,0 +1,32 @@
+# Chapter 4 — MovieLens-1M compression experiment (tab:exp_config_chap4)
+experiment_id: c4_movielens_compress
+chapter: 4
+dataset: movielens-1m
+
+federated:
+  num_clients: 100
+  dirichlet_alpha: 0.5
+  participation_rate: 0.1
+  global_rounds: 100
+  local_epochs: 5
+
+compression:
+  rho: 0.2
+  quant_bits: 4
+  bandwidth_mbps: 10
+
+training:
+  seed: 42
+  lr: 0.001
+  optimizer: adam
+  embed_dim: 64
+  batch_size: 256
+
+evaluation:
+  metrics: [recall@20, ndcg@20]
+  eval_every: 5
+
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  results: results

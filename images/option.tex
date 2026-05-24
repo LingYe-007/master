@@ -13,6 +13,7 @@ gbalign=right,
 
 \usepackage{amsmath, amsfonts, amssymb}
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{etoolbox}
 \usepackage{fontspec}
 \usepackage{threeparttable}
@@ -231,6 +232,15 @@ gbalign=right,
 % 表内文字：五号宋体，数字和字母五号 Times New Roman（西北大学规范）
 % 表内：小五号；西文/数字随 \setmainfont（TNR），汉字随正文 CJK 默认（宋体）
 \AtBeginEnvironment{tabular}{\wuhao}
+\AtBeginEnvironment{longtable}{%
+    \wuhao
+    \renewcommand{\arraystretch}{0.7}%
+    \setlength{\aboverulesep}{0.15ex}%
+    \setlength{\belowrulesep}{0.15ex}%
+    \setlength\LTpre{0pt plus 2pt minus 0pt}%
+    \setlength\LTpost{0pt plus 2pt minus 0pt}%
+    \setlength\LTcapwidth{\textwidth}%
+}
 \newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
 % 表格行距与三线表间距：硕论常用单倍行距；三线表线间距进一步收紧至 0.15ex
 \renewcommand{\arraystretch}{0.7}

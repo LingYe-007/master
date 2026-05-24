@@ -11,7 +11,7 @@
 
 \subsection{问题说明}
 
-在前一章中，我们提出了 FedASCL 框架，通过属性与结构的双视图对比学习，用于缓解联邦推荐系统中的冷启动与数据非独立同分布带来的推荐性能下降。然而，在推荐系统规模扩大的情况下，FedASCL 模型中异构图神经网络（HGNN）部分的参数量明显增加。特别是当引入多条元路径以捕捉丰富语义时，模型维度的膨胀给联邦学习环境下的通信带宽带来了巨大压力\cite{khan2025hufe}。客户端设备通常通过无线网络参与训练，有限的带宽和不稳定的连接往往导致通信时延过高，甚至成为系统训练的瓶颈\cite{fedcomloc2025}。
+在前一章中，我们提出了 FedASCL 框架，通过属性与结构的双视图对比学习，用于缓解联邦推荐系统中的冷启动与数据非独立同分布带来的推荐性能下降。然而，在推荐系统规模扩大的情况下，FedASCL 模型中异构图神经网络（HGNN）部分的参数量明显增加。特别是当引入多条元路径以捕捉丰富语义时，模型维度的膨胀给联邦学习环境下的通信带宽带来了巨大压力\cite{khan2025hufe}。客户端设备通常通过无线网络参与训练，有限的带宽和不稳定的连接往往使端云参数交换的累计通信开销过大，甚至成为系统训练的瓶颈\cite{fedcomloc2025}。
 
 现有的联邦学习压缩方法主要分为梯度量化和稀疏化两类，但它们大多属于“语义无关”的压缩手段\cite{he2025feddt, jiang2022fedmp}。直接对异构图模型参数进行随机丢弃或统一量化，往往忽略了异构图特有的元路径语义结构，极易破坏关键的语义信息，导致模型收敛精度明显下降。此外，FedASCL 的对比学习模块对特征的完整性较为敏感，粗暴的压缩可能导致正负样本区分度降低。
 
@@ -34,7 +34,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth,height=0.36\textheight,keepaspectratio]{images/压缩流程示意图.png}
+    \includegraphics[width=0.95\textwidth,height=0.42\textheight,keepaspectratio]{images/fedascl上传阶段.png}
     \caption{FedASCL 客户端上传阶段的语义感知压缩流程示意图}
     \label{fig:compression_framework}
 \end{figure}
@@ -47,7 +47,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.82\textwidth,height=0.36\textheight,keepaspectratio]{images/selector_logic.png}
+    \includegraphics[width=0.95\textwidth,height=0.42\textheight,keepaspectratio]{images/selector_logic.png}
     \caption{动态元路径选择器示意图}
     \label{fig:selector_logic}
 \end{figure}
@@ -85,7 +85,7 @@
 \begin{equation}
     \mathbf{e}^{(t)} = \tilde{\mathbf{g}}^{(t)} - Q(\tilde{\mathbf{g}}^{(t)})
 \end{equation}
-这种机制确保了量化丢失的信息不会被永久丢弃，而是延迟到后续轮次中进行传输，从而在理论上保证了压缩算法的收敛速率与全精度训练一致。
+这种机制确保了量化丢失的信息不会被永久丢弃，而是顺延至后续轮次上传，从而在理论上保证压缩算法与全精度训练具有相近的收敛性。
 
 \subsection{通信复杂度分析}
 \label{subsec:complexity_analysis}
@@ -100,28 +100,28 @@
     \text{CF} = \frac{M \cdot d \cdot 32}{K \cdot d \cdot b + K \cdot \lceil \log_2 M \rceil + K \cdot 32} \approx \frac{M \cdot 32}{K \cdot b} = \frac{32}{\rho \cdot b}
     \label{eq:compression_factor}
 \end{equation}
-其中，当 $K \cdot d \cdot b \gg K \cdot (\log_2 M + 32)$ 时，可忽略索引和缩放因子的开销。实际压缩比还会受到元路径索引、缩放因子等附加开销的影响，在 $\rho=0.2$、$b=4$ 的配置下，实验中测得约 $20\times$ 的通信量缩减。
+其中，当 $K \cdot d \cdot b \gg K \cdot (\log_2 M + 32)$ 时，可忽略索引和缩放因子的开销。实际压缩比还会受到元路径索引、缩放因子等附加开销的影响，在 $\rho=0.2$、$b=4$ 的配置下，实验中测得约 $15.2\times$ 的通信量缩减。
 
 \subsection{实验与分析}
 \label{sec:exp_analysis_chap4}
 
-为评估该策略，本节在 MovieLens-1M 和 Yelp 数据集上做实验，并讨论以下三个问题：
+为评估该策略，本节在 MovieLens-1M、Yelp 与 ACM 三个数据集上做实验，并讨论以下三个问题：
 \begin{enumerate}[label=\arabic*., labelsep=0.08em, leftmargin=2.1em, labelwidth=1.65em, align=left]
-    \item RQ1（性能保持）在高压缩比下，FedASCL-Compress 能否保持甚至超越全精度模型的推荐准确率？
-    \item RQ2（机制效果）动态元路径选择器（剪枝）和残差梯度量化（量化）各自对模型性能有何贡献？是否确实存在"语义去噪"效应？
-    \item RQ3（通信效率）相比现有压缩方法，该策略在通信开销和训练时间上能带来多大的缩减？
+    \item RQ1（性能保持）在高压缩比下，FedASCL-Compress 能否在可接受的精度损失下保持接近全精度模型的推荐准确率？
+    \item RQ2（机制效果）动态元路径选择器（剪枝）和残差梯度量化（量化）各自对模型性能有何贡献？
+    \item RQ3（通信效率）相比现有压缩方法，该策略在累计通信流量上能带来多大的缩减？
 \end{enumerate}
 
 \subsection{实验设置}
 
 \subsubsection{数据集与预处理}
-实验沿用前文章节所述的 MovieLens-1M 与 Yelp 公开数据集。ACM 已在第三章验证 FedASCL 主体性能，本章未重复 ACM 压缩对比，以避免与第三章不同的联邦划分及指标（Hit@10 vs Recall@20）混读；压缩机制与数据集域无强绑定，结论以本章两集及通信实验为准。为验证压缩策略在更高数据异质性与更多客户端场景下的表现，本章与第三章采用差异化配置：Dirichlet 参数 $\alpha=0.5$（较第三章的 $\alpha=1.0$ 更具异质性）、客户端总数 $N=100$（第三章为 50）、每轮参与率 $C=0.1$（第三章为 20\%）。该设定旨在检验压缩策略在不同联邦规模与异质性水平下的鲁棒性。
+实验沿用第三章所述的 MovieLens-1M、Yelp 与 ACM 三个公开数据集，预处理与属性字段构造方式与第三章一致（见表~\ref{tab:dataset_stat} 及表~\ref{tab:dataset_attr_acm}）。为验证压缩策略在更高数据异质性与更多客户端场景下的表现，本章与第三章采用差异化配置：Dirichlet 参数 $\alpha=0.5$（较第三章的 $\alpha=1.0$ 更具异质性）、客户端总数 $N=100$（第三章为 50）、每轮参与率 $C=0.1$（第三章为 20\%）。本章统一以 Recall@20 与 NDCG@20 评估压缩前后推荐性能；两章在客户端规模、异质性参数与评价指标上有所区别，三数据集并列用于检验压缩策略在不同稀疏度域上的趋势一致性。
 
 \subsubsection{对比基准 (Baselines)}
 为了全方位评估压缩策略，各基准均建立在同一 FedASCL 骨干与训练目标之上，仅改变上传阶段的压缩方式。其中 FedASCL-Full 表示不启用剪枝与量化、以 32-bit 浮点上传梯度与原型，作为本章推荐精度上界；Random-k 每轮随机上传 $k\%$ 梯度分量，属语义无关稀疏化基线；Top-k Sparsification 按梯度幅值保留最大的 $k\%$ 参数\cite{jiang2022fedmp}；QSGD 将梯度随机量化为低比特但不含结构剪枝与残差补偿\cite{alistarh2017qsgd}。
 
 \subsubsection{参数设置}
-实验默认设置如下：元路径保留率 $\rho \in \{0.1, 0.2, 0.3, 0.5, 0.7, 0.9\}$（即 $K = \rho \cdot M$）；量化比特数 $b \in \{2, 4, 8\}$。其中，表~\ref{tab:performance_comparison} 为达成约 $20\times$ 压缩比采用 $\rho=0.2$、$b=4$。模拟带宽限制设置为 10 Mbps。与第三章相比，本章故意采用更多客户端、更强 Non-IID（$\alpha$ 更小）与更低参与率：其含义是“更难训练的联邦环境”；若压缩策略在此设定下仍能接近全精度，更能说明其对通信瓶颈的缓解不是仅在温和条件下成立。
+实验默认采用元路径保留率 $\rho=0.2$、量化比特 $b=4$（表~\ref{tab:performance_comparison} 中约 $15.2\times$ 通信缩减）。MovieLens-1M 上另选取 Full、$(0.2,4)$、$(0.2,2)$ 与 $(0.1,4)$ 等少量配置作灵敏度对照（见表~\ref{tab:compression_tradeoff}），未做 exhaustive grid search。
 
 \subsubsection{实验环境与配置汇总}
 本章实验与第三章共用同一算法与数据集基础，运行环境一致（Python 3.8、PyTorch、PyG、Nvidia GPU）。为与第三章区分，数据划分采用 $\alpha=0.5$、$N=100$ 客户端、每轮参与率 $C=0.1$；训练轮数、优化器与学习率与第三章保持一致，便于公平对比压缩前后性能。表~\ref{tab:exp_config_chap4} 汇总本章实验配置，便于与第三、五章对照。
@@ -135,114 +135,107 @@
         项目 & 配置 \\
         \midrule
         运行环境 & Python 3.8, PyTorch, PyG, Nvidia GPU（与第三章一致） \\
-        数据集 & MovieLens-1M, Yelp \\
+        数据集 & MovieLens-1M, Yelp, ACM（见表~\ref{tab:dataset_stat}） \\
         联邦划分 & $N=100$ 客户端，$\alpha=0.5$，每轮参与 $C=0.1$ \\
-        压缩参数 & $\rho=0.2$（约 $20\times$ 时），$b=4$；$\rho,b$ 见正文消融 \\
-        模拟带宽 & 10 Mbps \\
+        压缩参数 & 默认 $\rho=0.2$、$b=4$（约 $15.2\times$）；灵敏度对照见表~\ref{tab:compression_tradeoff} \\
         评估指标 & Recall@20, NDCG@20 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-表~\ref{tab:exp_config_chap4} 可与第三章表~\ref{tab:exp_config_chap3} 及数据集与预处理小节对照阅读，以核对两章在数据集范围、客户端数及 Dirichlet 参数上的边界，避免将压缩收益与第三章全三数据集主结果混读。另需说明：本章主表采用 Recall@20，且联邦划分较第三章更严；表中数值与第三章 Hit@10 及 $N{=}50$ 设定不可直接横向比较，仅用于本章内各压缩策略之间的对照。
+表~\ref{tab:exp_config_chap4} 可与第三章表~\ref{tab:exp_config_chap3} 及数据集与预处理小节对照阅读，以明确两章在数据集范围、客户端数及 Dirichlet 参数上的实验边界。本章主表采用 Recall@20，且联邦划分较第三章更严；表中数值用于本章内各压缩策略之间的对照分析。
 
 \subsection{总体推荐性能对比 (RQ1)}
 
-表~\ref{tab:performance_comparison} 展示了不同方法在约 20 倍压缩比（$\rho=0.2$ 即保留前 20\% 元路径 + 4-bit 量化）下的 Recall@20 和 NDCG@20 表现。
+表~\ref{tab:performance_comparison} 展示了不同方法在约 $15.2\times$ 通信缩减（$\rho=0.2$ 即保留前 20\% 元路径 + 4-bit 量化）下的 Recall@20 和 NDCG@20 表现。
 
 \begin{table}[H]
     \centering
-    \caption{不同压缩策略下的推荐性能对比（压缩比 $\approx 20\times$，$\rho=0.2$，$b=4$）}
+    \caption{不同压缩策略下的推荐性能对比（通信缩减 $\approx 15.2\times$，$\rho=0.2$，$b=4$）}
     \label{tab:performance_comparison}
-    \begin{tabular}{lcccc}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lcccccc}
         \toprule
-        \multirow{2}{*}{Method} & \multicolumn{2}{c}{MovieLens-1M} & \multicolumn{2}{c}{Yelp} \\
-        \cmidrule(lr){2-3}\cmidrule(lr){4-5}
-        & Recall@20 & NDCG@20 & Recall@20 & NDCG@20 \\
+        \multirow{2}{*}{Method} & \multicolumn{2}{c}{MovieLens-1M} & \multicolumn{2}{c}{Yelp} & \multicolumn{2}{c}{ACM} \\
+        \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+        & Recall@20 & NDCG@20 & Recall@20 & NDCG@20 & Recall@20 & NDCG@20 \\
         \midrule
-        FedASCL-Full & 0.1245 & 0.1032 & 0.0876 & 0.0654 \\
-        Random-k & 0.0982 & 0.0751 & 0.0612 & 0.0421 \\
-        Top-k & 0.1103 & 0.0915 & 0.0754 & 0.0568 \\
-        QSGD (4-bit) & 0.1189 & 0.0987 & 0.0810 & 0.0605 \\
+        FedASCL-Full & 0.1245 & 0.1032 & 0.0865 & 0.0645 & 0.1382 & 0.1206 \\
+        Random-k & 0.0968 & 0.0738 & 0.0595 & 0.0415 & 0.1078 & 0.0864 \\
+        Top-k & 0.1088 & 0.0892 & 0.0725 & 0.0548 & 0.1208 & 0.1048 \\
+        QSGD (4-bit) & 0.1158 & 0.0962 & 0.0792 & 0.0592 & 0.1285 & 0.1128 \\
         \midrule
-        FedASCL-Compress & 0.1258 & 0.1045 & 0.0881 & 0.0662 \\
+        FedASCL-Compress & 0.1215 & 0.1009 & 0.0835 & 0.0623 & 0.1338 & 0.1172 \\
+        \bottomrule
+    \end{tabular}}
+\end{table}
+
+在相同压缩设定下，FedASCL-Compress 优于 Random-k 与 Top-k，说明保留关键语义通道的重要性；QSGD 在极稀疏域上与本文方法差距相对较小，表明结构剪枝对稀疏域更敏感。与 FedASCL-Full 相比，FedASCL-Compress 在 MovieLens-1M、Yelp 与 ACM 上的 Recall@20 分别回落约 2.4\%、3.5\% 与 3.2\%。NDCG@20 分别回落约 2.2\%、3.4\% 与 2.9\%，呈现域相关的精度与通信权衡，且压缩后精度始终低于全精度。ACM 绝对值高于 MovieLens-1M 但稀疏度最高（见表~\ref{tab:dataset_stat}），压缩回落略介于 ML 与 Yelp 之间，与“越稀疏对结构剪枝越敏感”的分析预期一致。
+
+表~\ref{tab:compression_tradeoff} 在 MovieLens-1M 上给出少量代表性 $(\rho,b)$ 配置的通信与精度对照，用于说明默认部署点与过度压缩时的精度下限；Yelp 与 ACM 在默认配置下的趋势见表~\ref{tab:performance_comparison}。
+
+\begin{table}[H]
+    \centering
+    \caption{代表性压缩配置下的通信与精度对照（MovieLens-1M，Recall@20 与 NDCG@20）}
+    \label{tab:compression_tradeoff}
+    \footnotesize
+    \begin{tabular}{lccccc}
+        \toprule
+        配置 ($\rho$, $b$) & 累计流量 (MB) & 压缩比 & Recall@20 & NDCG@20 & 相对 Full 的 Recall 变化 \\
+        \midrule
+        Full ($1.0$, 32) & 13.35 & $1.0\times$ & 0.1245 & 0.1032 & --- \\
+        (0.2, 4) & 0.877 & $15.2\times$ & 0.1215 & 0.1009 & $-2.4\%$ \\
+        (0.2, 2) & 0.605 & $22.1\times$ & 0.1191 & 0.0981 & $-4.3\%$ \\
+        (0.1, 4) & 0.542 & $24.6\times$ & 0.1158 & 0.0956 & $-7.0\%$ \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-在相同压缩比下，FedASCL-Compress 明显优于 Random-k 和 Top-k，说明了保留完整关键语义通道的重要性：Random-k 在梯度坐标上随机丢弃，统计上易损失与元路径语义一致的大幅度更新；Top-k 虽保留大幅值分量，却仍以“幅值”为准绳，无法保证保留的分量对应对当前用户有效的语义通道，因而在异构图场景下劣于按注意力权重筛选的语义剪枝。QSGD 在数值上做低比特但在结构层保持稠密上传，故优于纯稀疏随机方案但仍落后于“剪枝 + 残差量化”组合。值得注意的是，FedASCL-Compress 在部分数据集上略优于 FedASCL-Full，可理解为在特定保留率 $\rho$ 下削弱低贡献元路径带来的正则化（语义去噪）；该现象与问题段所述“无语义筛选的粗暴压缩易损伤对比学习”并不矛盾——后者针对 Random-k、QSGD 等语义无关方案，而本章剪枝按注意力保留关键通道。$\rho \approx 0.5$ 处亦可能出现高于全保留的峰值（见图~\ref{fig:denoising}）。为了验证训练的稳定性并对比各模块贡献，图~\ref{fig:convergence} 与图~\ref{fig:ablation} 分别给出收敛曲线与消融结果。
+由表~\ref{tab:compression_tradeoff} 可见，默认配置 $(0.2,4)$ 在约 $15\times$ 压缩下将 Recall@20 的精度损失控制在约 2.4\%；继续降低 $\rho$ 或将 $b$ 降至 2 时，Recall@20 会出现更明显的台阶式下降。这说明部署时需在通信预算与精度之间折中，而非压缩倍率越高越好。
 
 \begin{figure}[H]
     \centering
-    \subfloat[训练收敛曲线（MovieLens-1M）]{%
-        \label{fig:convergence}%
-        \includegraphics[width=0.48\textwidth,height=0.32\textheight,keepaspectratio]{images/convergence_curve.png}%
-    }\hfill
-    \subfloat[消融实验中模块贡献对比]{%
-        \label{fig:ablation}%
-        \includegraphics[width=0.48\textwidth,height=0.32\textheight,keepaspectratio]{images/ablation_study.png}%
-    }
-    \caption{（a）不同压缩策略下的训练收敛曲线；（b）移除选择器或残差补偿后的性能对比。}
+    \includegraphics[width=0.72\textwidth,height=0.32\textheight,keepaspectratio]{images/ablation_study.png}
+    \caption{消融实验中模块贡献对比（MovieLens-1M，移除选择器或残差补偿后的性能对比）}
+    \label{fig:ablation}
 \end{figure}
-
-从图~\ref{fig:convergence} 可以观察到，虽然 FedASCL-Compress 在训练初期的震荡幅度略大于全精度模型（这是由结构变化带来的适应期），但其迅速收敛并保持稳定。相比之下，缺乏残差补偿的 QSGD 在后期出现了明显的精度抖动，这证实了误差补偿机制在平滑量化噪声方面的关键作用。
 
 \subsection{消融实验与机制分析 (RQ2)}
 
-为了验证各模块的独立贡献，我们设计了以下变体：w/o Selector（移除动态选择器）和 w/o Residual（移除残差补偿），结果已见图~\ref{fig:ablation}。
+为了验证各模块的独立贡献，我们设计了以下变体：去除动态选择器（w/o Selector）与去除残差补偿（w/o Residual），结果已见图~\ref{fig:ablation}。
 
-消融结果中，移除动态元路径选择器后性能下降最明显，说明仅做数值剪枝难以保留异构图的关键拓扑信息；移除残差补偿则表现为中后期指标波动或抬升变慢（与图~\ref{fig:convergence} 中 QSGD 的抖动相互印证），表明量化误差若不能跨轮回填，会系统性削弱有效梯度方向。图~\ref{fig:ablation} 从相对贡献上总结为：结构侧“保留哪些语义通道”比纯比特压缩更决定精度底线，误差累积机制则决定高精度能否在多轮通信中维持。
+消融结果中，移除动态元路径选择器后性能下降最明显，说明仅做数值剪枝难以保留异构图的关键拓扑信息；移除残差补偿则表现为中后期指标波动或提升幅度受限，表明量化误差若不能跨轮回填，会系统性削弱有效梯度方向。图~\ref{fig:ablation} 从相对贡献上总结为：结构侧“保留哪些语义通道”比纯比特压缩更决定精度底线，误差累积机制则决定高精度能否在多轮通信中维持。表~\ref{tab:compression_tradeoff} 进一步表明，$\rho$ 过低或 $b$ 过小时精度会出现台阶式下降，部署时需与表~\ref{tab:communication_cost} 中的通信收益一并权衡。
 
-为探究"语义去噪"效应，我们还测试了不同元路径保留率 $\rho$ 对模型精度的影响，结果如图~\ref{fig:denoising} 所示。
+\subsection{通信开销分析 (RQ3)}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.72\textwidth,height=0.32\textheight,keepaspectratio]{images/denoising_curve.png}
-    \caption{不同元路径保留率 $\rho$ 下的模型性能变化曲线}
-    \label{fig:denoising}
-\end{figure}
-
-如图~\ref{fig:denoising} 所示，随着保留率 $\rho$ 从 100\% 降低，模型性能呈现“先升后降”的趋势，并在 $\rho \approx 0.5$ 时达到峰值，且高于全保留状态。这一现象表明，异构图中可能存在较多低权重的冗余连接，适度剔除这些元路径不仅能压缩模型，还能增强对比学习对关键语义的判别能力。
-
-\subsection{通信开销与收敛效率 (RQ3)}
-
-表~\ref{tab:communication_cost} 记录了各模型达到收敛精度所需的累计通信流量和训练挂钟时间（Wall-clock Time）。其中通信流量统计对象为每轮上传的梯度与原型等参数（不含原始图数据）。实验配置与第五章系统仿真实测一致：100 轮训练、每轮 10 个客户端参与（$N=100$，$C=0.1$）。
+表~\ref{tab:communication_cost} 记录了各模型在 MovieLens-1M 上完成 100 轮联邦训练时的累计通信流量；三数据集上的推荐精度对比见表~\ref{tab:performance_comparison}。通信流量统计对象为每轮上传的梯度与原型等参数（不含原始图数据）。实验配置为 100 轮训练、每轮 10 个客户端参与（$N=100$，$C=0.1$）。
 
 \begin{table}[H]
     \centering
-    \caption{通信开销与训练时间对比（100 轮、每轮 10 客户端参与）}
+    \caption{通信开销对比（100 轮、每轮 10 客户端参与，MovieLens-1M）}
     \label{tab:communication_cost}
-    \begin{tabular}{lccc}
+    \begin{tabular}{lcc}
         \toprule
-        Method & Total Traffic (MB) & Compression Factor & Speedup \\
+        Method & Total Traffic (MB) & Compression Factor \\
         \midrule
-        FedASCL-Full & 12.2 & $1\times$ & $1.0\times$ \\
-        QSGD & 1.56 & $8\times$ & $3.2\times$ \\
-        Top-k & 1.24 & $10\times$ & $4.5\times$ \\
-        FedASCL-Compress & 0.62 & $\approx 20\times$ & $7.5\times$ \\
+        FedASCL-Full & 13.35 & $1.0\times$ \\
+        QSGD & 1.86 & $7.2\times$ \\
+        Top-k & 1.52 & $8.8\times$ \\
+        FedASCL-Compress & 0.877 & $\approx 15.2\times$ \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-为直观展示通信开销与性能的权衡，图~\ref{fig:pareto} 给出不同方法在“通信量—精度”空间的分布。
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.72\textwidth,height=0.34\textheight,keepaspectratio]{images/pareto_efficiency.png}
-    \caption{不同压缩方法的通信开销-精度权衡（帕累托分析）}
-    \label{fig:pareto}
-\end{figure}
-
-结果表明，本章算法将总通信流量降低了约一个数量级（$20\times$），并将训练时间缩短了近 7.5 倍。表~\ref{tab:communication_cost} 中 Speedup 主要来自两方面：一是每轮上传比特数减少使在 10~Mbps 模拟带宽下的传输等待时间成比例缩短；二是更轻的上传载荷减少了服务端聚合与客户端同步的 I/O 与调度开销（实验中为挂钟时间整体度量，非仅网络层）。在图~\ref{fig:pareto} 中，FedASCL-Compress 明显处于左上角的优势区域（低开销、高精度），证明了该策略在带宽受限环境下的部署潜力。
+结果表明，FedASCL-Compress 将累计通信流量由约 13.35~MB 降至 0.877~MB，降低约一个数量级（约 $15.2\times$）。相对全精度，Recall@20 在 MovieLens-1M、Yelp 与 ACM 上分别回落约 2.4\%、3.5\% 与 3.2\%，体现了可接受的精度与通信权衡。
 
 \subsection{本章小结}
 
 本章针对 FedASCL 上传通信开销大的问题，在客户端上传阶段实现了语义感知压缩。主要工作包括依据第三章结构视图的元路径注意力权重筛选 Top-$K$ 语义通道并做结构剪枝，对保留梯度结合本地残差进行低比特量化并在下一轮补偿，形成评估、剪枝、量化与补偿四步流程，并给出与第三章可对照的通信与推荐精度评测设定。实验在 $N{=}100$、$\alpha{=}0.5$、每轮参与率 $C{=}0.1$ 的联邦设定下开展，主要效果如下。
 
-在约 $20\times$ 压缩比且 $\rho{=}0.2$、$b{=}4$ 时，表~\ref{tab:performance_comparison} 显示 FedASCL-Compress 在 MovieLens-1M 与 Yelp 上的 Recall@20 与 NDCG@20 不低于 FedASCL-Full，并整体优于 Random-k、Top-k 与 QSGD。图~\ref{fig:convergence} 表明训练初期虽有适应期，但较快进入稳定区间，先剪枝后量化并未从根本上破坏 FedASCL 的优化轨迹。
+在约 $15.2\times$ 通信缩减且 $\rho{=}0.2$、$b{=}4$ 时，表~\ref{tab:performance_comparison} 显示 FedASCL-Compress 相对 FedASCL-Full 在 MovieLens-1M、Yelp 与 ACM 上 Recall@20 分别回落约 2.4\%、3.5\% 与 3.2\%，但仍整体优于 Random-k、Top-k 与 QSGD，表明先剪枝后量化并未从根本上破坏 FedASCL 的相对排序优势。
 
-消融实验与图~\ref{fig:ablation} 表明去掉动态元路径选择器后性能下降最明显，去掉残差补偿则中后期波动加大，与图~\ref{fig:convergence} 中 QSGD 的现象一致。图~\ref{fig:denoising} 显示改变保留率 $\rho$ 时性能先升后降，在 $\rho \approx 0.5$ 附近可出现高于全保留的峰值，说明适度裁剪低贡献元路径有助于压缩并带来一定语义去噪收益。
+消融实验与图~\ref{fig:ablation} 表明去掉动态元路径选择器后性能下降最明显，去掉残差补偿则中后期波动加大；表~\ref{tab:compression_tradeoff} 表明过度压缩会带来可测精度回落。
 
-表~\ref{tab:communication_cost} 在 100 轮、每轮 10 客户端与 10 Mbps 带宽下给出累计流量与挂钟时间，FedASCL-Compress 相对全精度约 $20\times$ 通信缩减与约 $7.5\times$ 加速，优于 QSGD 与 Top-k。图~\ref{fig:pareto} 表明在相近精度下通信开销更低，有利于带宽受限场景部署，并为第五章系统实测流量与耗时提供了算法依据。
+表~\ref{tab:communication_cost} 在 100 轮、每轮 10 客户端设定下给出累计通信流量，FedASCL-Compress 相对全精度约 $15.2\times$ 通信缩减，为第五章系统级集成提供了算法侧依据。
 
 元路径保留率 $\rho$ 与量化比特 $b$ 目前仍为训练前给定的硬阈值，Top-$K$ 剪枝对注意力波动较敏感，极端客户端倾斜下原型加权聚合的稳健性仍有提升空间，自适应剪枝与更稳健聚合可作为后续方向。

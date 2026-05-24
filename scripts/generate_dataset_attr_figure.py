@@ -39,11 +39,13 @@ BLOCKS = [
         "#F3EEFA",
         "#6B46C1",
         [
-            ("作者节点", "keywords 关键词(多标签)", "subject area 学科领域", "affiliation 机构"),
-            ("", "编码: 关键词 Multi-hot, 其余 One-hot", "", ""),
-            ("论文节点", "keywords 关键词(多标签)", "conference 会议", "subject area 学科"),
-            ("", "编码: 关键词 Multi-hot, 其余 One-hot", "", ""),
-            ("说明", "Author→用户, Paper→物品", "与表3-1规模一致", ""),
+            ("作者节点", "author_id 作者编号", "name 姓名", "affiliation 所属机构"),
+            ("", "interests 研究兴趣", "research_direction 研究方向", "keywords/subject"),
+            ("", "编码: 多标签 Multi-hot, 机构/学科 One-hot", "", ""),
+            ("论文节点", "title 标题", "venue 会议/期刊", "year 年份"),
+            ("", "abstract 摘要", "keywords 关键词", "subject 学科"),
+            ("", "编码: 关键词 Multi-hot, 年份 Min-Max, 文本字段 TF-IDF/嵌入", "", ""),
+            ("系统对应", "个人设置页画像字段", "推荐列表论文元数据", "U-P-A-P / U-P-K-P"),
         ],
     ),
 ]

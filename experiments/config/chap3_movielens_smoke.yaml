@@ -1,0 +1,37 @@
+# Smoke run: 5 rounds, fast validation
+experiment_id: c3_movielens_smoke
+chapter: 3
+dataset: movielens-1m
+
+data:
+  min_rating: 4.0
+
+federated:
+  num_clients: 50
+  dirichlet_alpha: 1.0
+  participation_rate: 0.2
+  global_rounds: 5
+  local_epochs: 2
+
+training:
+  seed: 42
+  lr: 0.001
+  optimizer: adam
+  embed_dim: 32
+  batch_size: 512
+
+fedascl:
+  attr_knn: 10
+  tau_cl: 0.2
+  tau_proto: 0.5
+  lambda_cl: 0.1
+  lambda_proto: 0.1
+
+evaluation:
+  metrics: [hit@10, ndcg@10]
+  eval_every: 1
+
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  results: results
